@@ -1,14 +1,12 @@
-const express = require('express');
+// backend/routes/api/users.js
+const express = require('express')
+const router = express.Router();
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
-
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-
-const router = express.Router();
-
 const validateSignup = [
     check('email')
         .exists({ checkFalsy: true })
@@ -28,17 +26,14 @@ const validateSignup = [
         .withMessage('Password must be 6 characters or more.'),
     handleValidationErrors
 ];
-
 // Sign up
 router.post('/', validateSignup, async (req, res) => {
-    const { firstName, lastName, email, password, username } = req.body;
+    const { email, password, username } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ firstName, lastName, email, username, hashedPassword });
+    const user = await User.create({ email, username, hashedPassword });
 
     const safeUser = {
         id: user.id,
-        fistName: user.firstName,
-        lastName: user.lastName,
         email: user.email,
         username: user.username,
     };
@@ -48,7 +43,22 @@ router.post('/', validateSignup, async (req, res) => {
     return res.json({
         user: safeUser
     });
-});
+}
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router;
