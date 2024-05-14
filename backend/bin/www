@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // backend/bin/www
 
 // Import environment variables
