@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       firstName: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           len: [3, 50]
         }
       },
       lastName: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           len: [3, 50]
