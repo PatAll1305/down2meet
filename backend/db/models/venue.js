@@ -10,16 +10,85 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Venue.hasMany(models.Image, {
+        foreignKey: 'venueId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+      Venue.hasMany(models.Event, {
+        foreignKey: 'venueId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+      Venue.belongsTo(models.Group, {
+        foreignKey: 'groupId',
+        hooks: true
+      });
     }
   }
   Venue.init({
-    groupId: DataTypes.INTEGER,
-    address: DataTypes.STRING,
-    city: DataTypes.STRING,
-    state: DataTypes.STRING,
-    lat: DataTypes.DECIMAL,
-    lng: DataTypes.DECIMAL
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    address: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Street address is required'
+        },
+        notNull: {
+          msg: 'Street address is required'
+        }
+      }
+    },
+    city: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'City is required'
+        },
+        notNull: {
+          msg: 'City is required'
+        }
+      }
+    },
+    state: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'State is required'
+        },
+        notNull: {
+          msg: 'State is required'
+        }
+      }
+    },
+    lat: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        latitudeCheck(value) {
+          if (value < -87 || value > 87) {
+            throw new Error('Latitude is not valid');
+          }
+        }
+      }
+    },
+    lng: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        longitudeCheck(value) {
+          if (value < -180 || value > 180) {
+            throw new Error('Longitude is not valid');
+          }
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Venue',
