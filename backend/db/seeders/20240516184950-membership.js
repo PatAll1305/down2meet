@@ -65,52 +65,52 @@ module.exports = {
       },
       {
         userId: 11,
-        groupId: 6,
+        groupId: 1,
         status: 'member'
       },
       {
         userId: 12,
-        groupId: 6,
+        groupId: 1,
         status: 'co-host'
       },
       {
         userId: 13,
-        groupId: 7,
+        groupId: 2,
         status: 'pending'
       },
       {
         userId: 14,
-        groupId: 7,
+        groupId: 3,
         status: 'member'
       },
       {
         userId: 15,
-        groupId: 8,
+        groupId: 4,
         status: 'organizer'
       },
       {
         userId: 16,
-        groupId: 8,
+        groupId: 5,
         status: 'pending'
       },
       {
         userId: 17,
-        groupId: 9,
+        groupId: 1,
         status: 'member'
       },
       {
         userId: 18,
-        groupId: 9,
+        groupId: 2,
         status: 'co-host'
       },
       {
         userId: 19,
-        groupId: 10,
+        groupId: 3,
         status: 'pending'
       },
       {
         userId: 20,
-        groupId: 10,
+        groupId: 4,
         status: 'member'
       }
     ])

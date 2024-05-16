@@ -26,6 +26,9 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'eventId',
         onDelete: 'CASCADE'
       });
+      // Event.belongsTo(models.Attendance, {
+      //   foreignKey: 'eventId'
+      // })
     }
   }
   Event.init({
