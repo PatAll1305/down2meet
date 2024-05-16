@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Group.hasMany(models.Image, {
+      Group.hasMany(models.GroupImage, {
         foreignKey: 'groupId',
         onDelete: 'CASCADE',
         hooks: true
@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     type: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM({ values: ['Online', 'In person'] }),
       allowNull: false,
       validate: {
         textLength(value) {

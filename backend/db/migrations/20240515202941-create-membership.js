@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM({ values: ['pending', 'member', 'co-host', 'organizer'] }),
         allowNull: false
       },
       createdAt: {

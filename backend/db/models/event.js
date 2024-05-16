@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Event.hasMany(models.Image, {
+      Event.hasMany(models.GroupImage, {
         foreignKey: 'eventId',
         onDelete: 'CASCADE',
         hooks: true
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       });
       Event.belongsToMany(models.User, {
-        through: 'Attendees',
+        through: 'Attendances',
         foreignKey: 'userId',
         otherKey: 'eventId',
         onDelete: 'CASCADE',
@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     type: {
-      type: DataTypes.TEXT,
+      type: DataTypes.ENUM({ values: ['Online', 'In person'] }),
       allowNull: false,
       validate: {
         typeCheck(value) {
@@ -129,6 +129,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt', "updatedAt", "id", "groupdId", "venueId"]
+      }
+    }
   });
   return Event;
 };

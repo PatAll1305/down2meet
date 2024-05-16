@@ -10,11 +10,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Venue.hasMany(models.Image, {
-        foreignKey: 'venueId',
-        onDelete: 'CASCADE',
-        hooks: true
-      });
       Venue.hasMany(models.Event, {
         foreignKey: 'venueId',
         onDelete: 'CASCADE',

@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     groupId: DataTypes.INTEGER,
     memberId: DataTypes.INTEGER,
     status: {
-      type: DataTypes.TEXT,
+      type: DataTypes.ENUM({ values: ['pending', 'member', 'co-host', 'organizer'] }),
       allowNull: false,
       validate: {
         application(value) {

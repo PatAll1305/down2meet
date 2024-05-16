@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       });
       User.belongsToMany(models.Event, {
-        through: 'Attendees',
+        through: 'Attendances',
         foreignKey: 'userId',
         otherKey: 'eventId',
         onDelete: 'CASCADE',
