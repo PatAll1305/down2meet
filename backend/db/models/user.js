@@ -6,22 +6,19 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.belongsToMany(models.Group, {
-        through: 'Members',
-        foreignKey: 'memberId',
-        otherKey: 'groupId',
-        onDelete: 'CASCADE',
-        hooks: true
-      });
+        through: 'Memberships',
+        otherKey: 'userId',
+        foreignKey: 'groupId',
+        onDelete: "CASCADE"
+      })
       User.belongsToMany(models.Event, {
         through: 'Attendances',
-        foreignKey: 'userId',
-        otherKey: 'eventId',
-        onDelete: 'CASCADE',
-        hooks: true
+        foreignKey: 'eventId',
+        otherKey: 'userId',
+        onDelete: 'CASCADE'
       });
       User.hasMany(models.Group, {
-        foreignKey: 'organizerId',
-        hooks: true
+        foreignKey: 'organizerId'
       });
     }
   };

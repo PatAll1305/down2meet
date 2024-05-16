@@ -10,36 +10,34 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Event.hasMany(models.GroupImage, {
+      Event.hasMany(models.EventImage, {
         foreignKey: 'eventId',
-        onDelete: 'CASCADE',
-        hooks: true
+        onDelete: 'CASCADE'
       });
       Event.belongsTo(models.Group, {
-        foreignKey: 'groupId',
-        hooks: true
+        foreignKey: 'groupId'
       });
       Event.belongsTo(models.Venue, {
-        foreignKey: 'venueId',
-        hooks: true
+        foreignKey: 'venueId'
       });
       Event.belongsToMany(models.User, {
         through: 'Attendances',
         foreignKey: 'userId',
         otherKey: 'eventId',
-        onDelete: 'CASCADE',
-        hooks: true
+        onDelete: 'CASCADE'
       });
     }
   }
   Event.init({
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: { model: 'Groups' }
     },
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: { model: 'Venues' },
       validate: {
         typeView(value) {
           if (this.type === 'In person' && !value) {
