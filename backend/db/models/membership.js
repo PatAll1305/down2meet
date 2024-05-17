@@ -22,12 +22,12 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Groups' }
+      references: { model: 'Groups', key: 'id' }
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Users' }
+      references: { model: 'Users', key: 'id' }
     },
     status: {
       type: DataTypes.ENUM({ values: ['pending', 'member', 'co-host', 'organizer'] }),

@@ -35,12 +35,12 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Groups' }
+      references: { model: 'Groups', key: 'id' }
     },
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: { model: 'Venues' },
+      references: { model: 'Venues', key: 'id' },
       validate: {
         typeView(value) {
           if (this.type === 'In person' && !value) {

@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Groups' }
+      references: { model: 'Groups', key: 'id' }
     },
     address: {
       type: DataTypes.TEXT,
