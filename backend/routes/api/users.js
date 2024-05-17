@@ -28,12 +28,14 @@ const validateSignup = [
 ];
 // Sign up
 router.post('/', validateSignup, async (req, res) => {
-    const { email, password, username } = req.body;
+    const { email, password, username, firstName, lastName } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ email, username, hashedPassword });
+    const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
     const safeUser = {
         id: user.id,
+        firstName: firstName,
+        lastName: lastName,
         email: user.email,
         username: user.username,
     };
@@ -45,6 +47,16 @@ router.post('/', validateSignup, async (req, res) => {
     });
 }
 );
+
+router.get('/', async (req, res) => {
+    const user = req
+    if (user.id) {
+        res.status(200).json({ user: user })
+    }
+    else {
+        res.status(200).json({ user: null })
+    }
+})
 
 
 

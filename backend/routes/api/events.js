@@ -399,7 +399,7 @@ router.post('/:eventId/attendees', requireAuth, async (req, res) => {
         res.json({ message: "Event couldn't be found" });
     }
 });
-//cleared
+
 router.patch('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
     let event = await Event.findByPk(parseInt(req.params.eventId));
@@ -463,7 +463,7 @@ router.patch('/:eventId', requireAuth, async (req, res) => {
     }
 
 });
-//cleared
+
 router.patch('/:eventId/attendees', requireAuth, async (req, res) => {
     let eventId = parseInt(req.params.eventId);
     const event = await Event.findByPk(eventId);
@@ -547,7 +547,7 @@ router.patch('/:eventId/attendees', requireAuth, async (req, res) => {
         res.json({ message: "Event couldn't be found" });
     }
 });
-//cleared
+
 router.delete('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
     const event = await Event.findByPk(parseInt(req.params.eventId));
@@ -580,7 +580,7 @@ router.delete('/:eventId', requireAuth, async (req, res) => {
         res.json({ message: "Event couldn't be found" });
     }
 })
-//cleared
+
 router.delete('/:eventId/attendees', requireAuth, async (req, res) => {
     let eventId = parseInt(req.params.eventId);
     const event = await Event.findByPk(eventId);
@@ -621,7 +621,7 @@ router.delete('/:eventId/attendees', requireAuth, async (req, res) => {
     }
 });
 
-//cleared
+
 router.delete('/:eventId/images', requireAuth, async (req, res) => {
     const event = await Event.findByPk(parseInt(req.params.eventId));
     if (event) {
