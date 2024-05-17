@@ -1,4 +1,5 @@
 'use strict';
+const { EventImage } = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('EventImages', [
+    await EventImage.bulkCreate([
       {
         eventId: 1,
         url: 'https://example.com/event1_image.jpg',

@@ -1,6 +1,5 @@
 'use strict';
 const { Attendance } = require('../models');
-const bcrypt = require("bcryptjs");
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -18,7 +17,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Attendances', [
+    await Attendance.bulkCreate([
       {
         eventId: 1,
         userId: 1,

@@ -1,4 +1,5 @@
 'use strict';
+const { Venue } = require('../models')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Venues', [
+    await Venue.bulkCreate([
       {
         groupId: 1,
         address: '123 Main Street',

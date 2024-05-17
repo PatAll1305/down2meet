@@ -1,4 +1,5 @@
 'use strict';
+const { Membership } = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Memberships', [
+    await Membership.bulkCreate([
       {
         userId: 1,
         groupId: 1,

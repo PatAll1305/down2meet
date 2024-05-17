@@ -1,4 +1,5 @@
 'use strict';
+const { GroupImage } = require('../models')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('GroupImages', [
+    await GroupImage.bulkCreate([
       {
         groupId: 1,
         url: 'https://example.com/group1_image1.jpg',

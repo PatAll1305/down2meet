@@ -1,5 +1,5 @@
 'use strict';
-
+const { Group } = require('../models')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Groups', [
+    await Group.bulkCreate([
       {
         organizerId: 1,
         name: 'Group 1',
