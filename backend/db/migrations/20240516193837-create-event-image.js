@@ -1,4 +1,9 @@
 'use strict';
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;
+}
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -33,6 +38,7 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('EventImages');
+    options.tableName = "EventImages";
+    return queryInterface.dropTable(options);
   }
 };
