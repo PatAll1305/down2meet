@@ -132,7 +132,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Event',
     defaultScope: {
       attributes: {
-        exclude: ['createdAt', "updatedAt", "id", "groupdId", "venueId"]
+        exclude: ['createdAt', "updatedAt"]
       }
     }
   });
