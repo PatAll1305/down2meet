@@ -139,7 +139,7 @@ module.exports = {
         groupId: 2,
         name: 'Event 12',
         description: 'Description for Event 12',
-        type: 'In Person',
+        type: 'In person',
         capacity: 65,
         price: 16,
         startDate: new Date('2025-04-20T14:00:00Z'),
