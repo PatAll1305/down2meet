@@ -27,8 +27,8 @@ const validateSignup = [
     handleValidationErrors
 ];
 // Sign up
-router.post('/', validateSignup, async (req, res) => {
-    const { email, password, username, firstName, lastName } = req.body;
+router.post('/create', validateSignup, async (req, res) => {
+    const { email, hashedPassword, username, firstName, lastName } = req.body;
     const checkUserEmail = await User.findAll({ where: { email: email } })
     const checkUserUsername = await User.findAll({ where: { username: username } })
     if (Object.keys(checkUserEmail).length || Object.keys(checkUserUsername).length) {
@@ -38,21 +38,19 @@ router.post('/', validateSignup, async (req, res) => {
         err.errors = { credential: 'The provided username and/or email are in use.' };
         return next(err);
     }
-    const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
-    const safeUser = {
-        id: user.id,
+    const user = await User.create({
         firstName: firstName,
         lastName: lastName,
-        email: user.email,
-        username: user.username,
-    };
+        email: email,
+        username: username,
+        hashedPassword: bcrypt.hashSync(hashedPassword)
+    });
 
-    await setTokenCookie(res, safeUser);
+    setTokenCookie(res, user);
 
     return res.json({
-        user: safeUser
+        user: user
     });
 }
 );
