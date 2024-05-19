@@ -5,8 +5,16 @@
 const express = require('express');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Group, Event, Venue, Membership, Attendance, EventImage, GroupImage } = require('../../db/models');
-
+const {
+    User,
+    Group,
+    Event,
+    Venue,
+    Membership,
+    Attendance,
+    EventImage,
+    GroupImage
+} = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
@@ -31,7 +39,7 @@ router.get('/', async (req, res) => {
 
     const where = {};
 
-    let { name, type, startDate } = req.query;
+    let { name, type, startDate, price } = req.query;
 
     if (name) {
         if (typeof name !== 'string') {
@@ -55,6 +63,14 @@ router.get('/', async (req, res) => {
             errors.date = "Start date must be a valid datetime. I.E: '10-20-2012' or '10-20-2012 18:30:00'";
         } else {
             where.startDate = { [Op.gte]: date }
+        }
+    }
+
+    if (price) {
+        if (isNaN(+price) || +price < 0) {
+            errors.price = "price must be a valid integer greater than -1";
+        } else {
+            where.price = { [Op.between]: [0, +price] }
         }
     }
 

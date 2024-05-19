@@ -32,7 +32,13 @@ router.post('/', validateLogin, async (req, res, next) => {
             }
         }
     });
-
+    if (!credential || !password) {
+        const err = new Error('Login failed');
+        err.status = 400;
+        err.title = 'Login failed';
+        err.errors = { credential: 'The provided credentials were invalid.' };
+        return next(err);
+    }
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
         const err = new Error('Login failed');
         err.status = 401;
@@ -43,6 +49,8 @@ router.post('/', validateLogin, async (req, res, next) => {
 
     const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
     };
@@ -71,6 +79,8 @@ router.get(
         if (user) {
             const safeUser = {
                 id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email,
                 username: user.username,
             };
