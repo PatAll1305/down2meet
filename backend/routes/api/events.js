@@ -24,8 +24,8 @@ router.get('/', async (req, res) => {
     page = +page;
     size = +size;
 
-    if (!page || page < 0 || isNaN(page)) page = 1;
-    if (!size || size < 0 || isNaN(size)) size = 10;
+    if (!page || page < 1 || isNaN(page)) page = 1;
+    if (!size || size < 1 || isNaN(size)) size = 20;
 
     params.limit = size;
     params.offset = size * (page - 1);
@@ -168,117 +168,10 @@ router.get('/:eventId/attendees', async (req, res) => {
 
 });
 
-
-router.post('/:groupId', requireAuth, async (req, res) => {
-    const group = await Group.findByPk(parseInt(req.params.groupId));
-    const { user } = req;
-    const errors = {};
-
-    if (group) {
-        if (group.organizerId === user.id) {
-            const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-            let venue;
-            if (venueId) venue = await Venue.findByPk(venueId);
-
-            if (venue === null) {
-                errors.venueId = "Venue does not exist";
-            }
-
-            if (Object.keys(errors).length) {
-                res.status(400);
-                return res.json({
-                    message: "Bad Request",
-                    errors
-                })
-            }
-
-            const newEvent = await Event.create({
-                groupId: group.id,
-                venueId: venueId,
-                name: name,
-                type: type,
-                capacity: capacity,
-                price: price,
-                description: description,
-                startDate: startDate,
-                endDate: endDate
-            });
-            await newEvent.save();
-
-            const newHost = await Attendance.create({
-                eventId: safeEvent.id,
-                userId: user.id,
-                status: 'host'
-            }, { validate: true });
-            newHost.save();
-
-            res.json(newEvent);
-
-        } else {
-            let status = await Membership.findOne({
-                where: {
-                    groupId: group.id,
-                    userId: user.id
-                }
-            });
-            if (status) {
-                if (status.status === 'co-host') {
-                    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-                    let venue;
-                    if (venueId) venue = await Venue.findByPk(venueId);
-
-                    if (venue === null) {
-                        errors.venueId = "Venue does not exist";
-                    }
-
-                    if (Object.keys(errors).length) {
-                        res.status(400);
-                        return res.json({
-                            message: "Bad Request",
-                            Errors: errors
-                        })
-                    }
-
-                    const newEvent = await Event.create({
-                        groupId: group.id,
-                        venueId: venueId,
-                        name: name,
-                        type: type,
-                        capacity: capacity,
-                        price: price,
-                        description: description,
-                        startDate: startDate,
-                        endDate: endDate
-                    });
-                    await newEvent.save();
-
-                    const newHost = await Attendance.create({
-                        eventId: safeEvent.id,
-                        userId: user.id,
-                        status: 'host'
-                    }, { validate: true });
-                    newHost.save();
-                    res.json(newEvent);
-
-                } else {
-                    res.status(400);
-                    res.json({ message: "Invalid membership level" });
-                }
-            } else {
-                res.status(400);
-                res.json({ message: "User is not a member" });
-            }
-        }
-    } else {
-        res.status(404);
-        res.json({ message: "Group couldn't be found" });
-    }
-});
-
 router.post('/:eventId/images', requireAuth, async (req, res) => {
     const { preview, url } = req.body;
     const { user } = req;
-    const event = await Event.findByPk(parseInt(req.params.eventId));
+    const event = await Event.findByPk(+req.params.eventId);
     if (event) {
         const attendStatus = await Attendance.findOne({
             where: {
@@ -572,7 +465,7 @@ router.delete('/:eventId/attendees', requireAuth, async (req, res) => {
 });
 
 
-router.delete('/:eventId/images', requireAuth, async (req, res) => {
+router.delete('/:eventId/images/:imageId', requireAuth, async (req, res) => {
     const event = await Event.findByPk(+req.params.eventId);
     if (event) {
 
@@ -590,9 +483,9 @@ router.delete('/:eventId/images', requireAuth, async (req, res) => {
         if (isHost || isCoHost) {
             let image = await EventImage.findOne({
                 where: {
-                    eventId: event.id
+                    eventId: +req.params.eventId,
+                    id: +req.params.imageId
                 },
-                offset: +searchId - 1
             });
             if (image) {
                 await image.destroy();

@@ -362,7 +362,7 @@ router.get('/:groupId/events', async (req, res) => {
     }
 })
 
-router.post('/', requireAuth, async (req, res) => {
+router.post('/greate', requireAuth, async (req, res) => {
     const { user } = req;
 
     const { name, about, type, private, city, state } = req.body;
@@ -632,6 +632,70 @@ router.post('/:groupId/membership', requireAuth, async (req, res) => {
     } else {
         res.status(404);
         res.json({ message: "Group couldn't be found" })
+    }
+});
+
+router.post('/:groupId/members/', requireAuth, async (req, res) => {
+    const { user } = req;
+    const { userId, status } = req.body;
+    let group = Group.findOne({
+        where: {
+            id: +req.params.groupId
+        }
+    })
+
+    if (group) {
+        let groupOrganizer = await Group.findOne({
+            where: {
+                organizerId: user.id
+            }
+        })
+        let userStatus = await Membership.findOne({
+            where: {
+                userId: user.id,
+                groupId: +req.params.groupId
+            }
+        })
+        if (groupOrganizer || userStatus && userStatus.status === 'co-host') {
+            if ((status === 'co-host' || status === 'organizer') && !groupOrganizer) {
+                res.status(400)
+                return res.json({
+                    message: 'user does not have the permissions for this change'
+                })
+            }
+            if (status === 'organizer' && groupOrganizer) {
+                const organizerMembership = await Membership.findOne({
+                    where: {
+                        userId: groupOrganizer.organizerId,
+                        groupId: groupOrganizer.id
+                    }
+                })
+                organizerMembership.status = 'co-host'
+            }
+            const newMember = await Membership.findOne(
+                {
+                    groupId: group.id,
+                    userId: userId
+                }
+            )
+            newMember.status = status
+
+            await newMember.validate()
+
+            await newMember.save()
+
+            return res.json(newMember)
+        } else {
+            res.status(400)
+            return res.json({
+                message: 'user does not have appropriate status for this change'
+            })
+        }
+    } else {
+        res.status(404)
+        return res.json({
+            message: 'could not find a group with specified Id'
+        })
     }
 });
 
