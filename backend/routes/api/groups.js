@@ -14,6 +14,7 @@ const { Op } = require('sequelize');
 const express = require('express')
 const { requireAuth } = require('../../utils/auth');
 const e = require('express');
+const group = require('../../db/models/group');
 
 const router = express.Router();
 
@@ -692,7 +693,7 @@ router.delete('/:groupId/membership', requireAuth, async (req, res) => {
     if (group) {
         if (group.organizerId === +user.id) {
             const removeUser = await User.findByPk(+user.id);
-            if (removeUser.id) {
+            if (removeUser) {
                 const member = await Membership.findOne({
                     where: {
                         groupId: group.id,
@@ -717,6 +718,46 @@ router.delete('/:groupId/membership', requireAuth, async (req, res) => {
     } else {
         res.status(404);
         res.json({ message: "Group couldn't be found" });
+    }
+})
+
+router.delete('/:groupId/images/:imageId', requireAuth, async (req, res) => {
+
+    let image = await GroupImage.findOne({
+        where: {
+            id: +req.params.imageId,
+            groupId: +req.params.groupId
+        }
+    });
+
+    let group = await group.findByPk(+req.params.groupId)
+
+    const { user } = req
+    if (image) {
+
+        if (user.id === group.organizerId) {
+            await image.destroy()
+            res.status(200)
+            return res.json({ message: 'Successfully deleted' })
+        } else {
+            const member = await Membership.findOne({
+                where: {
+                    groupId: group.id,
+                    userId: removeUser.id
+                }
+            });
+            if (member && member.status === 'co-host') {
+                await image.destroy()
+                res.status(200)
+                return res.json({ message: "Successfully deleted" });
+            } else {
+                res.status(400);
+                res.json({ message: "Status is not high enough for this action" });
+            };
+        }
+    } else {
+        res.status(404)
+        return res.json({ message: 'Group Imagage could not be found' })
     }
 })
 
