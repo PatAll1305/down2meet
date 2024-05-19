@@ -323,13 +323,13 @@ router.get('/:groupId/events', async (req, res) => {
             let img = await EventImage.findOne({
                 where: {
                     eventId: event.id,
-                    isPreview: true
+                    preview: true
                 }
             });
             let venue = await Venue.findByPk(event.venueId, {
                 attributes: ['id', 'city', 'state']
             });
-            let numAttending = await Attendee.count({
+            let numAttending = await Attendance.count({
                 where: {
                     status: {
                         [Op.in]: ['attending', 'waitlist']
@@ -420,11 +420,11 @@ router.post('/:groupId/venues', requireAuth, async (req, res) => {
                     const { address, city, state, lat, lng } = req.body;
                     const newVenue = await Venue.create({
                         groupId: group.id,
-                        address,
-                        city,
-                        state,
-                        lat,
-                        lng
+                        address: address,
+                        city: city,
+                        state: state,
+                        lat: lat,
+                        lng: lng
                     }, { validate: true });
 
                     await newVenue.save();
