@@ -28,7 +28,7 @@ const validateSignup = [
 ];
 // Sign up
 router.post('/', validateSignup, async (req, res) => {
-    const { email, hashedPassword, username, firstName, lastName } = req.body;
+    const { email, password, username, firstName, lastName } = req.body;
     const checkUserEmail = await User.findAll({ where: { email: email } })
     const checkUserUsername = await User.findAll({ where: { username: username } })
     if (Object.keys(checkUserEmail).length || Object.keys(checkUserUsername).length) {
@@ -44,13 +44,23 @@ router.post('/', validateSignup, async (req, res) => {
         lastName: lastName,
         email: email,
         username: username,
-        hashedPassword: bcrypt.hashSync(hashedPassword)
+        hashedPassword: bcrypt.hashSync(password)
     });
+    await user.validate()
+    await user.save()
 
-    setTokenCookie(res, user);
+    const newUser = {
+        id: user.id,
+        fistName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        username: user.username,
+    };
+
+    await setTokenCookie(res, newUser);
 
     return res.json({
-        user: user
+        user: newUser
     });
 }
 );

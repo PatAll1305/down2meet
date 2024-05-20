@@ -185,7 +185,7 @@ router.get('/:groupId', async (req, res) => {
             }
         });
 
-        group.memberCount = await Membership.count({
+        group.numMembers = await Membership.count({
             where: {
                 groupId: group.id,
                 status: { [Op.in]: ['member', 'co-host'] }
@@ -194,7 +194,7 @@ router.get('/:groupId', async (req, res) => {
                 exclude: ['groupId']
             }
         });
-        group.memberCount += 1;
+        group.numMembers += 1;
 
         group.GroupImages = imagePreview;
 
@@ -735,7 +735,7 @@ router.delete('/:groupId', requireAuth, async (req, res) => {
     let group = await Group.findByPk(+req.params.groupId);
 
 
-    if (group.id && group.organizerId === user.id) {
+    if (group && group.organizerId === user.id) {
         await group.destroy();
         res.json({ message: "Successfully deleted" })
     } else {
