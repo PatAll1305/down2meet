@@ -27,7 +27,7 @@ const validateSignup = [
     handleValidationErrors
 ];
 // Sign up
-router.post('/create', validateSignup, async (req, res) => {
+router.post('/', validateSignup, async (req, res) => {
     const { email, hashedPassword, username, firstName, lastName } = req.body;
     const checkUserEmail = await User.findAll({ where: { email: email } })
     const checkUserUsername = await User.findAll({ where: { username: username } })
@@ -36,7 +36,7 @@ router.post('/create', validateSignup, async (req, res) => {
         err.status = 500;
         err.title = 'Login failed';
         err.errors = { credential: 'The provided username and/or email are in use.' };
-        return next(err);
+        return res.status(500).json({ Errors: err });
     }
 
     const user = await User.create({

@@ -362,7 +362,7 @@ router.get('/:groupId/events', async (req, res) => {
     }
 })
 
-router.post('/greate', requireAuth, async (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
     const { user } = req;
 
     const { name, about, type, private, city, state } = req.body;
