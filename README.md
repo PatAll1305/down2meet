@@ -159,7 +159,7 @@ user's information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: 'api/users/create'
+  * URL: 'api/users/'
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -394,7 +394,7 @@ Creates and returns a new group.
 * Require Authentication: true
 * Request
   * Method: POST
-  * URL: /api/groups/create
+  * URL: /api/groups/
   * Headers:
     * Content-Type: application/json
   * Body:
