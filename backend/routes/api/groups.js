@@ -635,7 +635,7 @@ router.post('/:groupId/membership', requireAuth, async (req, res) => {
     }
 });
 
-router.post('/:groupId/members/', requireAuth, async (req, res) => {
+router.put('/:groupId/members/', requireAuth, async (req, res) => {
     const { user } = req;
     const { userId, status } = req.body;
     let group = Group.findOne({
@@ -643,6 +643,16 @@ router.post('/:groupId/members/', requireAuth, async (req, res) => {
             id: +req.params.groupId
         }
     })
+
+    if (status === 'pending') {
+        res.status(400)
+        return res.json({
+            message: 'Validation Error',
+            errors: {
+                status: "Cannot change a membership status to pending"
+            }
+        })
+    }
 
     if (group) {
         let groupOrganizer = await Group.findOne({
@@ -656,6 +666,7 @@ router.post('/:groupId/members/', requireAuth, async (req, res) => {
                 groupId: +req.params.groupId
             }
         })
+
         if (groupOrganizer || userStatus && userStatus.status === 'co-host') {
             if ((status === 'co-host' || status === 'organizer') && !groupOrganizer) {
                 res.status(400)
@@ -678,6 +689,15 @@ router.post('/:groupId/members/', requireAuth, async (req, res) => {
                     userId: userId
                 }
             )
+            if (!newMember) {
+                res.status(404)
+                return res.json({
+                    "message": "Validation Error",
+                    "errors": {
+                        "memberId": "User couldn't be found"
+                    }
+                })
+            }
             newMember.status = status
 
             await newMember.validate()
@@ -694,12 +714,12 @@ router.post('/:groupId/members/', requireAuth, async (req, res) => {
     } else {
         res.status(404)
         return res.json({
-            message: 'could not find a group with specified Id'
+            message: 'Could not find a group with specified Id'
         })
     }
 });
 
-router.post('/:groupId', requireAuth, async (req, res) => {
+router.put('/:groupId', requireAuth, async (req, res) => {
     const { user } = req;
 
     const { name, about, type, private, city, state } = req.body;
