@@ -28,28 +28,44 @@ const validateSignup = [
 ];
 // Sign up
 router.post('/', validateSignup, async (req, res) => {
-    const { email, hashedPassword, username, firstName, lastName } = req.body;
+    const { email, password, username, firstName, lastName } = req.body;
     const checkUserEmail = await User.findAll({ where: { email: email } })
     const checkUserUsername = await User.findAll({ where: { username: username } })
-    if (Object.keys(checkUserEmail).length || Object.keys(checkUserUsername).length) {
-        const err = new Error('Login failed');
-        err.status = 500;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided username and/or email are in use.' };
-        return res.status(500).json({ Errors: err });
+    const errors = {}
+
+    if (!firstName) {
+        errors.firstName = "First Name is required"
+        res.status(400)
     }
+    if (!lastName) {
+        errors.lastName = "Last Name is required"
+        res.status(400)
+    }
+    if (Object.keys(checkUserEmail).length) {
+        errors.email = 'The provided email is in use.';
+        res.status(500)
+    }
+    if (Object.keys(checkUserUsername).length) {
+        errors.username = 'The provided username is in use.'
+        res.status(500)
+    };
+    if (Object.keys(errors).length) return res.json({ message: 'User already exists', errors });
+
 
     const user = await User.create({
         firstName: firstName,
         lastName: lastName,
         email: email,
         username: username,
-        hashedPassword: bcrypt.hashSync(hashedPassword)
+        hashedPassword: bcrypt.hashSync(password)
     });
+
+    await user.validate()
+    await user.save()
 
     setTokenCookie(res, user);
 
-    return res.json({
+    return res.status(200).json({
         user: user
     });
 }
