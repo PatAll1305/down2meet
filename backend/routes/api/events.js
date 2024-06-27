@@ -98,26 +98,36 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:eventId', async (req, res) => {
-    let event = await Event.findByPk(+req.params.eventId,
-        {
+
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId, {
             include: [
                 { model: Group },
                 { model: Venue }
             ]
-        }
-    )
+        })
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
 
     if (event) {
-        res.json(event);
+        return res.json(event);
     } else {
         res.status(404);
-        res.json({ message: "Event couldn't be found" })
+        return res.json({ message: "Event couldn't be found" })
     }
 });
 
-router.get('/:eventId/attendees', async (req, res) => {
-    let eventId = +req.params.eventId;
-    const event = await Event.findByPk(eventId);
+router.get('/:eventId/attendance', async (req, res) => {
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
 
     if (event) {
         const group = await Group.findByPk(event.groupId);
@@ -150,7 +160,7 @@ router.get('/:eventId/attendees', async (req, res) => {
                     include: { model: User }
                 });
 
-                res.json(attendees);
+                return res.json(attendees);
             }
         } else {
             const attendees = await Attendance.findAll({
@@ -160,12 +170,12 @@ router.get('/:eventId/attendees', async (req, res) => {
                 },
                 include: { model: User }
             })
-            res.json(attendees);
+            return res.json(attendees);
         }
 
     } else {
         res.status(404);
-        res.json({ message: "Event couldn't be found" });
+        return res.json({ message: "Event couldn't be found" });
     }
 
 
@@ -174,7 +184,13 @@ router.get('/:eventId/attendees', async (req, res) => {
 router.post('/:eventId/images', requireAuth, async (req, res) => {
     const { preview, url } = req.body;
     const { user } = req;
-    const event = await Event.findByPk(+req.params.eventId);
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
     if (event) {
         const attendStatus = await Attendance.findOne({
             where: {
@@ -222,8 +238,14 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
     }
 });
 
-router.post('/:eventId/attendees', requireAuth, async (req, res) => {
-    const event = await Event.findByPk(+req.params.eventId);
+router.post('/:eventId/attendance', requireAuth, async (req, res) => {
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
     const { user } = req;
     if (event) {
         const attendance = await Attendance.findOne({
@@ -261,7 +283,13 @@ router.post('/:eventId/attendees', requireAuth, async (req, res) => {
 
 router.put('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
-    let event = await Event.findByPk(+req.params.eventId);
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
     const errors = {};
     if (event) {
         const group = await Group.findByPk(event.groupId);
@@ -315,9 +343,14 @@ router.put('/:eventId', requireAuth, async (req, res) => {
 
 });
 
-router.patch('/:eventId/attendees', requireAuth, async (req, res) => {
-    let eventId = +req.params.eventId;
-    const event = await Event.findByPk(eventId);
+router.put('/:eventId/attendance', requireAuth, async (req, res) => {
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
     if (event) {
         const group = await Group.findByPk(event.groupId);
         const { user } = req;
@@ -401,7 +434,13 @@ router.patch('/:eventId/attendees', requireAuth, async (req, res) => {
 
 router.delete('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
-    const event = await Event.findByPk(parseInt(req.params.eventId));
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
     if (event) {
         const group = await Group.findByPk(event.groupId);
         const memberStatus = await Membership.findOne(
@@ -432,9 +471,14 @@ router.delete('/:eventId', requireAuth, async (req, res) => {
     }
 })
 
-router.delete('/:eventId/attendees', requireAuth, async (req, res) => {
-    let eventId = +req.params.eventId;
-    const event = await Event.findByPk(eventId);
+router.delete('/:eventId/attendance', requireAuth, async (req, res) => {
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
     if (event) {
         const group = await Group.findByPk(event.groupId);
         const { user } = req;
@@ -469,7 +513,13 @@ router.delete('/:eventId/attendees', requireAuth, async (req, res) => {
 
 
 router.delete('/:eventId/images/:imageId', requireAuth, async (req, res) => {
-    const event = await Event.findByPk(+req.params.eventId);
+    let event;
+    try {
+        event = await Event.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
     if (event) {
 
         const group = await Group.findByPk(event.groupId);
