@@ -504,7 +504,7 @@ Updates and returns an existing group.
 * Require Authentication: true
 * Require proper authorization: Group must belong to the current user
 * Request
-  * Method: POST
+  * Method: PUT
   * URL: /api/groups/:groupId
   * Headers:
     * Content-Type: application/json
@@ -741,7 +741,7 @@ Edit a new venue specified by its id
 * Require Authentication: Current User must be the organizer of the group or a member of
   the group with a status of "co-host"
 * Request
-  * Method: POST
+  * Method: PUT
   * URL: /api/venues/:venueId
   * Headers:
     * Content-Type: application/json
@@ -1153,7 +1153,7 @@ Edit and returns an event specified by its id
 * Require Authorization: Current User must be the organizer of the group or a member of
   the group with a status of "co-host"
 * Request
-  * Method: POST
+  * Method: PUT
   * URL: /api/events/:eventId
   * Headers:
     * Content-Type: application/json
@@ -1441,7 +1441,7 @@ Change the status of a membership for a group specified by id.
   * To change the status from "member" to "co-host":
     * Current User must already be the organizer
 * Request
-  * Method: POST
+  * Method: PUT
   * URL: /api/groups/:groupId/members
   * Headers:
     * Content-Type: application/json

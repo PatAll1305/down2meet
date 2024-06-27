@@ -24,8 +24,11 @@ router.get('/', async (req, res) => {
     page = +page;
     size = +size;
 
-    if (!page || page < 1 || isNaN(page)) page = 1;
-    if (!size || size < 1 || isNaN(size)) size = 20;
+    if (page < 1) errors.page = "Page must be greater than or equal to 1"
+    if (size < 1) errors.size = "Size must be greater than or equal to 1"
+
+    if (!page || isNaN(page)) page = 1;
+    if (!size || isNaN(size)) size = 20;
 
     params.limit = size;
     params.offset = size * (page - 1);
@@ -45,7 +48,7 @@ router.get('/', async (req, res) => {
     }
 
     if (type) {
-        if (type !== 'Online' && type !== 'In person') {
+        if (type !== 'Online' && type !== 'In Person') {
             errors.type = "Type must be 'Online' or 'In Person'";
         } else {
             where.type = type;
@@ -256,7 +259,7 @@ router.post('/:eventId/attendees', requireAuth, async (req, res) => {
     }
 });
 
-router.post('/:eventId', requireAuth, async (req, res) => {
+router.put('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
     let event = await Event.findByPk(+req.params.eventId);
     const errors = {};

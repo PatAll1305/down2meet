@@ -3,7 +3,7 @@ const { requireAuth } = require('../../utils/auth');
 const { Group, Venue, Membership } = require('../../db/models');
 const router = express.Router();
 
-router.post('/:venueId', requireAuth, async (req, res) => {
+router.put('/:venueId', requireAuth, async (req, res) => {
 
     const { user } = req;
     let venue = await Venue.findByPk(+req.params.venueId);
