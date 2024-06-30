@@ -6,7 +6,13 @@ const router = express.Router();
 router.put('/:venueId', requireAuth, async (req, res) => {
 
     const { user } = req;
-    let venue = await Venue.findByPk(+req.params.venueId);
+    let venue;
+    try {
+        venue = await Venue.findByPk(+req.params.venueId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
 
     if (venue) {
         const group = await Group.findByPk(venue.groupId);
@@ -19,12 +25,23 @@ router.put('/:venueId', requireAuth, async (req, res) => {
             if (state) venue.state = state;
             if (lat) venue.lat = lat;
             if (lng) venue.lng = lng;
+            try {
+                await venue.validate();
 
-            await venue.validate();
+                await venue.save();
+            } catch (e) {
+                const errorsObj = {};
+                for (let error of e.errors) {
+                    if (error.validatorKey === 'lattitudeCheck' || !lat || lat > 87 || lat < -87) errorsObj.lat = "Latitude is not valid"
+                    if (error.validatorKey === 'longitudeCheck' || !lng || lng > 180 || lng < -180) errorsObj.lng = "Longitude is not valid"
+                    if (error.validatorKey === 'addressCheck' || !address) errorsObj.address = "Street address is required"
+                    if (error.validatorKey === 'cityCheck' || !city) errorsObj.city = "City is required"
+                    if (error.validatorKey === 'stateCheck' || !state) errorsObj.state = "State is required"
+                }
+                return res.status(400).json({ message: 'Bad Request', errors: { ...errorsObj } })
+            }
 
-            await venue.save();
-
-            res.json(venue);
+            return res.json(venue);
         } else {
             let status = await Membership.findOne({
                 where: {
@@ -42,12 +59,23 @@ router.put('/:venueId', requireAuth, async (req, res) => {
                     if (state) venue.state = state;
                     if (lat) venue.lat = lat;
                     if (lng) venue.lng = lng;
+                    try {
+                        await venue.validate();
 
-                    await venue.validate();
+                        await venue.save();
+                    } catch (e) {
+                        const errorsObj = {};
+                        for (let error of e.errors) {
+                            if (error.validatorKey === 'lattitudeCheck' || !lat || lat > 87 || lat < -87) errorsObj.lat = "Latitude is not valid"
+                            if (error.validatorKey === 'longitudeCheck' || !lng || lng > 180 || lng < -180) errorsObj.lng = "Longitude is not valid"
+                            if (error.validatorKey === 'addressCheck' || !address) errorsObj.address = "Street address is required"
+                            if (error.validatorKey === 'cityCheck' || !city) errorsObj.city = "City is required"
+                            if (error.validatorKey === 'stateCheck' || !state) errorsObj.state = "State is required"
+                        }
+                        return res.status(400).json({ message: 'Bad Request', errors: { ...errorsObj } },)
+                    }
 
-                    await venue.save();
-
-                    res.json(venue);
+                    return res.json(venue);
 
                 } else {
                     res.status(400);

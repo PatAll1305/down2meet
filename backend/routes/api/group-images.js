@@ -1,16 +1,8 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-
-const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Group, Member, GroupImage } = require('../../db/models');
-
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-
-const { Op } = require('sequelize');
-const e = require('express');
-
+const express = require('express')
 const router = express.Router();
+const { requireAuth } = require('../../utils/auth');
+const { Group, Membership, GroupImage } = require('../../db/models');
+
 
 router.delete('/:imageId', requireAuth, async (req, res) => {
 
@@ -25,10 +17,10 @@ router.delete('/:imageId', requireAuth, async (req, res) => {
 
         const group = await Group.findByPk(parseInt(groupImage.groupId));
         const { user } = req;
-        const membership = await Member.findOne({
+        const membership = await Membership.findOne({
             where: {
                 groupId: group.id,
-                memberId: user.id
+                userId: user.id
             }
         });
 

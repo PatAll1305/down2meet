@@ -101,32 +101,32 @@ router.get('/:eventId', async (req, res) => {
 
     let event;
     try {
-        event = await Event.findByPk(+req.params.groupId, {
+        event = await Event.findByPk(+req.params.eventId, {
             include: [
                 { model: Group },
                 { model: Venue }
             ]
         })
+        const count = await Event.count()
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" })
     }
-
     if (event) {
         return res.json(event);
     } else {
-        res.status(404);
+        res.status(404)
         return res.json({ message: "Event couldn't be found" })
     }
 });
 
-router.get('/:eventId/attendance', async (req, res) => {
+router.get('/:eventId/attendees', async (req, res) => {
     let event;
     try {
-        event = await Event.findByPk(+req.params.groupId)
+        event = await Event.findByPk(+req.params.eventId)
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" })
     }
 
     if (event) {
@@ -183,13 +183,21 @@ router.get('/:eventId/attendance', async (req, res) => {
 
 router.post('/:eventId/images', requireAuth, async (req, res) => {
     const { preview, url } = req.body;
+    const errors = {};
+    if (preview === null) errors.preview = "Preview must be 'true' or 'false'"
+    if (url === null) errors.null = "URL is required"
+
+    if (Object.keys(errors).length) {
+        res.status(400)
+        return res.json({ message: 'Bad Request', errors })
+    }
     const { user } = req;
     let event;
     try {
-        event = await Event.findByPk(+req.params.groupId)
+        event = await Event.findByPk(+req.params.eventId)
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" })
     }
     if (event) {
         const attendStatus = await Attendance.findOne({
@@ -198,11 +206,11 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
                 userId: user.id
             }
         });
-        const isAble = attendStatus ? attendStatus.status === 'host' ||
-            attendStatus.status === 'co-host' ||
-            attendStatus.status === 'attendee' : false;
+        const isAble = attendStatus ? attendStatus.status.toLowerCase() === 'host' ||
+            attendStatus.status.toLowerCase() === 'co-host' ||
+            attendStatus.status.toLowerCase() === 'attending' : false;
+        console.log(user, attendStatus)
         if (isAble) {
-
             if (preview === true) {
                 let oldImage = await EventImage.findOne({
                     where: {
@@ -216,35 +224,33 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
                     await oldImage.save();
                 };
             };
-
             const newImage = await EventImage.create({
-                imageUrl: url,
+                url: url,
                 preview: preview,
                 eventId: event.id
             }, { validate: true });
-
             await newImage.save();
 
-            res.json(newImage);
+            return res.json(newImage);
 
         } else {
             res.status(400);
-            res.json({ message: 'Unable to add image to event, not an Attendee, co-host, or host for the event' });
+            return res.json({ message: 'Unable to add image to event, not an Attendee, co-host, or host for the event' });
         }
 
     } else {
         res.status(404);
-        res.json({ message: "Event couldn't be found" });
+        return res.json({ message: "Event couldn't be found" });
     }
 });
 
 router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     let event;
     try {
-        event = await Event.findByPk(+req.params.groupId)
+        event = await Event.findByPk(+req.params.eventId)
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" })
     }
     const { user } = req;
     if (event) {
@@ -285,10 +291,10 @@ router.put('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
     let event;
     try {
-        event = await Event.findByPk(+req.params.groupId)
+        event = await Event.findByPk(+req.params.eventId)
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" })
     }
     const errors = {};
     if (event) {
@@ -309,7 +315,7 @@ router.put('/:eventId', requireAuth, async (req, res) => {
                 if (newVenue) {
                     event.venueId = venueId;
                 } else {
-                    errors.venueId = "Venue does not exist"
+                    return res.status(404).json({ message: "Venue couldn't be found" })
                 }
             }
             if (name) event.name = name;
@@ -320,17 +326,25 @@ router.put('/:eventId', requireAuth, async (req, res) => {
             if (startDate) event.startDate = startDate;
             if (endDate) event.endDate = endDate;
 
-            if (Object.keys(errors).length) {
-                res.status(400);
-                return res.json({
-                    message: "Bad Request",
-                    errors
-                })
+            try {
+                await event.validate();
+                await event.save();
+                return res.json(event);
+            } catch (e) {
+                const errorObj = {}
+                if (!Object.keys(e).length) return res.json(safeEvent)
+                for (let err of e.errors) {
+                    if (err.path === 'name') errorObj.name = err.message
+                    if (err.path === 'type') errorObj.type = err.message
+                    if (err.path === 'capacity') errorObj.capacity = err.message
+                    if (err.path === 'price') errorObj.price = err.message
+                    if (err.path === 'description') errorObj.description = "Description is required"
+                    if (err.path === 'private') errorObj.private = err.message
+                    if (err.path === 'startDate') errorObj.startDate = err.message
+                    if (err.path === 'endDate') errorObj.endDate = err.message
+                }
+                return res.status(400).json({ message: 'Bad Request', error: { ...errorObj } })
             }
-            await event.validate();
-            await event.save();
-
-            res.json(event);
         } else {
             res.status(403);
             res.json({ message: "User isn't the organizer or 'co-host' of the group" });
@@ -343,13 +357,16 @@ router.put('/:eventId', requireAuth, async (req, res) => {
 
 });
 
+
 router.put('/:eventId/attendance', requireAuth, async (req, res) => {
     let event;
+
     try {
-        event = await Event.findByPk(+req.params.groupId)
+        event = await Event.findByPk(parseInt(req.params.eventId));
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" });
     }
     if (event) {
         const group = await Group.findByPk(event.groupId);
@@ -371,26 +388,23 @@ router.put('/:eventId/attendance', requireAuth, async (req, res) => {
                     eventId: event.id
                 }
             });
+            const attend = await Attendance.findByPk(1)
+            console.log(attend)
             if (attendance) {
                 const countAttend = await Attendance.count({
                     where: {
                         eventId: event.id
                     }
                 });
-                if (status === 'attending' && countAttend < event.capacity) {
+                if (status !== 'pending' && countAttend < event.capacity) {
                     if (attendance.status === 'pending' || attendance.status === 'waitlist') {
                         attendance.status = status;
                         await attendance.validate();
                         await attendance.save()
-                        res.json({
-                            id: attendance.id,
-                            eventId: event.id,
-                            userId: user.id,
-                            status: attendance.status
-                        });
+                        return res.json(attendance);
                     } else {
                         res.status(400);
-                        res.json({ message: "User is already attending event" });
+                        return res.json({ message: "User is already attending event" });
                     }
                 } else {
                     if (status === 'waitlist') {
@@ -398,48 +412,45 @@ router.put('/:eventId/attendance', requireAuth, async (req, res) => {
                             attendance.status = status;
                             await attendance.validate();
                             await attendance.save()
-                            res.json({
-                                id: attendance.id,
-                                eventId: event.id,
-                                userId: user.id,
-                                status: attendance.status
-                            });
+                            return res.json(attendance);
                         } else {
                             res.status(400);
-                            res.json({ message: "User is already attending or on the waitlist" });
+                            return res.json({ message: "User is already attending or on the waitlist" });
                         }
                     } else {
                         res.status(400);
                         if (status === 'pending') {
-                            res.json({ message: "Cannot change an attendance status to pending" });
+                            return res.json({ message: "Cannot change an attendance status to pending" });
                         } else {
-                            res.json({ message: "Invalid status was sent. May be at capacity and need to apply 'waitlist'." });
+                            return res.json({ message: "Invalid status was sent. May be at capacity and need to apply 'waitlist'." });
 
                         }
                     }
                 }
             } else {
                 res.status(404);
-                res.json({ message: "Attendance between the user and the event does not exist" });
+                return res.json({ message: "Attendance between the user and the event does not exist" });
             }
         } else {
             res.status(403);
-            res.json({ message: "Can only be modified by Organizer or co-host of the group" });
+            return res.json({ message: "Can only be modified by Organizer or co-host of the group" });
         }
     } else {
         res.status(404);
-        res.json({ message: "Event couldn't be found" });
+        return res.json({ message: "Event couldn't be found" });
     }
 });
 
 router.delete('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
     let event;
+
     try {
-        event = await Event.findByPk(+req.params.groupId)
+        event = await Event.findByPk(parseInt(req.params.eventId));
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" });
     }
     if (event) {
         const group = await Group.findByPk(event.groupId);
@@ -453,72 +464,31 @@ router.delete('/:eventId', requireAuth, async (req, res) => {
         if ((memberStatus && memberStatus.status === 'co-host') || group.organizerId === user.id) {
             try {
                 await event.destroy();
-                res.json({ message: `Successfully deleted event of id:[${req.params.eventId}]` });
+                return res.json({ message: `Successfully deleted event of id:[${req.params.eventId}]` });
             } catch (error) {
                 res.status(400);
-                res.json({
+                return res.json({
                     message: "Something went wrong",
                     error: error.message
                 })
             }
         } else {
             res.status(403);
-            res.json({ message: "User is not a co-host or owner of group organizing this event" });
+            return res.json({ message: "User is not a co-host or owner of group organizing this event" });
         }
     } else {
         res.status(404);
-        res.json({ message: "Event couldn't be found" });
+        return res.json({ message: "Event couldn't be found" });
     }
 })
-
-router.delete('/:eventId/attendance', requireAuth, async (req, res) => {
-    let event;
-    try {
-        event = await Event.findByPk(+req.params.groupId)
-    } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
-    }
-    if (event) {
-        const group = await Group.findByPk(event.groupId);
-        const { user } = req;
-        const isOwner = user.id === group.organizerId;
-
-        let { userId, status } = req.body;
-        userId = +userId;
-        const isUser = (userId === user.id);
-        if (isOwner || isUser) {
-            const attendance = await Attendance.findOne({
-                where: {
-                    userId: userId,
-                    eventId: event.id
-                }
-            });
-            if (attendance) {
-                await attendance.destroy();
-                res.json({ message: "Successfully deleted attendance from event" });
-            } else {
-                res.status(404);
-                res.json({ message: "Attendance between the user and the event does not exist" });
-            }
-        } else {
-            res.status(403);
-            res.json({ message: "Can only be deleted by the organizer of the group or the user being deleted" });
-        }
-    } else {
-        res.status(404);
-        res.json({ message: "Event couldn't be found" });
-    }
-});
-
 
 router.delete('/:eventId/images/:imageId', requireAuth, async (req, res) => {
     let event;
     try {
-        event = await Event.findByPk(+req.params.groupId)
+        event = await Event.findByPk(+req.params.eventId)
     } catch (error) {
-        res.status(400)
-        return res.json({ message: 'Bad Request' })
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" })
     }
     if (event) {
 
@@ -542,22 +512,71 @@ router.delete('/:eventId/images/:imageId', requireAuth, async (req, res) => {
             });
             if (image) {
                 await image.destroy();
-                res.json({ message: "Successfully deleted" });
+                return res.json({ message: "Successfully deleted" });
             } else {
                 res.status(404);
-                res.json({ message: "Could not find image" });
+                return res.json({ message: "Could not find image" });
             }
         } else {
             res.status(400);
-            res.json({ message: "Stutus is not high enough for this action" });
+            return res.json({ message: "Stutus is not high enough for this action" });
         }
 
     } else {
         res.status(404);
-        res.json({ message: "Event couldn't be found" });
+        return res.json({ message: "Event couldn't be found" });
     }
 })
 
+router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
+    let event;
 
+    try {
+        event = await Event.findByPk(parseInt(req.params.eventId));
+    } catch (error) {
+
+        res.status(404)
+        return res.json({ message: "Event couldn't be found" });
+    }
+    if (event) {
+        const group = await Group.findByPk(event.groupId);
+        const { user } = req;
+        const isOwner = user.id === group.organizerId;
+        let userId = parseInt(req.params.userId);
+        try {
+            const checkExist = await User.findByPk(userId);
+            if (!checkExist) {
+                res.status(404)
+                return res.json({ message: "User couldn't be found" });
+            }
+        } catch (error) {
+
+            res.status(404)
+            return res.json({ message: "User couldn't be found" });
+        }
+        const isUser = userId === user.id;
+        if (isOwner || isUser) {
+            const attendance = await Attendance.findOne({
+                where: {
+                    userId: userId,
+                    eventId: event.id
+                }
+            });
+            if (attendance) {
+                await attendance.destroy();
+                return res.json({ message: "Successfully deleted attendance from event" });
+            } else {
+                res.status(404);
+                return res.json({ message: "Attendance between the user and the event does not exist" });
+            }
+        } else {
+            res.status(403);
+            return res.json({ message: "Can only be deleted by the organizer of the group or the user being deleted" });
+        }
+    } else {
+        res.status(404);
+        return res.json({ message: "Event couldn't be found" });
+    }
+});
 
 module.exports = router;
