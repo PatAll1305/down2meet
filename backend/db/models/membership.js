@@ -11,10 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Membership.belongsTo(models.Group, {
-        foreignKey: 'groupId'
+        foreignKey: 'groupId',
+        onDelete: 'SET NULL'
       });
       Membership.belongsTo(models.User, {
-        foreignKey: 'userId'
+        foreignKey: 'userId',
+        onDelete: 'SET NULL'
       })
     }
   }
@@ -22,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Groups', key: 'id' }
+      references: { model: 'Groups' }
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Users', key: 'id' }
+      references: { model: 'Users' }
     },
     status: {
       type: DataTypes.ENUM({ values: ['pending', 'member', 'co-host', 'organizer'] }),
