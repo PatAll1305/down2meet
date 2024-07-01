@@ -11,27 +11,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here,
-      Attendance.belongsTo(
-        models.Event, {
-        foreignKey: 'id'
+      Attendance.belongsTo(models.Event, {
+        foreignKey: 'id',
+        onDelete: 'SET NULL'
       })
-      Attendance.belongsTo(
-        models.User,
-        {
-          foreignKey: 'id',
-          onDelete: 'CASCADE'
-        })
+      Attendance.belongsTo(models.User, {
+        foreignKey: 'id',
+        onDelete: 'SET NULL'
+      })
     }
   }
   Attendance.init({
     eventId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Events', foreignKey: 'id' }
+      references: { model: 'Events' }
     },
     userId: {
       type: DataTypes.INTEGER,
-      references: { model: 'Users', foreignKey: 'id' },
+      references: { model: 'Users' },
       allowNull: false
     },
     status: {

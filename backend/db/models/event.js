@@ -20,13 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       });
       Event.belongsTo(models.Venue, {
         foreignKey: 'venueId',
-        onDelete: 'CASCADE'
+        onDelete: 'SET NULL'
       });
       Event.belongsToMany(models.User, {
         through: 'Attendances',
         foreignKey: 'eventId',
         otherKey: 'userId',
-        onDelete: 'CASCADE'
+        onDelete: 'SET NULL'
       });
     }
   }
@@ -35,19 +35,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Groups',
-        key: 'id'
+        model: 'Groups'
       },
-      onDelete: 'SET NULL'
     },
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Venues',
-        key: 'id'
+        model: 'Venues'
       },
-      onDelete: 'CASCADE',
       validate: {
         typeView(value) {
           if (this.type === 'In person' && !value) {
