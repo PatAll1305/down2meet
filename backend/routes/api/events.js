@@ -446,7 +446,7 @@ router.delete('/:eventId', requireAuth, async (req, res) => {
     let event;
 
     try {
-        event = await Event.findByPk(parseInt(req.params.eventId));
+        event = await Event.findByPk(+req.params.eventId);
     } catch (error) {
 
         res.status(404)
@@ -462,16 +462,10 @@ router.delete('/:eventId', requireAuth, async (req, res) => {
                 }
             });
         if ((memberStatus && memberStatus.status === 'co-host') || group.organizerId === user.id) {
-            try {
-                await event.destroy();
-                return res.json({ message: `Successfully deleted event of id:[${req.params.eventId}]` });
-            } catch (error) {
-                res.status(400);
-                return res.json({
-                    message: "Something went wrong",
-                    error: error.message
-                })
-            }
+
+            await event.destroy();
+            return res.json({ message: `Successfully deleted event of id:[${req.params.eventId}]` });
+
         } else {
             res.status(403);
             return res.json({ message: "User is not a co-host or owner of group organizing this event" });

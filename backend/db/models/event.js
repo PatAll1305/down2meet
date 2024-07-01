@@ -15,32 +15,39 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       });
       Event.belongsTo(models.Group, {
-        foreignKey: 'groupId'
+        foreignKey: 'groupId',
+        onDelete: 'SET NULL'
       });
       Event.belongsTo(models.Venue, {
-        foreignKey: 'venueId'
+        foreignKey: 'venueId',
+        onDelete: 'CASCADE'
       });
       Event.belongsToMany(models.User, {
         through: 'Attendances',
-        foreignKey: 'userId',
-        otherKey: 'eventId',
+        foreignKey: 'eventId',
+        otherKey: 'userId',
         onDelete: 'CASCADE'
       });
-      // Event.belongsTo(models.Attendance, {
-      //   foreignKey: 'eventId'
-      // })
     }
   }
   Event.init({
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Groups', key: 'id' }
+      references: {
+        model: 'Groups',
+        key: 'id'
+      },
+      onDelete: 'SET NULL'
     },
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: { model: 'Venues', key: 'id' },
+      references: {
+        model: 'Venues',
+        key: 'id'
+      },
+      onDelete: 'CASCADE',
       validate: {
         typeView(value) {
           if (this.type === 'In person' && !value) {
