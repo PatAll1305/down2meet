@@ -15,19 +15,22 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       });
       Group.hasMany(models.Venue, {
-        foreignKey: 'groupId'
-      })
+        foreignKey: 'groupId',
+        onDelete: "CASCADE"
+      });
       Group.hasMany(models.Event, {
         foreignKey: 'groupId',
         onDelete: 'CASCADE'
-      })
+      });
       Group.belongsToMany(models.User, {
         through: 'Memberships',
-        otherKey: 'groupId',
-        foreignKey: 'userId'
+        otherKey: 'userId',
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE'
       });
       Group.belongsTo(models.User, {
-        foreignKey: 'organizerId'
+        foreignKey: 'id',
+        onDelete: 'CASCADE'
       });
     }
   }
@@ -35,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     organizerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Users', key: 'id' }
+      references: { model: 'Users', foreignKey: 'id' }
     },
     name: {
       type: DataTypes.STRING,

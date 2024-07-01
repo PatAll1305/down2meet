@@ -13,8 +13,6 @@ const {
 const { Op } = require('sequelize');
 const express = require('express')
 const { requireAuth } = require('../../utils/auth');
-const e = require('express');
-const group = require('../../db/models/group');
 
 const router = express.Router();
 
@@ -27,14 +25,14 @@ router.get('/', async (req, res) => {
         where.name = name
     }
     if (type) {
-        if (type.toLowerCase() !== ('in person' || 'online')) {
+        if (type.toLowerCase() !== 'in person' && type.toLowerCase() !== 'online') {
             errors.type = 'type must be "In person" or "Online"'
         } else {
             where.type = type[0].toUpperCase() + type.slice(0)
         }
     }
     if (private) {
-        if (private !== ('true' || 'false')) {
+        if (private !== true && private !== false) {
             errors.private = 'private must be "true" or "false"'
         } else {
             where.private = private
@@ -49,7 +47,6 @@ router.get('/', async (req, res) => {
         }
     }
     if (state) {
-        console.log(state)
         const count = await Group.count({ where: { state: state } })
         if (!count.length) {
             errors.state = 'state does not exist or no groups in state'
@@ -68,19 +65,17 @@ router.get('/', async (req, res) => {
             }
         })
 
-        group.numMembers = await Membership.count({
+        group.dataValues.numMembers = await Membership.count({
             where: {
                 groupId: group.id,
                 status: { [Op.in]: ['member', 'co-host'] }
             }
         });
 
-        group.numMembers += 1;
+        group.dataValues.numMembers += 1;
 
         if (image) {
-            group.previewImage = image.url;
-        } else {
-            group.previewImage = image;
+            group.dataValues.previewImage = image.url;
         }
         results.push(group);
     }
@@ -166,13 +161,17 @@ router.get('/current', requireAuth, async (req, res) => {
         }
     }
 
-    res.json(results);
+    return res.json(results);
 });
 
 router.get('/:groupId', async (req, res) => {
-
-    let group = await Group.findByPk(+req.params.groupId)
-
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    }
     if (group) {
         group = group.toJSON();
 
@@ -207,17 +206,22 @@ router.get('/:groupId', async (req, res) => {
             }
         });
 
-        res.json(group);
+        return res.json(group);
     } else {
-        res.statusCode = 404;
-        res.json({ "message": "Group couldn't be found" })
+        res.status(404);
+        return res.json({ "message": "Group couldn't be found" })
     }
 })
 
 router.get('/:groupId/members', async (req, res) => {
     const { user } = req;
-
-    let group = await Group.findByPk(parseInt(req.params.groupId));
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
 
     let MemberCount = [];
     if (group) {
@@ -268,15 +272,21 @@ router.get('/:groupId/members', async (req, res) => {
             }
         }
 
-        res.json(MemberCount);
+        return res.json(MemberCount);
     } else {
         res.statusCode = 404;
-        res.json({ "message": "Group couldn't be found" })
+        return res.json({ "message": "Group couldn't be found" })
     }
 })
 
 router.get('/:groupId/venues', requireAuth, async (req, res) => {
-    let group = await Group.findByPk(+req.params.groupId);
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(400)
+        return res.json({ message: 'Bad Request' })
+    }
 
     if (group) {
         const { user } = req;
@@ -298,20 +308,23 @@ router.get('/:groupId/venues', requireAuth, async (req, res) => {
             return res.json(venues);
         } else {
             res.status(403);
-            res.json({ message: "User must be the organizer or co-host to view this info" });
+            return res.json({ message: "User must be the organizer or co-host to view this info" });
         }
     } else {
         res.status(404);
-        res.json({ message: "Group couldn't be found" });
+        return res.json({ message: "Group couldn't be found" });
     }
 
 });
 
 router.get('/:groupId/events', async (req, res) => {
-    let group = await Group.findByPk(+req.params.groupId, {
-        attributes: ['id', 'name', 'city', 'state']
-    });
-
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    }
 
     if (group) {
         const events = await Event.findAll({
@@ -355,10 +368,10 @@ router.get('/:groupId/events', async (req, res) => {
             };
             results.push(groupContainer);
         }
-        res.json(results);
+        return res.json(results);
     } else {
         res.status(404);
-        res.json({ message: "Group couldn't be found" })
+        return res.json({ message: "Group couldn't be found" })
     }
 })
 
@@ -366,7 +379,18 @@ router.post('/', requireAuth, async (req, res) => {
     const { user } = req;
 
     const { name, about, type, private, city, state } = req.body;
+    let errors = {}
+    if (!name || name.length > 60) errors.name = "Name must be 60 characters or less"
+    if (!about || about.length < 50) errors.about = "About must be 50 characters or more"
+    if (!type || (type.toLowerCase() !== 'in Person' && type.toLowerCase() !== 'online')) errors.type = "Type must be 'Online' or 'In person'"
+    if (private === null || typeof private !== typeof true) errors.private = "Private must be a boolean"
+    if (!city) errors.city = "City is required"
+    if (!state) errors.state = "State is required"
 
+    if (Object.keys(errors).length) {
+        res.status(400)
+        return res.json({ message: 'Bad Request', errors })
+    }
 
     const group = await Group.create({
         organizerId: user.id,
@@ -382,211 +406,342 @@ router.post('/', requireAuth, async (req, res) => {
 
     const newGroup = await Group.findByPk(group.id)
 
-    res.status(201).json(newGroup)
+    return res.status(201).json(newGroup)
 
 })
 
 router.post('/:groupId/venues', requireAuth, async (req, res) => {
 
     const user = req.user;
-    let group = await Group.findByPk(+req.params.groupId);
-
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
     if (group) {
         if (group.organizerId === user.id) {
-
             const { address, city, state, lat, lng } = req.body;
-            const newVenue = await Venue.create({
-                groupId: group.id,
-                address: address,
-                city: city,
-                state: state,
-                lat: lat,
-                lng: lng
-            }, { validate: true });
-
-            await newVenue.save();
-
-            res.json(newVenue);
-
+            try {
+                const newVenue = await Venue.create({
+                    groupId: group.id,
+                    address: address,
+                    city: city,
+                    state: state,
+                    lat: lat,
+                    lng: lng
+                });
+                await newVenue.validate()
+                await newVenue.save();
+                let safeVenue = {
+                    id: newVenue.id,
+                    groupId: newVenue.groupId,
+                    address: newVenue.address,
+                    city: newVenue.city,
+                    state: newVenue.state,
+                    lat: newVenue.lat,
+                    lng: newVenue.lng
+                };
+                return res.json(safeVenue);
+            } catch (e) {
+                const errorsObj = {};
+                for (let error of e.errors) {
+                    if (error.validatorKey === 'lattitudeCheck' || !lat || lat > 87 || lat < -87) errorsObj.lat = "Latitude is not valid"
+                    if (error.validatorKey === 'longitudeCheck' || !lng || lng > 180 || lng < -180) errorsObj.lng = "Longitude is not valid"
+                    if (error.validatorKey === 'addressCheck' || !address) errorsObj.address = "Street address is required"
+                    if (error.validatorKey === 'cityCheck' || !city) errorsObj.city = "City is required"
+                    if (error.validatorKey === 'stateCheck' || !state) errorsObj.state = "State is required"
+                }
+                return res.status(400).json({ message: 'Bad Request', errors: { ...errorsObj } })
+            }
         } else {
-            let member = await Membership.findOne({
+            let status = await Membership.findOne({
                 where: {
                     groupId: group.id,
                     userId: user.id
                 }
             });
-            if (member) {
-                if (member.status === 'co-host') {
+            if (status) {
+                if (status.status === 'co-host') {
 
-                    const { address, city, state, lat, lng } = req.body;
-                    const newVenue = await Venue.create({
-                        groupId: group.id,
-                        address: address,
-                        city: city,
-                        state: state,
-                        lat: lat,
-                        lng: lng
-                    }, { validate: true });
-
-                    await newVenue.save();
-
-                    res.json(newVenue);
+                    try {
+                        const { address, city, state, lat, lng } = req.body;
+                        const newVenue = await Venue.create({
+                            groupId: group.id,
+                            address: address,
+                            city: city,
+                            state: state,
+                            lat: lat,
+                            lng: lng
+                        });
+                        await newVenue.validate()
+                        await newVenue.save();
+                        let safeVenue = {
+                            id: newVenue.id,
+                            groupId: newVenue.groupId,
+                            address: newVenue.address,
+                            city: newVenue.city,
+                            state: newVenue.state,
+                            lat: newVenue.lat,
+                            lng: newVenue.lng
+                        };
+                        return res.json(safeVenue);
+                    } catch (e) {
+                        const errorsObj = {};
+                        for (let error of e.errors) {
+                            if (error.validatorKey === 'lattitudeCheck' || !lat || lat > 87 || lat < -87) errorsObj.lat = "Latitude is not valid"
+                            if (error.validatorKey === 'longitudeCheck' || !lng || lng > 180 || lng < -180) errorsObj.lng = "Longitude is not valid"
+                            if (error.validatorKey === 'addressCheck' || !address) errorsObj.address = "Street address is required"
+                            if (error.validatorKey === 'cityCheck' || !city) errorsObj.city = "City is required"
+                            if (error.validatorKey === 'stateCheck' || !state) errorsObj.state = "State is required"
+                        }
+                        return res.status(400).json({ message: 'Bad Request', errors: { ...errorsObj } })
+                    }
                 } else {
-                    res.status(400);
-                    return res.json({ message: "User is not a member of this group" });
+                    res.status(403);
+                    return res.json({ message: "User does not have the valid member level" });
                 }
+            } else {
+                res.status(403);
+                return res.json({ message: "User is not a member of this group" });
             }
         }
     } else {
         res.status(404);
-        res.json({ "message": "Group couldn't be found" })
+        return res.json({ "message": "Group couldn't be found" })
     }
 
 });
 
 router.post('/:groupId/events', requireAuth, async (req, res) => {
-    let group = await Group.findByPk(parseInt(req.params.groupId));
-
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
     const { user } = req;
     const errors = {};
 
     if (group) {
         if (group.organizerId === user.id) {
-            const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+            const { venueId, private, name, type, capacity, price, description, startDate, endDate } = req.body;
+            let safeEvent;
+            try {
+                let venue;
+                if (venueId) venue = await Venue.findByPk(venueId);
 
-            let venue;
-            if (venueId) venue = await Venue.findByPk(venueId);
+                if (venue === null) {
+                    errors.venueId = "Venue does not exist";
+                }
 
-            if (venue === null) {
-                errors.venueId = "Venue does not exist";
+                if (Object.keys(errors).length) {
+                    res.status(404);
+                    return res.json({
+                        message: "Bad Request",
+                        errors
+                    })
+                }
+
+                const newEvent = await Event.create({
+                    groupId: group.id,
+                    venueId: venueId,
+                    name: name,
+                    type: type,
+                    capacity: capacity,
+                    price: price,
+                    description: description,
+                    private: private,
+                    startDate: startDate,
+                    endDate: endDate
+                });
+                await newEvent.validate()
+                await newEvent.save();
+                safeEvent = {
+                    id: newEvent.id,
+                    groupId: newEvent.groupId,
+                    venueId: newEvent.venueId,
+                    name: newEvent.name,
+                    type: newEvent.type,
+                    capacity: newEvent.capacity,
+                    price: newEvent.price,
+                    description: newEvent.description,
+                    private: newEvent.private,
+                    startDate: newEvent.startDate,
+                    endDate: newEvent.startDate
+                };
+
+                const newHost = await Attendance.create({
+                    eventId: newEvent.id,
+                    userId: user.id,
+                    status: 'host'
+                });
+                await newHost.validate();
+                await newHost.save();
+
+                return res.json(safeEvent);
+            } catch (error) {
+                const errorObj = {}
+                if (!Object.keys(error).length) return res.json(safeEvent)
+                for (let err of error.errors) {
+                    if (err.path === 'name') errorObj.name = err.message
+                    if (err.path === 'type') errorObj.type = err.message
+                    if (err.path === 'capacity') errorObj.capacity = err.message
+                    if (err.path === 'price') errorObj.price = err.message
+                    if (err.path === 'description') errorObj.description = "Description is required"
+                    if (err.path === 'private') errorObj.private = err.message
+                    if (err.path === 'startDate') errorObj.startDate = err.message
+                    if (err.path === 'endDate') errorObj.endDate = err.message
+                }
+                return res.status(400).json({ message: 'Bad Request', error: { ...errorObj } })
             }
-
-            if (Object.keys(errors).length) {
-                res.status(400);
-                return res.json({
-                    message: "Bad Request",
-                    Errors: errors
-                })
-            }
-
-            const newEvent = await Event.create({
-                groupId: group.id,
-                venueId: venueId,
-                name: name,
-                type: type,
-                capacity: capacity,
-                price: price,
-                description: description,
-                startDate: startDate,
-                endDate: endDate
-            });
-
-            await newEvent.save();
-
-            const newHost = await Attendance.create({
-                eventId: newEvent.id,
-                userId: user.id,
-                status: 'host'
-            }, { validate: true });
-
-            newHost.save();
-
-            res.json(newEvent);
         } else {
-            let member = await Membership.findOne({
+            let status = await Membership.findOne({
                 where: {
                     groupId: group.id,
                     userId: user.id
                 }
             });
-            if (member) {
-                if (member.status === 'co-host') {
+            if (status) {
+                if (status.status === 'co-host') {
                     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+                    try {
+                        let venue;
+                        if (venueId) venue = await Venue.findByPk(venueId);
 
-                    let venue;
-                    if (venueId) venue = await Venue.findByPk(venueId);
+                        if (venue === null) {
+                            errors.venueId = "Venue does not exist";
+                        }
 
-                    if (venue === null) {
-                        errors.venueId = "Venue does not exist";
+                        if (Object.keys(errors).length) {
+                            res.status(404);
+                            return res.json({
+                                message: "Bad Request",
+                                errors
+                            })
+                        }
+
+                        const newEvent = await Event.create({
+                            groupId: group.id,
+                            venueId: venueId,
+                            name: name,
+                            type: type,
+                            capacity: capacity,
+                            price: price,
+                            description: description,
+                            startDate: startDate,
+                            endDate: endDate
+                        });
+                        await newEvent.validate()
+                        await newEvent.save();
+                        const safeEvent = {
+                            id: newEvent.id,
+                            groupId: newEvent.groupId,
+                            venueId: newEvent.venueId,
+                            name: newEvent.name,
+                            type: newEvent.type,
+                            capacity: newEvent.capacity,
+                            price: newEvent.price,
+                            description: newEvent.description,
+                            startDate: newEvent.startDate,
+                            endDate: newEvent.startDate
+                        };
+                        const newHost = await Attendance.create({
+                            eventId: newEvent.id,
+                            userId: user.id,
+                            status: 'host'
+                        }, { validate: true });
+                        await newHost.validate();
+                        await newHost.save();
+                        return res.json(safeEvent);
+                    } catch (error) {
+                        const errorObj = {}
+                        if (!Object.keys(error).length) return res.json(safeEvent)
+                        for (let err of error.errors) {
+                            if (err.path === 'name') errorObj.name = err.message
+                            if (err.path === 'type') errorObj.type = err.message
+                            if (err.path === 'capacity') errorObj.capacity = err.message
+                            if (err.path === 'price') errorObj.price = err.message
+                            if (err.path === 'description') errorObj.description = "Description is required"
+                            if (err.path === 'private') errorObj.private = err.message
+                            if (err.path === 'startDate') errorObj.startDate = err.message
+                            if (err.path === 'endDate') errorObj.endDate = err.message
+                        }
+                        return res.status(400).json({ message: 'Bad Request', error })//: { ...errorObj } })
+
                     }
-
-                    if (Object.keys(errors).length) {
-                        res.status(400);
-                        return res.json({
-                            message: "Bad Request",
-                            Errors: errors
-                        })
-                    }
-
-                    const newEvent = await Event.create({
-                        groupId: group.id,
-                        venueId: venueId,
-                        name: name,
-                        type: type,
-                        capacity: capacity,
-                        price: price,
-                        description: description,
-                        startDate: startDate,
-                        endDate: endDate
-                    });
-                    await newEvent.save();
-
-                    const newHost = await Attendance.create({
-                        eventId: safeEvent.id,
-                        userId: user.id,
-                        status: 'host'
-                    }, { validate: true });
-                    newHost.save();
-
-                    res.json(newEvent);
+                } else {
+                    res.status(403);
+                    return res.json({ message: "Invalid membership level" });
                 }
             } else {
                 res.status(403);
-                res.json({ message: "User is not a member" });
+                return res.json({ message: "User is not a member" });
             }
         }
     } else {
-        res.status(400);
-        res.json({ message: "Group couldn't be found" });
+        res.status(404);
+        return res.json({ message: "Group couldn't be found" });
     }
 });
 
 router.post('/:groupId/images', requireAuth, async (req, res) => {
-
-    let group = await Group.findByPk(+req.params.groupId, {
-        include: { model: GroupImage }
-    });
-    if (!Object.keys(group).length) {
-        res.status(404);
-        return res.json({ "message": "Group couldn't be found" });
-    }
+    const { user } = req;
+    let errors = {}
     const { url, preview } = req.body;
+    if (!url) errors.url = "Must provide a link to the image";
+    if (preview === null || (preview !== true && preview !== false)) errors.preview = "Preview must be a boolean";
+
+    if (Object.keys(errors).length) {
+        res.status(400)
+        return res.json({ message: 'Bad Request', errors })
+    }
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId, {
+            include: { model: GroupImage }
+        })
+        if (!Object.keys(group).length) {
+            res.status(404);
+            return res.json({ "message": "Group couldn't be found" });
+        }
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
 
     if (group) {
-        if (preview === true && group.GroupImages.length) {
-            let images = group.GroupImages;
+        if (group.organizerId === user.id) {
+            if (preview === true && group.GroupImages.length) {
+                let images = group.GroupImages;
 
-            for (let image of images) {
-                if (image.preview) {
-                    let oldImage = await GroupImage.findByPk(image.id);
-                    oldImage.preview = false;
-                    await oldImage.save();
-                    break
+                for (let image of images) {
+                    if (image.preview) {
+                        let oldImage = await GroupImage.findByPk(image.id);
+                        oldImage.preview = false;
+                        await oldImage.save();
+                        break
+                    };
                 };
             };
-        };
-        let newImage = await GroupImage.create({
-            url: url,
-            preview: preview,
-            groupId: group.id
-        }, { validate: true });
 
-        await newImage.save();
+            let newImage = await GroupImage.create({
+                url: url,
+                preview: preview,
+                groupId: group.id
+            }, { validate: true });
 
-        res.json({ ...newImage.toJSON() });
+            await newImage.save();
+
+            return res.json({ ...newImage.toJSON() });
+        } else {
+            return res.status(401).json({ message: 'Not authorized for this action' })
+        }
     } else {
         res.status(404);
-        res.json({ message: "Group couldn't be found" });
+        return res.json({ message: "Group couldn't be found" });
     }
 
 
@@ -613,36 +768,38 @@ router.post('/:groupId/membership', requireAuth, async (req, res) => {
                     status: "pending"
                 }, { validate: true });
                 await newMembership.save();
-                res.json({
+                return res.json({
                     userId: newMembership.userId,
                     status: newMembership.status
                 });
             } else {
                 res.status(400);
                 if (membershipCheck.status === 'pending') {
-                    res.json({ message: "Membership has already been requested" })
+                    return res.json({ message: "Membership has already been requested" })
                 } else {
-                    res.json({ message: "User is already a member of the group" })
+                    return res.json({ message: "User is already a member of the group" })
                 }
             }
         } else {
             res.status(403);
-            res.json({ message: "User is the organizer/owner of the group!" })
+            return res.json({ message: "User is the organizer/owner of the group!" })
         }
     } else {
         res.status(404);
-        res.json({ message: "Group couldn't be found" })
+        return res.json({ message: "Group couldn't be found" })
     }
 });
 
-router.put('/:groupId/members/', requireAuth, async (req, res) => {
+router.put('/:groupId/membership/', requireAuth, async (req, res) => {
     const { user } = req;
-    const { userId, status } = req.body;
-    let group = Group.findOne({
-        where: {
-            id: +req.params.groupId
-        }
-    })
+    const { memberId, status } = req.body;
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
 
     if (status === 'pending') {
         res.status(400)
@@ -683,18 +840,18 @@ router.put('/:groupId/members/', requireAuth, async (req, res) => {
                 })
                 organizerMembership.status = 'co-host'
             }
-            const newMember = await Membership.findOne(
-                {
+            const newMember = await Membership.findOne({
+                where: {
                     groupId: group.id,
-                    userId: userId
+                    userId: memberId
                 }
-            )
+            })
             if (!newMember) {
                 res.status(404)
                 return res.json({
                     "message": "Validation Error",
                     "errors": {
-                        "memberId": "User couldn't be found"
+                        "userId": "User couldn't be found"
                     }
                 })
             }
@@ -723,7 +880,13 @@ router.put('/:groupId', requireAuth, async (req, res) => {
     const { user } = req;
 
     const { name, about, type, private, city, state } = req.body;
-    let group = await Group.findByPk(+req.params.groupId);
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
     if (group && group.organizerId === user.id) {
         if (name) group.name = name;
         if (about) group.about = about;
@@ -731,47 +894,68 @@ router.put('/:groupId', requireAuth, async (req, res) => {
         if (private) group.private = private;
         if (city) group.city = city;
         if (state) group.state = state;
+        try {
+            await group.validate();
+            await group.save();
 
-        await group.validate();
-        await group.save();
+        } catch (error) {
+            res.status(400)
+            const errorObj = {}
+            for (let err of error.errors) {
+                if (err.path === 'name') errorObj.name = err.message
+                if (err.path === 'about') errorObj.about = err.message
+                if (err.path === 'type') errorObj.type = err.message
+                if (err.path === 'private') errorObj.private = err.message
+                if (err.path === 'city' || (city !== null && city.length < 1)) errorObj.city = "City is required"
+                if (err.path === 'state' || (state !== null && state.length < 1)) errorObj.state = "State is required"
+            }
+            return res.status(400).json({ message: 'Bad Request', errors: { ...errorObj } })
+        }
 
-        res.json({ ...group.toJSON() })
+        return res.json({ ...group.toJSON() })
 
     } else {
         if (!group) {
             res.status(404);
-            res.json({ message: "Group couldn't be found" });
+            return res.json({ message: "Group couldn't be found" });
         } else {
             res.status(403);
-            res.json({ message: "Not the owner of this group" });
+            return res.json({ message: "Not the owner of this group" });
         }
     }
 });
 
 router.delete('/:groupId', requireAuth, async (req, res) => {
     const { user } = req;
-
-
-    let group = await Group.findByPk(+req.params.groupId);
-
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
+    if (!group) {
+        res.status(404);
+        return res.json({ message: "Group couldn't be found" });
+    }
 
     if (group && group.organizerId === user.id) {
         await group.destroy();
-        res.json({ message: "Successfully deleted" })
+        return res.json({ message: "Successfully deleted" })
     } else {
-        if (!group) {
-            res.status(404);
-            res.json({ message: "Group couldn't be found" });
-        } else {
-            res.status(400);
-            res.json({ message: "Not the owner of this group" });
-        }
+        res.status(400);
+        return res.json({ message: "Not the owner of this group" });
     };
 });
 
-router.delete('/:groupId/membership', requireAuth, async (req, res) => {
-
-    let group = await Group.findByPk(+req.params.groupId);
+router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res) => {
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
 
     const { user } = req
     if (group) {
@@ -786,22 +970,22 @@ router.delete('/:groupId/membership', requireAuth, async (req, res) => {
                 });
                 if (member) {
                     await member.destroy();
-                    res.json({ message: "Successfully deleted membership from group" });
+                    return res.json({ message: "Successfully deleted membership from group" });
                 } else {
                     res.status(404);
-                    res.json({ message: "No membership found for the user with this group" });
+                    return res.json({ message: "No membership found for the user with this group" });
                 }
             } else {
                 res.status(400);
-                res.json({ message: "User could not be found" });
+                return res.json({ message: "User could not be found" });
             }
         } else {
             res.status(403);
-            res.json({ message: "Must be organizer of group or referred user to remove from group" });
+            return res.json({ message: "Must be organizer of group or referred user to remove from group" });
         }
     } else {
         res.status(404);
-        res.json({ message: "Group couldn't be found" });
+        return res.json({ message: "Group couldn't be found" });
     }
 })
 
@@ -813,8 +997,13 @@ router.delete('/:groupId/images/:imageId', requireAuth, async (req, res) => {
             groupId: +req.params.groupId
         }
     });
-
-    let group = await group.findByPk(+req.params.groupId)
+    let group;
+    try {
+        group = await Group.findByPk(+req.params.groupId)
+    } catch (error) {
+        res.status(404)
+        return res.json({ "message": "Group couldn't be found" })
+    };
 
     const { user } = req
     if (image) {
@@ -836,12 +1025,12 @@ router.delete('/:groupId/images/:imageId', requireAuth, async (req, res) => {
                 return res.json({ message: "Successfully deleted" });
             } else {
                 res.status(400);
-                res.json({ message: "Status is not high enough for this action" });
+                return res.json({ message: "Status is not high enough for this action" });
             };
         }
     } else {
         res.status(404)
-        return res.json({ message: 'Group Imagage could not be found' })
+        return res.json({ message: 'Group Image could not be found' })
     }
 })
 
