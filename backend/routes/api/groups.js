@@ -948,44 +948,69 @@ router.delete('/:groupId', requireAuth, async (req, res) => {
     };
 });
 
-router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res) => {
+router.delete('/:groupId/membership/:userId', requireAuth, async (req, res) => {
     let group;
     try {
-        group = await Group.findByPk(+req.params.groupId)
+        group = await Group.findByPk(+req.params.groupId);
     } catch (error) {
-        res.status(404)
-        return res.json({ "message": "Group couldn't be found" })
-    };
-
-    const { user } = req
+        res.status(404);
+        res.json({ "message": "Group couldn't be found" });
+    }
+    const { user } = req;
+    let { userId } = req.params;
     if (group) {
-        if (group.organizerId === +user.id) {
-            const removeUser = await User.findByPk(+user.id);
+        try {
+            const checkExist = await User.findByPk(+userId);
+            if (!checkExist) {
+                res.status(404);
+                return res.json({ message: "User couldn't be found" });
+            }
+        } catch (error) {
+            res.status(404);
+            return res.json({ message: "User couldn't be found" });
+        }
+
+        if (group.organizerId === user.id) {
+            const removeUser = await User.findByPk(+userId);
             if (removeUser) {
-                const member = await Membership.findOne({
+                const membership = await Membership.findOne({
                     where: {
                         groupId: group.id,
                         userId: removeUser.id
                     }
                 });
-                if (member) {
-                    await member.destroy();
-                    return res.json({ message: "Successfully deleted membership from group" });
+                if (membership) {
+                    await membership.destroy();
+                    res.json({ message: "Successfully deleted membership from group" });
                 } else {
                     res.status(404);
-                    return res.json({ message: "No membership found for the user with this group" });
+                    res.json({ message: "No membership is held for the user with this group" });
                 }
             } else {
                 res.status(400);
-                return res.json({ message: "User could not be found" });
+                res.json({ message: "Bad Message", errors: { userId: "User couldn't be found" } });
+            }
+        } else if (parseInt(userId) === user.id) {
+            const membership = await Membership.findOne({
+                where: {
+                    groupId: group.id,
+                    userId: user.id
+                }
+            });
+            if (membership) {
+                await membership.destroy();
+                res.json({ message: "Successfully deleted membership from group" });
+            } else {
+                res.status(404);
+                res.json({ message: "No membership is held for the user with this group" });
             }
         } else {
             res.status(403);
-            return res.json({ message: "Must be organizer of group or referred user to remove from group" });
+            res.json({ message: "Must be organizer of group or referred user to remove from group" });
         }
     } else {
         res.status(404);
-        return res.json({ message: "Group couldn't be found" });
+        res.json({ message: "Group couldn't be found" });
     }
 })
 
