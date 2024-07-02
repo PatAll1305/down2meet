@@ -247,10 +247,10 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
 router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     let event;
     try {
-        event = await Event.findByPk(+req.params.eventId)
+        event = await Event.findByPk(+req.params.eventId);
     } catch (error) {
         res.status(404)
-        return res.json({ message: "Event couldn't be found" })
+        return res.json({ message: "Event couldn't be found" });
     }
     const { user } = req;
     if (event) {
@@ -264,11 +264,29 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
             if (attendance.status === 'host') {
                 res.status(403)
                 res.json({ message: "User is the host of the event" });
+            } else if (attendance.status !== 'pending') {
+                res.status(400)
+                res.json({ message: "User is already an attendee of the event" });
             } else {
                 res.status(400)
                 res.json({ message: "Attendance has already been requested" });
             }
         } else {
+            const group = await Group.findByPk(event.groupId);
+            const membership = await Membership.findOne(
+                {
+                    where: {
+                        userId: user.id,
+                        status: {
+                            [Op.in]: ['member', 'co-host']
+                        }
+                    }
+                }
+            );
+            if (!membership && user.id !== group.organizerId) {
+                res.status(403);
+                return res.json({ message: "Not a member of the group" })
+            }
             const attendInfo = {
                 userId: user.id,
                 eventId: event.id,
@@ -287,6 +305,7 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     }
 });
 
+
 router.put('/:eventId', requireAuth, async (req, res) => {
     const { user } = req;
     let event;
@@ -296,7 +315,6 @@ router.put('/:eventId', requireAuth, async (req, res) => {
         res.status(404)
         return res.json({ message: "Event couldn't be found" })
     }
-    const errors = {};
     if (event) {
         const group = await Group.findByPk(event.groupId);
         const status = await Membership.findOne({
@@ -360,11 +378,9 @@ router.put('/:eventId', requireAuth, async (req, res) => {
 
 router.put('/:eventId/attendance', requireAuth, async (req, res) => {
     let event;
-
     try {
         event = await Event.findByPk(parseInt(req.params.eventId));
     } catch (error) {
-
         res.status(404)
         return res.json({ message: "Event couldn't be found" });
     }
@@ -388,8 +404,6 @@ router.put('/:eventId/attendance', requireAuth, async (req, res) => {
                     eventId: event.id
                 }
             });
-            const attend = await Attendance.findByPk(1)
-            console.log(attend)
             if (attendance) {
                 const countAttend = await Attendance.count({
                     where: {
@@ -524,11 +538,9 @@ router.delete('/:eventId/images/:imageId', requireAuth, async (req, res) => {
 
 router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
     let event;
-
     try {
         event = await Event.findByPk(parseInt(req.params.eventId));
     } catch (error) {
-
         res.status(404)
         return res.json({ message: "Event couldn't be found" });
     }
@@ -544,7 +556,6 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
                 return res.json({ message: "User couldn't be found" });
             }
         } catch (error) {
-
             res.status(404)
             return res.json({ message: "User couldn't be found" });
         }
@@ -556,6 +567,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
                     eventId: event.id
                 }
             });
+            console.log(attendance)
             if (attendance) {
                 await attendance.destroy();
                 return res.json({ message: "Successfully deleted attendance from event" });

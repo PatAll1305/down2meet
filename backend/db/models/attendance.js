@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here,
       Attendance.belongsTo(models.Event, {
-        foreignKey: 'id',
+        foreignKey: 'eventId',
         onDelete: 'SET NULL'
       })
       Attendance.belongsTo(models.User, {
-        foreignKey: 'id',
+        foreignKey: 'userId',
         onDelete: 'SET NULL'
       })
     }
@@ -25,11 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     eventId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Events' }
     },
     userId: {
       type: DataTypes.INTEGER,
-      references: { model: 'Users' },
       allowNull: false
     },
     status: {
@@ -43,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Attendance',
     defaultScope: {
       attributes: {
-        exclude: ['id', 'createdAt', 'updatedAt']
+        exclude: ['createdAt', 'updatedAt']
       }
     }
   });

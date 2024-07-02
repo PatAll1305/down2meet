@@ -17,12 +17,10 @@ module.exports = {
       eventId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'Events' }
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'Users' }
       },
       status: {
         type: Sequelize.ENUM({ values: ['host', 'co-host', 'attending', 'pending', 'waitlist'] }),

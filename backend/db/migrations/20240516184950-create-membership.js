@@ -17,11 +17,9 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'Users' }
       },
       groupId: {
         allowNull: false,
-        references: { model: 'Groups' },
         type: Sequelize.INTEGER
       },
       status: {

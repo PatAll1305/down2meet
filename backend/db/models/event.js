@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         through: 'Attendances',
         foreignKey: 'eventId',
         otherKey: 'userId',
-        onDelete: 'SET NULL'
+        onDelete: 'CASCADE'
       });
     }
   }
@@ -34,16 +34,10 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'Groups'
-      },
     },
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {
-        model: 'Venues'
-      },
       validate: {
         typeView(value) {
           if (this.type === 'In person' && !value) {
