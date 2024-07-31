@@ -585,17 +585,20 @@ router.post('/:groupId/events', requireAuth, async (req, res) => {
             } catch (error) {
                 const errorObj = {}
                 if (!Object.keys(error).length) return res.json(safeEvent)
-                for (let err of error.errors) {
-                    if (err.path === 'name') errorObj.name = err.message
-                    if (err.path === 'type') errorObj.type = err.message
-                    if (err.path === 'capacity') errorObj.capacity = err.message
-                    if (err.path === 'price') errorObj.price = err.message
-                    if (err.path === 'description') errorObj.description = "Description is required"
-                    if (err.path === 'private') errorObj.private = err.message
-                    if (err.path === 'startDate') errorObj.startDate = err.message
-                    if (err.path === 'endDate') errorObj.endDate = err.message
+                if (Object.keys(error.errors).length) {
+                    for (let err of error.errors) {
+                        if (err.path === 'name') errorObj.name = err.message
+                        if (err.path === 'type') errorObj.type = err.message
+                        if (err.path === 'capacity') errorObj.capacity = err.message
+                        if (err.path === 'price') errorObj.price = err.message
+                        if (err.path === 'description') errorObj.description = "Description is required"
+                        if (err.path === 'private') errorObj.private = err.message
+                        if (err.path === 'startDate') errorObj.startDate = err.message
+                        if (err.path === 'endDate') errorObj.endDate = err.message
+                    }
+                    return res.status(400).json({ message: 'Bad Request', error: { ...errorObj } })
                 }
-                return res.status(400).json({ message: 'Bad Request', error: { ...errorObj } })
+                return res.status(400).json({ message: 'Bad Request', error })
             }
         } else {
             let status = await Membership.findOne({
@@ -659,18 +662,20 @@ router.post('/:groupId/events', requireAuth, async (req, res) => {
                     } catch (error) {
                         const errorObj = {}
                         if (!Object.keys(error).length) return res.json(safeEvent)
-                        for (let err of error.errors) {
-                            if (err.path === 'name') errorObj.name = err.message
-                            if (err.path === 'type') errorObj.type = err.message
-                            if (err.path === 'capacity') errorObj.capacity = err.message
-                            if (err.path === 'price') errorObj.price = err.message
-                            if (err.path === 'description') errorObj.description = "Description is required"
-                            if (err.path === 'private') errorObj.private = err.message
-                            if (err.path === 'startDate') errorObj.startDate = err.message
-                            if (err.path === 'endDate') errorObj.endDate = err.message
+                        if (Object.keys(error.errors).length) {
+                            for (let err of error.errors) {
+                                if (err.path === 'name') errorObj.name = err.message
+                                if (err.path === 'type') errorObj.type = err.message
+                                if (err.path === 'capacity') errorObj.capacity = err.message
+                                if (err.path === 'price') errorObj.price = err.message
+                                if (err.path === 'description') errorObj.description = "Description is required"
+                                if (err.path === 'private') errorObj.private = err.message
+                                if (err.path === 'startDate') errorObj.startDate = err.message
+                                if (err.path === 'endDate') errorObj.endDate = err.message
+                            }
+                            return res.status(400).json({ message: 'Bad Request', error: { ...errorObj } })
                         }
-                        return res.status(400).json({ message: 'Bad Request', error })//: { ...errorObj } })
-
+                        return res.status(400).json({ message: 'Bad Request', error })
                     }
                 } else {
                     res.status(403);
@@ -901,15 +906,18 @@ router.put('/:groupId', requireAuth, async (req, res) => {
         } catch (error) {
             res.status(400)
             const errorObj = {}
-            for (let err of error.errors) {
-                if (err.path === 'name') errorObj.name = err.message
-                if (err.path === 'about') errorObj.about = err.message
-                if (err.path === 'type') errorObj.type = err.message
-                if (err.path === 'private') errorObj.private = err.message
-                if (err.path === 'city' || (city !== null && city.length < 1)) errorObj.city = "City is required"
-                if (err.path === 'state' || (state !== null && state.length < 1)) errorObj.state = "State is required"
+            if (Object.keys(error.errors).length) {
+                for (let err of error.errors) {
+                    if (err.path === 'name') errorObj.name = err.message
+                    if (err.path === 'about') errorObj.about = err.message
+                    if (err.path === 'type') errorObj.type = err.message
+                    if (err.path === 'private') errorObj.private = err.message
+                    if (err.path === 'city' || (city !== null && city.length < 1)) errorObj.city = "City is required"
+                    if (err.path === 'state' || (state !== null && state.length < 1)) errorObj.state = "State is required"
+                }
+                return res.status(400).json({ message: 'Bad Request', errors: { ...errorObj } })
             }
-            return res.status(400).json({ message: 'Bad Request', errors: { ...errorObj } })
+            res.status(400).json({ message: 'Bad Request', error })
         }
 
         return res.json({ ...group.toJSON() })
