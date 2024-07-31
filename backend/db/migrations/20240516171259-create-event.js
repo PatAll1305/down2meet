@@ -39,8 +39,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       price: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0
+        type: Sequelize.FLOAT,
+        defaultValue: 0.0
       },
       startDate: {
         allowNull: false,
