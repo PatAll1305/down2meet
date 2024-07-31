@@ -209,7 +209,6 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
         const isAble = attendStatus ? attendStatus.status.toLowerCase() === 'host' ||
             attendStatus.status.toLowerCase() === 'co-host' ||
             attendStatus.status.toLowerCase() === 'attending' : false;
-        console.log(user, attendStatus)
         if (isAble) {
             if (preview === true) {
                 let oldImage = await EventImage.findOne({
@@ -567,7 +566,6 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
                     eventId: event.id
                 }
             });
-            console.log(attendance)
             if (attendance) {
                 await attendance.destroy();
                 return res.json({ message: "Successfully deleted attendance from event" });

@@ -23,14 +23,18 @@ const validateLogin = [
 // Log in
 router.post('/', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
-
-    if (!credential || !password) {
-        const err = new Error('Login failed');
-        err.status = 400;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided credentials were invalid.' };
-        return next(err);
+    let errors = {}
+    if (!credential) {
+        errors.credential = 'Email or username is required'
     }
+    if (!password) {
+        errors.credential = 'Password is required'
+    }
+
+    if (Object.keys(errors).length) {
+        return res.status(400).json({ message: "Bad Reques", errors })
+    }
+
 
     const user = await User.findOne({
         where: {
@@ -44,29 +48,22 @@ router.post('/', validateLogin, async (req, res, next) => {
     if (user) {
 
         if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-            const err = new Error('Login failed');
-            err.status = 401;
-            err.title = 'Login failed';
-            err.errors = { credential: 'The provided credentials were invalid.' };
-            return next(err);
+            return res.status(401).json({ message: 'Invalid credentials.' });
         }
     } else {
-        res.status(404)
-        return res.json({ Error: 'could not find user' })
+        return res.status(404).json({ Error: 'could not find user' })
     }
 
-    const safeUser = {
-        id: user.id,
-        fistName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-    };
-
-    await setTokenCookie(res, safeUser);
+    await setTokenCookie(res, user);
 
     return res.json({
-        user: safeUser
+        user: {
+            id: user.id,
+            firstname: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username
+        }
     });
 });
 
@@ -79,17 +76,19 @@ router.delete(
     }
 );
 
-router.get(
-    '/',
-    requireAuth,
-    (req, res) => {
-        const { user } = req;
-        if (user) {
-
-            return res.json({
-                user: user
-            });
-        } else return res.json({ user: null });
-    }
+router.get('/', (req, res) => {
+    const { user } = req;
+    if (user) {
+        return res.json({
+            user: {
+                id: user.id,
+                firstname: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                username: user.username
+            }
+        });
+    } else return res.json({ user: null });
+}
 );
 module.exports = router;
