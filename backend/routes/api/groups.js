@@ -585,7 +585,7 @@ router.post('/:groupId/events', requireAuth, async (req, res) => {
             } catch (error) {
                 const errorObj = {}
                 if (!Object.keys(error).length) return res.json(safeEvent)
-                if (Object.keys(error.errors).length) {
+                if (error.errors) {
                     for (let err of error.errors) {
                         if (err.path === 'name') errorObj.name = err.message
                         if (err.path === 'type') errorObj.type = err.message
@@ -662,7 +662,7 @@ router.post('/:groupId/events', requireAuth, async (req, res) => {
                     } catch (error) {
                         const errorObj = {}
                         if (!Object.keys(error).length) return res.json(safeEvent)
-                        if (Object.keys(error.errors).length) {
+                        if (error.errors) {
                             for (let err of error.errors) {
                                 if (err.path === 'name') errorObj.name = err.message
                                 if (err.path === 'type') errorObj.type = err.message
@@ -906,7 +906,7 @@ router.put('/:groupId', requireAuth, async (req, res) => {
         } catch (error) {
             res.status(400)
             const errorObj = {}
-            if (Object.keys(error.errors).length) {
+            if (error.errors) {
                 for (let err of error.errors) {
                     if (err.path === 'name') errorObj.name = err.message
                     if (err.path === 'about') errorObj.about = err.message
