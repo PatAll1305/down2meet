@@ -107,7 +107,6 @@ router.get('/:eventId', async (req, res) => {
                 { model: Venue }
             ]
         })
-        const count = await Event.count()
     } catch (error) {
         res.status(404)
         return res.json({ message: "Event couldn't be found" })
@@ -147,7 +146,12 @@ router.get('/:eventId/attendees', async (req, res) => {
                         eventId: event.id,
                         status: { [Op.in]: ['pending', 'waitlist', 'attending', 'co-host', 'host'] }
                     },
-                    include: [{ model: User }]
+                    include: [{
+                        model: User,
+                        attributes: {
+                            exclude: ['hashedPassword', 'createdAt', 'updatedAt']
+                        }
+                    }]
                 });
 
                 res.json(attendees);
@@ -157,7 +161,12 @@ router.get('/:eventId/attendees', async (req, res) => {
                         eventId: event.id,
                         status: { [Op.in]: ['waitlist', 'attending', 'co-host', 'host'] }
                     },
-                    include: { model: User }
+                    include: {
+                        model: User,
+                        attributes: {
+                            exclude: ['hashedPassword', 'createdAt', 'updatedAt']
+                        }
+                    }
                 });
 
                 return res.json(attendees);
@@ -165,10 +174,15 @@ router.get('/:eventId/attendees', async (req, res) => {
         } else {
             const attendees = await Attendance.findAll({
                 where: {
-                    eventId: eventId,
+                    eventId: event.id,
                     status: { [Op.in]: ['attending', 'co-host', 'host'] }
                 },
-                include: { model: User }
+                include: {
+                    model: User,
+                    attributes: {
+                        exclude: ['hashedPassword', 'createdAt', 'updatedAt']
+                    }
+                }
             })
             return res.json(attendees);
         }

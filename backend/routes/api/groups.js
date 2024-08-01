@@ -198,7 +198,11 @@ router.get('/:groupId', async (req, res) => {
         group.GroupImages = imagePreview;
 
 
-        group.Organizer = await User.findByPk(group.organizerId);
+        group.Organizer = await User.findByPk(group.organizerId, {
+            attributes: {
+                exclude: ['hashedPassword']
+            }
+        });
 
         group.Venues = await Venue.findAll({
             where: {
@@ -227,7 +231,12 @@ router.get('/:groupId/members', async (req, res) => {
     if (group) {
         if (user && group.organizerId === user.id) {
             let memberCount = await Membership.findAll({
-                include: { model: User },
+                include: {
+                    model: User,
+                    attributes: {
+                        exclude: ['hashedPassword', 'createdAt', 'updatedAt']
+                    }
+                },
                 attributes: ['status'],
                 where: {
                     groupId: group.id
@@ -248,7 +257,10 @@ router.get('/:groupId/members', async (req, res) => {
         } else {
             let memberCount = await Membership.findAll({
                 include: {
-                    model: User
+                    model: User,
+                    attributes: {
+                        exclude: ['hashedPassword', 'createdAt', 'updatedAt']
+                    }
                 },
                 attributes: ['status'],
                 where: {
