@@ -21,18 +21,18 @@ const validateLogin = [
 ];
 
 // Log in
-router.post('/', validateLogin, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     const { credential, password } = req.body;
     let errors = {}
     if (!credential) {
         errors.credential = 'Email or username is required'
     }
     if (!password) {
-        errors.credential = 'Password is required'
+        errors.password = 'Password is required'
     }
 
     if (Object.keys(errors).length) {
-        return res.status(400).json({ message: "Bad Reques", errors })
+        return res.status(400).json({ message: "Bad Request", errors })
     }
 
 

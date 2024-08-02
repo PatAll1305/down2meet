@@ -58,13 +58,13 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     type: {
-      type: DataTypes.ENUM({ values: ['Online', 'In person'] }),
+      type: DataTypes.ENUM({ values: ['Online', 'In Person'] }),
       allowNull: false,
       validate: {
         typeCheck(value) {
-          let types = ['Online', 'In person']
+          let types = ['Online', 'In Person']
           if (!types.includes(value)) {
-            throw new Error('Type must be Online or In person');
+            throw new Error('Type must be Online or In Person');
           }
         }
       }

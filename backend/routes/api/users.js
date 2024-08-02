@@ -27,29 +27,45 @@ const validateSignup = [
     handleValidationErrors
 ];
 // Sign up
-router.post('/', validateSignup, async (req, res) => {
+router.post('/', async (req, res) => {
     const { email, password, username, firstName, lastName } = req.body;
     const checkUserEmail = await User.findAll({ where: { email: email } })
     const checkUserUsername = await User.findAll({ where: { username: username } })
     const errors = {}
+    let message;
 
-    if (!firstName) {
+    if (!firstName || firstName.length === 0) {
         errors.firstName = "First Name is required"
         res.status(400)
     }
-    if (!lastName) {
+    if (!lastName || lastName.length === 0) {
         errors.lastName = "Last Name is required"
+        res.status(400)
+    }
+    if (!email) {
+        errors.email = "Invalid email"
+        res.status(400)
+    }
+    if (!username) {
+        errors.username = "Username is required"
+        res.status(400)
+    }
+    if (!password) {
+        errors.password = "Password is required"
         res.status(400)
     }
     if (Object.keys(checkUserEmail).length) {
         errors.email = 'The provided email is in use.';
+        message = 'User already exists'
         res.status(500)
     }
     if (Object.keys(checkUserUsername).length) {
         errors.username = 'The provided username is in use.'
+        message = 'User already exists'
         res.status(500)
     };
-    if (Object.keys(errors).length) return res.json({ message: 'User already exists', errors });
+    message = 'Bad Request'
+    if (Object.keys(errors).length) return res.json({ message, errors });
 
 
     const user = await User.create({
@@ -67,6 +83,7 @@ router.post('/', validateSignup, async (req, res) => {
 
     return res.status(200).json({
         user: {
+            id: user.id,
             firstname: user.firstName,
             lastName: user.lastName,
             email: user.email,

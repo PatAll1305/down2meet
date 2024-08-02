@@ -23,6 +23,7 @@ router.get('/', async (req, res) => {
     let { page, size } = req.query;
     page = +page;
     size = +size;
+    const errors = {};
 
     if (page < 1) errors.page = "Page must be greater than or equal to 1"
     if (size < 1) errors.size = "Size must be greater than or equal to 1"
@@ -32,8 +33,6 @@ router.get('/', async (req, res) => {
 
     params.limit = size;
     params.offset = size * (page - 1);
-
-    const errors = {};
 
     const where = {};
 
@@ -79,6 +78,26 @@ router.get('/', async (req, res) => {
             errors: { ...errors }
         })
     }
+    const attendanceCounter = async (event) => {
+        return await Attendance.count({
+            where: {
+                eventId: event.id
+            }
+        })
+    }
+
+    const previewImage = async (event) => {
+        let image = await EventImage.findOne({
+            where: {
+                eventId: event.id,
+                preview: true
+            }
+        })
+        if (image) {
+            return image.url
+        }
+        return false
+    }
 
     const events = await Event.findAll({
         where,
@@ -89,6 +108,11 @@ router.get('/', async (req, res) => {
         ]
 
     });
+
+    for (const event of events) {
+        event.dataValues.numAttending = await attendanceCounter(event)
+        event.dataValues.previewImage = await previewImage(event)
+    }
 
     return res.json({
         Events: events,
@@ -145,13 +169,7 @@ router.get('/:eventId/attendees', async (req, res) => {
                     where: {
                         eventId: event.id,
                         status: { [Op.in]: ['pending', 'waitlist', 'attending', 'co-host', 'host'] }
-                    },
-                    include: [{
-                        model: User,
-                        attributes: {
-                            exclude: ['hashedPassword', 'createdAt', 'updatedAt']
-                        }
-                    }]
+                    }
                 });
 
                 res.json(attendees);
@@ -160,31 +178,19 @@ router.get('/:eventId/attendees', async (req, res) => {
                     where: {
                         eventId: event.id,
                         status: { [Op.in]: ['waitlist', 'attending', 'co-host', 'host'] }
-                    },
-                    include: {
-                        model: User,
-                        attributes: {
-                            exclude: ['hashedPassword', 'createdAt', 'updatedAt']
-                        }
                     }
                 });
 
-                return res.json(attendees);
+                return res.json({ Attendees: attendees });
             }
         } else {
             const attendees = await Attendance.findAll({
                 where: {
                     eventId: event.id,
                     status: { [Op.in]: ['attending', 'co-host', 'host'] }
-                },
-                include: {
-                    model: User,
-                    attributes: {
-                        exclude: ['hashedPassword', 'createdAt', 'updatedAt']
-                    }
                 }
             })
-            return res.json(attendees);
+            return res.json({ Attendees: attendees });
         }
 
     } else {
@@ -247,7 +253,7 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
             return res.json(newImage);
 
         } else {
-            res.status(400);
+            res.status(403);
             return res.json({ message: 'Unable to add image to event, not an Attendee, co-host, or host for the event' });
         }
 

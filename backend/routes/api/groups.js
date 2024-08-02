@@ -161,7 +161,7 @@ router.get('/current', requireAuth, async (req, res) => {
         }
     }
 
-    return res.json(results);
+    return res.json({ Groups: results });
 });
 
 router.get('/:groupId', async (req, res) => {
@@ -284,7 +284,7 @@ router.get('/:groupId/members', async (req, res) => {
             }
         }
 
-        return res.json(MemberCount);
+        return res.json({ Members: MemberCount });
     } else {
         res.statusCode = 404;
         return res.json({ "message": "Group couldn't be found" })
@@ -317,7 +317,7 @@ router.get('/:groupId/venues', requireAuth, async (req, res) => {
                 }
             });
 
-            return res.json(venues);
+            return res.json({ Venues: venues });
         } else {
             res.status(403);
             return res.json({ message: "User must be the organizer or co-host to view this info" });
@@ -380,7 +380,7 @@ router.get('/:groupId/events', async (req, res) => {
             };
             results.push(groupContainer);
         }
-        return res.json(results);
+        return res.json({ Events: results });
     } else {
         res.status(404);
         return res.json({ message: "Group couldn't be found" })
@@ -754,7 +754,7 @@ router.post('/:groupId/images', requireAuth, async (req, res) => {
 
             return res.json({ ...newImage.toJSON() });
         } else {
-            return res.status(401).json({ message: 'Not authorized for this action' })
+            return res.status(403).json({ message: 'Not authorized for this action' })
         }
     } else {
         res.status(404);
@@ -866,8 +866,7 @@ router.put('/:groupId/membership/', requireAuth, async (req, res) => {
             if (!newMember) {
                 res.status(404)
                 return res.json({
-                    "message": "Validation Error",
-                    "errors": {
+                    "message": {
                         "userId": "User couldn't be found"
                     }
                 })
@@ -880,7 +879,7 @@ router.put('/:groupId/membership/', requireAuth, async (req, res) => {
 
             return res.json(newMember)
         } else {
-            res.status(400)
+            res.status(403)
             return res.json({
                 message: 'user does not have appropriate status for this change'
             })
@@ -888,7 +887,7 @@ router.put('/:groupId/membership/', requireAuth, async (req, res) => {
     } else {
         res.status(404)
         return res.json({
-            message: 'Could not find a group with specified Id'
+            message: "Membership between the user and the group does not exist"
         })
     }
 });
@@ -963,7 +962,7 @@ router.delete('/:groupId', requireAuth, async (req, res) => {
         await group.destroy();
         return res.json({ message: "Successfully deleted" })
     } else {
-        res.status(400);
+        res.status(403);
         return res.json({ message: "Not the owner of this group" });
     };
 });

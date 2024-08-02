@@ -72,17 +72,17 @@ router.put('/:venueId', requireAuth, async (req, res) => {
                             if (error.validatorKey === 'cityCheck' || !city) errorsObj.city = "City is required"
                             if (error.validatorKey === 'stateCheck' || !state) errorsObj.state = "State is required"
                         }
-                        return res.status(400).json({ message: 'Bad Request', errors: { ...errorsObj } },)
+                        return res.status(403).json({ message: 'Bad Request', errors: { ...errorsObj } },)
                     }
 
                     return res.json(venue);
 
                 } else {
-                    res.status(400);
+                    res.status(403);
                     return res.json({ message: "User does not have a valid member level" });
                 }
             } else {
-                res.status(400);
+                res.status(403);
                 return res.json({ message: "User is not a member of this group" });
             }
         }
