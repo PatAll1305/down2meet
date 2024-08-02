@@ -141,7 +141,7 @@ router.get('/:eventId', async (req, res) => {
             ]
         })
 
-        event ? event.numAttending = await attendanceCounter(event) : null
+        event ? event.dataValues.numAttending = await attendanceCounter(event) : null
     } catch (error) {
         res.status(404)
         return res.json({ message: "Event couldn't be found" })
