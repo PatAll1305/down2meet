@@ -125,12 +125,23 @@ router.get('/:eventId', async (req, res) => {
 
     let event;
     try {
+        const attendanceCounter = async (event) => {
+            return await Attendance.count({
+                where: {
+                    eventId: event.id
+                }
+            })
+        }
+
         event = await Event.findByPk(+req.params.eventId, {
             include: [
                 { model: Group },
-                { model: Venue }
+                { model: Venue },
+                { model: EventImage }
             ]
         })
+
+        event ? event.numAttending = await attendanceCounter(event) : null
     } catch (error) {
         res.status(404)
         return res.json({ message: "Event couldn't be found" })
