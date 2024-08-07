@@ -866,9 +866,8 @@ router.put('/:groupId/membership/', requireAuth, async (req, res) => {
             if (!newMember) {
                 res.status(404)
                 return res.json({
-                    "message": {
-                        "userId": "User couldn't be found"
-                    }
+                    "message": "User couldn't be found"
+
                 })
             }
             newMember.status = status

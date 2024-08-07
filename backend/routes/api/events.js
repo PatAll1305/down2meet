@@ -25,11 +25,11 @@ router.get('/', async (req, res) => {
     size = +size;
     const errors = {};
 
-    if (page < 1) errors.page = "Page must be greater than or equal to 1"
-    if (size < 1) errors.size = "Size must be greater than or equal to 1"
+    if (page < 1 || isNaN(page)) errors.page = "Page must be a number greater than or equal to 1"
+    if (size < 1 || isNaN(size) || size > 20) errors.size = "Size must be a number between 1 and 20"
 
-    if (!page || isNaN(page)) page = 1;
-    if (!size || isNaN(size)) size = 20;
+    if (!page) page = 1;
+    if (!size) size = 20;
 
     params.limit = size;
     params.offset = size * (page - 1);
