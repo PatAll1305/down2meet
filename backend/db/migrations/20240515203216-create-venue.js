@@ -32,11 +32,11 @@ module.exports = {
       },
       lat: {
         allowNull: false,
-        type: Sequelize.DECIMAL
+        type: Sequelize.FLOAT
       },
       lng: {
         allowNull: false,
-        type: Sequelize.DECIMAL
+        type: Sequelize.FLOAT
       },
       createdAt: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

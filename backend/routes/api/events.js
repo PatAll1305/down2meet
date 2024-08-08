@@ -179,18 +179,42 @@ router.get('/:eventId/attendees', async (req, res) => {
                 const attendees = await Attendance.findAll({
                     where: {
                         eventId: event.id,
-                        status: { [Op.in]: ['pending', 'waitlist', 'attending', 'co-host', 'host'] }
-                    }
+                        status: { [Op.in]: ['pending', 'waitlist', 'attending', 'co-host', 'host'] },
+                    },
+                    attributes: ['id']
                 });
 
-                res.json(attendees);
+                for (const attendee of attendees) {
+                    const att = await Attendance.findByPk(attendee.id, {
+                        attributes: ['status', 'userId']
+                    })
+                    const user = await User.findByPk(att.userId)
+                    attendee.dataValues.firstName = user.firstName
+                    attendee.dataValues.lastName = user.lastName
+                    attendee.dataValues.Attendance = { status: att.status }
+
+                }
+
+                res.json({ Attendees: attendees });
             } else {
                 const attendees = await Attendance.findAll({
                     where: {
                         eventId: event.id,
-                        status: { [Op.in]: ['waitlist', 'attending', 'co-host', 'host'] }
-                    }
+                        status: { [Op.in]: ['waitlist', 'attending', 'co-host', 'host'] },
+                    },
+                    attributes: ['id']
                 });
+
+                for (const attendee of attendees) {
+                    const att = await Attendance.findByPk(attendee.id, {
+                        attributes: ['status', 'userId']
+                    })
+                    const user = await User.findByPk(att.userId)
+                    attendee.dataValues.firstName = user.firstName
+                    attendee.dataValues.lastName = user.lastName
+                    attendee.dataValues.Attendance = { status: att.status }
+
+                }
 
                 return res.json({ Attendees: attendees });
             }
@@ -199,8 +223,20 @@ router.get('/:eventId/attendees', async (req, res) => {
                 where: {
                     eventId: event.id,
                     status: { [Op.in]: ['attending', 'co-host', 'host'] }
-                }
+                },
+                attributes: ['id']
             })
+
+            for (const attendee of attendees) {
+                const att = await Attendance.findByPk(attendee.id, {
+                    attributes: ['status', 'userId']
+                })
+                const user = await User.findByPk(att.userId)
+                attendee.dataValues.firstName = user.firstName
+                attendee.dataValues.lastName = user.lastName
+                attendee.dataValues.Attendance = { status: att.status }
+
+            }
             return res.json({ Attendees: attendees });
         }
 
