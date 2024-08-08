@@ -62,7 +62,7 @@ const restoreUser = (req, res, next) => {
 
 // If there is no current user, return an error
 const requireAuth = function (req, _res, next) {
-    const { environment } = require('./config');
+    const { environment } = require('../config/index');
     const isProduction = environment === 'production';
     if (req.user) return next();
 
