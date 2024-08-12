@@ -61,7 +61,7 @@ const restoreUser = (req, res, next) => {
 };
 
 // If there is no current user, return an error
-const requireAuth = function (req, _res, next) {
+const requireAuth = function (req, res, next) {
     const { environment } = require('../config/index');
     const isProduction = environment === 'production';
     if (req.user) return next();
@@ -70,7 +70,7 @@ const requireAuth = function (req, _res, next) {
     if (!isProduction) err.title = 'Authentication required';
     err.errors = { message: 'Authentication required' };
     err.status = 401;
-    if (isProduction) return _res.json(err.errors);
+    if (isProduction) return res.status(401).json(err.errors);
     return next(err);
 }
 
