@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                index: true,
+                path: '/',
                 element: <h1>Welcome to my app!</h1>
             },
         ]
