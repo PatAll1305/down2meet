@@ -1,18 +1,18 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import sessionReducer from './session';
-// import groupReducer from './group';
-// import eventReducer from './event';
+import groupReducer from './groups.js';
+import eventReducer from './events.js';
 // import curGroupEventsReducer from './curGroup';
-// import curGroupMemberssReducer from './members';
+// import curGroupMembersReducer from './members';
 // import venueReducer from './venue';
 
 const rootReducer = combineReducers({
     session: sessionReducer,
-    // groups: groupReducer,
-    // events: eventReducer,
+    groups: groupReducer,
+    events: eventReducer,
     // groupEvents: curGroupEventsReducer,
-    // groupMembers: curGroupMemberssReducer,
+    // groupMembers: curGroupMembersReducer,
     // groupVenue: venueReducer
 });
 

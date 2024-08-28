@@ -37,6 +37,7 @@ export default function ProfileButton({ user }) {
         <>
             <button onClick={toggleMenu}>
                 <i className="profile-button-outline" />
+                Profile
             </button>
             <ul className={ulClassname} ref={ulRef}>
                 <li>{user.username}</li>

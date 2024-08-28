@@ -1,3 +1,3 @@
-import SignupFormModal from './SignupFormModal';
+import SignupFormModal from './SignupFormModal.jsx';
 
 export default SignupFormModal;

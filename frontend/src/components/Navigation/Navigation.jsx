@@ -1,9 +1,9 @@
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import ProfileButton from './ProfileButton';
-import OpenModalButton from '../OpenModal/OpenModal';
-import LoginFormModal from '../LoginFormModal';
-import SignupFormModal from '../SignupFormModal';
+import ProfileButton from './ProfileButton.jsx';
+// import OpenModalButton from '../OpenModal/index.js';
+// import LoginFormModal from '../LoginFormModal/index.js';
+// import SignupFormModal from '../SignupFormModal/index.js';
 import './Navigation.css';
 
 export const Navigation = ({ loaded }) => {
@@ -17,17 +17,17 @@ export const Navigation = ({ loaded }) => {
         ) : (
             <>
                 <li>
-                    <OpenModalButton
+                    {/* <OpenModalButton
                         buttonText="Log In"
                         modalComponent={<LoginFormModal />}
-                    />
+                    /> */}
                     <NavLink to="/login">Log In</NavLink>
                 </li>
                 <li>
-                    <OpenModalButton
+                    {/* <OpenModalButton
                         buttonText="Sign Up"
                         modalComponent={<SignupFormModal />}
-                    />
+                    /> */}
                     <NavLink to="/signup">Sign Up</NavLink>
                 </li>
             </>
@@ -39,11 +39,6 @@ export const Navigation = ({ loaded }) => {
                 <NavLink to="/">Home</NavLink>
             </li>
             {loaded && sessionLinks}
-            {loaded && (
-                <li>
-                    <ProfileButton user={sessionUser} />
-                </li>
-            )}
         </ul>
     );
 }

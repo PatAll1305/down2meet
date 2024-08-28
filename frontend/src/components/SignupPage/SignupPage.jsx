@@ -1,11 +1,11 @@
-import { useModal } from '../../context/modal';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import * as sessionActions from '../../store/session';
-import './SignupFormModal.css';
 
-export default function SignupFormModal({ redirect }) {
+export default function SignupPage() {
     const dispatch = useDispatch();
+    const sessionUser = useSelector((state) => state.session.user);
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -13,14 +13,14 @@ export default function SignupFormModal({ redirect }) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [errors, setErrors] = useState({});
-    const { closeModal } = useModal();
 
-    const handleSubmit = async (e) => {
+    if (sessionUser) return <Navigate to="/" replace={true} />;
+
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (password === confirmPassword) {
             setErrors({});
-            let allow = true;
-            await dispatch(
+            return dispatch(
                 sessionActions.signup({
                     email,
                     username,
@@ -28,17 +28,12 @@ export default function SignupFormModal({ redirect }) {
                     lastName,
                     password
                 })
-            )
-                .then(closeModal)
-                .catch(async (res) => {
-                    const data = await res.json();
-                    if (data?.errors) {
-                        setErrors(data.errors);
-                        allow = false;
-                    }
-                });
-            if (allow) redirect('/');
-            return;
+            ).catch(async (res) => {
+                const data = await res.json();
+                if (data?.errors) {
+                    setErrors(data.errors);
+                }
+            });
         }
         return setErrors({
             confirmPassword: "Confirm Password field must be the same as the Password field"
@@ -46,7 +41,7 @@ export default function SignupFormModal({ redirect }) {
     };
 
     return (
-        <div className="form">
+        <>
             <h1>Sign Up</h1>
             <form onSubmit={handleSubmit}>
                 <label>
@@ -109,17 +104,8 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-                <button
-                    type="submit"
-                    disabled={
-                        !email ||
-                        !firstName ||
-                        !lastName ||
-                        password.length < 6 ||
-                        username.length < 4
-                    }
-                >Sign Up</button>
+                <button type="submit">Sign Up</button>
             </form>
-        </div>
+        </>
     );
 }
