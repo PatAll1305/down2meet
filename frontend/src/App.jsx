@@ -7,6 +7,8 @@ import * as sessionActions from './store/session';
 import SignupPage from './components/SignupPage/index.js';
 import LoginPage from './components/LoginPage/index.js';
 import HomePage from './components/HomePage/index.js'
+import Browser from './components/Browser/index.js';
+import logo from '../logo.png'
 
 const Layout = () => {
     const [loaded, setLoaded] = useState(false);
@@ -20,6 +22,7 @@ const Layout = () => {
 
     return (
         <>
+            <img className='logo' src={logo} />
             <Modal />
             <Navigation loaded={loaded} />
             {loaded && <Outlet />}
@@ -35,10 +38,10 @@ const router = createBrowserRouter([
                 index: true,
                 element: <HomePage />
             },
-            // {
-            //     path: '/groups',
-            //     element: <Browser />
-            // },
+            {
+                path: '/groups',
+                element: <Browser />
+            },
             // {
             //     path: '/events',
             //     element: <Browser />
