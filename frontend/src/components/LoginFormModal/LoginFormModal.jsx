@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
-import { useModal } from '../../context/Modal';
-import './LoginForm.css';
+import { useModal } from '../../context/modal';
+import './login-form.css';
 
 const LoginFormModal = ({ redirect }) => {
     const [credential, setCredential] = useState("");

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Navigation } from './components/Navigation/Navigation';
-import { Modal } from './context/Modal';
+import Navigation from './components/Navigation/index.js';
+import { Modal } from './context/modal.jsx';
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import * as sessionActions from './store/session';
-// import SignupFormPage from './components/SignupFormPage';
-// import LoginFormPage from './components/LoginFormPage';
+import SignupPage from './components/SignupPage/index.js';
+import LoginPage from './components/LoginPage/index.js';
+import HomePage from './components/HomePage/index.js'
 
 const Layout = () => {
     const [loaded, setLoaded] = useState(false);
@@ -31,15 +32,49 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: '/',
-                element: <h1>Welcome to my app!</h1>
+                index: true,
+                element: <HomePage />
             },
+            // {
+            //     path: '/groups',
+            //     element: <Browser />
+            // },
+            // {
+            //     path: '/events',
+            //     element: <Browser />
+            // },
+            // {
+            //     path: '/events/:eventId',
+            //     element: <EventIdPage />
+            // },
+            // {
+            //     path: '/groups/:groupId',
+            //     element: <GroupIdPage />
+            // },
+            // {
+            //     path: '/groups/:groupId/edit',
+            //     element: <UpdateGroup />
+            // },
+            // {
+            //     path: '/groups/create',
+            //     element: <CreateGroup />
+            // },
+            // {
+            //     path: '/groups/:groupId/event/new',
+            //     element: <CreateEvent />
+            // },
+            {
+                path: '/login',
+                element: <LoginPage />
+            },
+            {
+                path: '/signup',
+                element: <SignupPage />
+            }
         ]
     }
 ]);
 
-function App() {
+export const App = () => {
     return <RouterProvider router={router} />;
 }
-
-export default App;

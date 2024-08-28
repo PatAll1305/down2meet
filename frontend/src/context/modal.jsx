@@ -1,33 +1,33 @@
 import { useRef, useState, useContext, createContext } from 'react';
 import ReactDOM from 'react-dom';
-import './Modal.css';
+import './modal.css';
 
 const ModalContext = createContext();
 
 export const ModalProvider = ({ children }) => {
     const modalRef = useRef();
     const [modalContent, setModalContent] = useState(null);
-    const [onModalClose, setOnModalClose] = useState(null);
+    const [modalClose, setModalClose] = useState(null);
 
     const closeModal = () => {
         setModalContent(null);
-        if (typeof onModalClose === 'function') {
-            setOnModalClose(null);
-            onModalClose();
+        if (typeof modalClose === 'function') {
+            setModalClose(null);
+            modalClose();
         }
     };
 
-    const contextValue = {
+    const context = {
         modalRef,
         modalContent,
         setModalContent,
-        setOnModalClose,
+        setModalClose,
         closeModal
     };
 
     return (
         <>
-            <ModalContext.Provider value={contextValue}>
+            <ModalContext.Provider value={context}>
                 {children}
             </ModalContext.Provider>
             <div ref={modalRef} />
