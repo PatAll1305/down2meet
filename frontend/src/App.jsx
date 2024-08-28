@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigation } from './components/Navigation/Navigation';
-import { Modal } from './context/Modal';
+import { Modal } from './context/modal.jsx';
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import * as sessionActions from './store/session';
 // import SignupFormPage from './components/SignupFormPage';
