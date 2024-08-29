@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { LuDot } from "react-icons/lu";
 
 
 export default function EventDisplayer({ event }) {
@@ -17,7 +16,7 @@ export default function EventDisplayer({ event }) {
                     <img src={event.previewImage} alt="Event preview image" />
                 </div>
                 <div id='event'>
-                    <h4 id='date'>{`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`} <LuDot /> {`${startDate.getHours() > 12 ? `${startDate.getHours() - 12}` : startDate.getHours()}:${startDate.getMinutes() < 10 ? `0${startDate.getMinutes()}` : startDate.getMinutes()}`}</h4>
+                    <h4 id='date'>{`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`}  {`${startDate.getHours() > 12 ? `${startDate.getHours() - 12}` : startDate.getHours()}:${startDate.getMinutes() < 10 ? `0${startDate.getMinutes()}` : startDate.getMinutes()}`}</h4>
                     <h3>{event.name}</h3>
                     <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : `${event.Group.city}, ${event.Group.state}`}</h4>
                 </div>
