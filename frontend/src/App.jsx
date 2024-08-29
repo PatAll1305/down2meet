@@ -8,7 +8,8 @@ import SignupPage from './components/SignupPage/index.js';
 import LoginPage from './components/LoginPage/index.js';
 import HomePage from './components/HomePage/index.js'
 import Browser from './components/Browser/index.js';
-import logo from '../logo.png'
+import { EventsById } from './components/Events/index.js'
+import { GroupsById } from './components/Groups/index.js'
 
 const Layout = () => {
     const [loaded, setLoaded] = useState(false);
@@ -22,7 +23,6 @@ const Layout = () => {
 
     return (
         <>
-            <img className='logo' src={logo} />
             <Modal />
             <Navigation loaded={loaded} />
             {loaded && <Outlet />}
@@ -42,18 +42,18 @@ const router = createBrowserRouter([
                 path: '/groups',
                 element: <Browser />
             },
-            // {
-            //     path: '/events',
-            //     element: <Browser />
-            // },
-            // {
-            //     path: '/events/:eventId',
-            //     element: <EventIdPage />
-            // },
-            // {
-            //     path: '/groups/:groupId',
-            //     element: <GroupIdPage />
-            // },
+            {
+                path: '/events',
+                element: <Browser />
+            },
+            {
+                path: '/events/:eventId',
+                element: <EventsById />
+            },
+            {
+                path: '/groups/:groupId',
+                element: <GroupsById />
+            },
             // {
             //     path: '/groups/:groupId/edit',
             //     element: <UpdateGroup />

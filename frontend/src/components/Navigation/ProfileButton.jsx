@@ -42,7 +42,7 @@ export default function ProfileButton({ user }) {
             <ul className={ulClassname} ref={ulRef}>
                 <li>{user.username}</li>
                 <li>{user.email}</li>
-                <li>{user.firstName} {user.lastName}</li>
+                <li>{user.lastName + ', ' + user.firstname}</li>
                 <li>
                     <button onClick={logout}>Log Out</button>
                 </li>

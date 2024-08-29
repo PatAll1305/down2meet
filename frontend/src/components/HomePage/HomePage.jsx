@@ -1,13 +1,11 @@
 import { Link, Navigate, NavLink, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { MdFollowTheSigns, MdGroups3 } from "react-icons/md";
-import { SiVfairs } from "react-icons/si";
 import { useEffect, useState } from "react";
 import { allEvents } from "../../store/events.js";
 import { allGroups } from "../../store/groups.js";
 import './HomePage.css';
-
-
+import logo from '../../../logo.png'
 
 export default function HomePage() {
     const sessionUser = useSelector(state => state.session.user);
@@ -23,14 +21,14 @@ export default function HomePage() {
         <div id='home-page'>
             <div id='title-splash'>
                 <div>
-                    <h1>The People Platform-</h1>
-                    <h2>Where interests become friendships</h2>
+                    <img className="logo-homepage" src={logo} alt="logo" />
+                    <h1>Meet up with others</h1>
+                    <h2>Where hobbies can  become friendships</h2>
                     <p>Find groups and events to join!</p>
                 </div>
-                <SiVfairs size={100} />
             </div>
             <div id='section-two'>
-                <h2>How Down2Meet Works</h2>
+                <h2>How Down2Meet Works:</h2>
                 <h3>Join a group in order to join their events! Connect with others in your local area!</h3>
             </div>
             <div id='nav'>
@@ -50,7 +48,7 @@ export default function HomePage() {
                         ? <Link to='/groups/create'>Create a group</Link>
                         : <Link className="disabled">Create a group</Link>
                     }
-                    <p>See all of the groups we have to offer!</p>
+                    <p>Create your own group!</p>
                 </div>
             </div>
             <div id="button-div">

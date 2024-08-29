@@ -1,7 +1,91 @@
-.profile-dropdown {
-    position: absolute;
-}
-
 .hidden {
     display: none;
+}
+
+#overall-bar {
+    background-color: rgb(95, 237, 77);
+    margin: 0;
+    padding: 0;
+}
+
+.nav {
+    grid-area: a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 100%;
+    justify-self: left;
+    background-color: rgb(31, 238, 20);
+}
+
+#logged-options {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    column-gap: 50px;
+}
+
+.profile-button {
+    width: 100px;
+    height: 50px;
+    display: flex;
+    align-self: center;
+}
+
+#auth-buttons {
+    display: flex;
+    align-content: center;
+    column-gap: 20px;
+}
+
+#loggedButton>button {
+    width: 75px;
+    height: 35px;
+}
+
+.dropdown>button {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.dropdown>button>* {
+    font-size: larger;
+}
+
+.dropdown-content-hide {
+    display: none;
+    position: absolute;
+    width: 100px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.7);
+}
+
+.dropdown-content-show {
+    top: auto;
+    position: absolute;
+    width: 175px;
+    overflow: auto;
+    text-align: end;
+    background-color: rgb(22, 189, 122);
+    display: block;
+    flex-direction: column;
+    justify-self: end;
+    right: 0px;
+    border: black 3px solid;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    text-align: start;
+}
+
+.dropdown-content>* {
+    display: block;
+    color: #000000;
+    text-decoration: none;
+}
+
+#modal-options {
+    display: flex;
+    flex-direction: column;
 }

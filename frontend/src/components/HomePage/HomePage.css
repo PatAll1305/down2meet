@@ -1,0 +1,63 @@
+#home-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo-homepage {
+    display: flex;
+    align-self: center;
+    margin-left: 100px;
+    margin-top: 30px;
+    height: 125px;
+    width: 125px;
+}
+
+#title-splash {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+#section-two {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 200px;
+}
+
+.home-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+}
+
+.home-nav>img {
+    height: 100px;
+    width: 100px;
+}
+
+#buttonHolder {
+    margin: 20px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+#button-div>button {
+    font-size: larger;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 50px;
+}
