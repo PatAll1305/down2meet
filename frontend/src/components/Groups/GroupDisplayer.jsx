@@ -10,7 +10,7 @@ export default function GroupDisplayer({ group }) {
             navigate(`/groups/${+group.id}`);
         }}>
             <div id='preview-image'>
-                <img src={group.previewImage} alt="" />
+                <img src={group.previewImage} alt={`Group ${+group.id}'s image`} />
             </div>
             <div id='group'>
                 <h3>{group.name}</h3>
