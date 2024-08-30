@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+// import { useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Outlet } from "react-router-dom";
 import { Groups, GroupsView } from "./index.js";
@@ -15,17 +15,17 @@ export default function GroupById() {
 
     const dispatch = useDispatch();
 
-    async function updateGroups() {
-        dispatch(allGroups());
-        dispatch(allGroupEvents(groupId));
-    }
-    let reRender = 1
-    reRender--
-    useEffect(() => {
-        updateGroups();
-        reRender !== 1 ? reRender++ : reRender--
-        console.log(Object.values(events))
-    }, [reRender])
+    // async function updateGroups() {
+    dispatch(allGroups());
+    dispatch(allGroupEvents(groupId));
+    // reRender--
+    // }
+    // let reRender = 1
+    // useEffect(() => {
+    //     updateGroups();
+    //     reRender !== 1 ? reRender++ : reRender--
+    //     console.log(Object.values(events))
+    // }, [reRender])
 
     return (
         <div>
