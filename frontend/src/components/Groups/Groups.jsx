@@ -19,9 +19,7 @@ export default function Groups({ group, user }) {
             setOrganizer(await getOrganizer())
         }
         orgInit()
-        console.log(organizer)
     }, [group])
-    console.log(organizer)
 
     const navigate = useNavigate();
     const redirect = (path) => {

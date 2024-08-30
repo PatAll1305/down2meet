@@ -5,8 +5,7 @@ import { csrfFetch } from "../../store/csrf";
 
 export default function GroupsView({ group, events }) {
     const getOrganizer = async () => {
-        const organizer = await csrfFetch(`/api/groups/${group.id}`).json()
-        console.log(organizer)
+        const organizer = await (await csrfFetch(`/api/groups/${group.id}`)).json()
         return organizer.Organizer
     }
     const organizer = getOrganizer()

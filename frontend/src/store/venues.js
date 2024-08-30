@@ -14,7 +14,6 @@ export const groupVenues = (id) => async (dispatch) => {
 
     if (response.ok) {
         const data = await response.json();
-        console.log(data);
         await dispatch(loadVenues(data))
         return data;
     }

@@ -131,7 +131,6 @@ export default function CreateEvent() {
     useEffect(() => {
         dispatch(allGroups());
         dispatch(groupVenues(groupId));
-        console.log(venues);
     }, [])
 
     return (

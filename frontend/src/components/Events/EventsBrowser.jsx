@@ -24,8 +24,6 @@ export default function EventsBrowser() {
         return dateA < today || dateA < dateB ? 1 : dateA > dateB ? -1 : dateA === dateB ? 0 : null
     })
 
-    console.log(eventsValues);
-
     return (
         <div>
             <h2>Events in Down2Meet</h2>
