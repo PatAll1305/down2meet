@@ -14,7 +14,6 @@ export const allGroupEvents = (id) => async (dispatch) => {
 
     if (response.ok) {
         const events = await response.json();
-        console.log(events)
         dispatch(loadGroups(events));
         return events;
     }
@@ -25,7 +24,7 @@ export default function currentGroupEventsReducer(state = {}, action) {
         case LOAD_GROUP_EVENTS: {
             const newState = {};
 
-            for (const event of action.groups) {
+            for (const event of action.groups.Events) {
                 newState[event.id] = event;
             }
 

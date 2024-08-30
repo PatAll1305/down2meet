@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react"
 import { EventDisplayer } from '../Events/index'
 import './Group.css';
+import { csrfFetch } from "../../store/csrf";
 
 export default function GroupsView({ group, events }) {
-
+    const getOrganizer = async () => {
+        const organizer = await csrfFetch(`/api/groups/${group.id}`).json()
+        console.log(organizer)
+        return organizer.Organizer
+    }
+    const organizer = getOrganizer()
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [pastEvents, setPastEvents] = useState([]);
 
@@ -43,11 +49,12 @@ export default function GroupsView({ group, events }) {
         organizeDates();
     }, [events])
 
+
     return (
         <div id='groupViewBody'>
             <div>
                 <h3>Organizer</h3>
-                <p>{group.organizer.firstName} {group.organizer.lastName}</p>
+                <p>{organizer.firstName} {organizer.lastName} </p>
             </div>
             <div>
                 <h3>All about us:</h3>

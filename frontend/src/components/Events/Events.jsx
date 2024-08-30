@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Events({ event, group }) {
 
-    { group.organizer.firstName } { group.organizer.lastName }
+    { group.organizer.firstname } { group.organizer.lastName }
     return (
         <>
             {Object.keys(event).length && event.name
@@ -14,7 +14,7 @@ export default function Events({ event, group }) {
                             <Link to='/events'>Events</Link>
                         </div>
                         <div id='event-name'><h2>{event.name}</h2></div>
-                        <div id='host-header'><h4>This event is hosted by {!event.host ? `${group.organizer.firstName} ${group.organizer.lastName}` : `${event.host.firstName} ${event.host.lastName}`}</h4></div>
+                        <div id='host-header'><h4>This event is hosted by {!event.host ? `${group.organizer.firstname} ${group.organizer.lastName}` : `${event.host.firstname} ${event.host.lastName}`}</h4></div>
                     </div>
                 </div>
                 :

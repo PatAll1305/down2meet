@@ -17,7 +17,7 @@ export default function GroupById() {
 
     async function updateGroups() {
         dispatch(allGroups());
-        await dispatch(allGroupEvents(groupId));
+        dispatch(allGroupEvents(groupId));
     }
 
     useEffect(() => {

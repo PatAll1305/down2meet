@@ -1,9 +1,27 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { DeleteGroupModal } from "../DeleteModals/index.js";
 import { ModalDeleteItem } from './index.js';
+import { csrfFetch } from '../../store/csrf.js';
 import './Group.css';
+import { useEffect, useState } from 'react';
+
 
 export default function Groups({ group, user }) {
+    const [organizer, setOrganizer] = useState({})
+
+    const getOrganizer = async () => {
+        const organizer = await (await csrfFetch(`/api/groups/${group.id}`)).json()
+        return organizer.Organizer
+    }
+
+    useEffect(() => {
+        const orgInit = async () => {
+            setOrganizer(await getOrganizer())
+        }
+        orgInit()
+        console.log(organizer)
+    }, [group])
+    console.log(organizer)
 
     const navigate = useNavigate();
     const redirect = (path) => {
@@ -16,7 +34,7 @@ export default function Groups({ group, user }) {
                 <div id='link'>{'< '}<Link to='/groups'>Groups</Link></div>
                 <div id='group-info'>
                     <div id='left-group'>
-                        <div className="group-image"><img src={group.previewImage} alt={`Group ${group.id}'s image`} /></div>
+                        <div className="group-image"><img href={group.previewImage} alt={`Group ${group.id}'s image`} /></div>
                     </div>
                     <div id='right-group'>
                         <div className='group-header'>
@@ -25,7 +43,7 @@ export default function Groups({ group, user }) {
                             <div className="events-privacy">
                                 <p>{group.private ? 'Private' : 'Public'}</p>
                             </div>
-                            <p>{`Organized by ${group.organizer.firstName} ${group.organizer.lastName}`}</p>
+                            <p>{`Organized by ${organizer.firstName} ${organizer.lastName}`}</p>
                         </div>
                         <div className="group-footer">
                             {

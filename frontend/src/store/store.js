@@ -3,17 +3,17 @@ import thunk from 'redux-thunk';
 import sessionReducer from './session';
 import groupReducer from './groups.js';
 import eventReducer from './events.js';
-// import curGroupEventsReducer from './curGroup';
+import currentGroupEventsReducer from './currentGroup';
 // import curGroupMembersReducer from './members';
-// import venueReducer from './venue';
+import venueReducer from './venues';
 
 const rootReducer = combineReducers({
     session: sessionReducer,
     groups: groupReducer,
     events: eventReducer,
-    // groupEvents: curGroupEventsReducer,
+    groupEvents: currentGroupEventsReducer,
     // groupMembers: curGroupMembersReducer,
-    // groupVenue: venueReducer
+    groupVenue: venueReducer
 });
 
 let enhancer;
