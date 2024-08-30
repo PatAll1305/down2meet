@@ -16,27 +16,27 @@ module.exports = {
     await GroupImage.bulkCreate([
       {
         groupId: 1,
-        url: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fdepositphotos.com%2Fphotos%2Frestaurant-party.html&psig=AOvVaw2Un0uIW6DhzRmzcF0O-AjK&ust=1725034429261000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICf9JfMmogDFQAAAAAdAAAAABAI',
+        url: 'https://st4.depositphotos.com/2931363/20161/i/380/depositphotos_201618554-stock-photo-friends-smiling-while-taking-pizza.jpg',
         preview: true
       },
       {
         groupId: 2,
-        url: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fphoto%2Fgroup-of-people-with-happy-faces-7551506%2F&psig=AOvVaw2Un0uIW6DhzRmzcF0O-AjK&ust=1725034429261000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICf9JfMmogDFQAAAAAdAAAAABAk',
+        url: 'https://assets3.cbsnewsstatic.com/hub/i/r/2011/07/27/5d9518d7-a643-11e2-a3f0-029118418759/thumbnail/640x350/926c55f0cdb2d9c56adfc9231261dc95/800px-Anonymous_at_Scientology_in_Los_Angeles.jpg?v=29ebd300d9a3cd24077d945a46991f72',
         preview: false
       },
       {
         groupId: 3,
-        url: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.westend61.de%2Fen%2Fphoto%2FOIPF04040%2Fgroup-photo-of-happy-young-friends-with-colorful-clothing-smiling-at-camera&psig=AOvVaw2Un0uIW6DhzRmzcF0O-AjK&ust=1725034429261000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICf9JfMmogDFQAAAAAdAAAAABAq',
+        url: 'https://st2.depositphotos.com/3591429/11568/i/380/depositphotos_115685284-stock-photo-people-interacting-with-each-other.jpg',
         preview: true
       },
       {
         groupId: 4,
-        url: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.123rf.com%2Fphoto_32783607_group-of-happy-smiling-girls-friends-for-ever.html&psig=AOvVaw2Un0uIW6DhzRmzcF0O-AjK&ust=1725034429261000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICf9JfMmogDFQAAAAAdAAAAABA_',
+        url: 'https://previews.123rf.com/images/mandygodbehear/mandygodbehear1410/mandygodbehear141000031/32783607-group-of-happy-smiling-girls-friends-for-ever.jpg',
         preview: false
       },
       {
         groupId: 5,
-        url: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Ffree-photos%2Fhappy-people-diverse&psig=AOvVaw2Un0uIW6DhzRmzcF0O-AjK&ust=1725034429261000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICf9JfMmogDFQAAAAAdAAAAABBE',
+        url: 'https://www.google.com/url?sa=https://cdn-apkpk.nitrocdn.com/ORTUaBxDZqklpdaXWJHCKPnkdYhRBLBZ/assets/images/optimized/rev-5620df5/www.sullivan-group.com/wp-content/uploads/2022/03/team-1.pngi&url=https%3A%2F%2Fwww.vecteezy.com%2Ffree-photos%2Fhappy-people-diverse&psig=AOvVaw2Un0uIW6DhzRmzcF0O-AjK&ust=1725034429261000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICf9JfMmogDFQAAAAAdAAAAABBE',
         preview: true
       }
     ])
