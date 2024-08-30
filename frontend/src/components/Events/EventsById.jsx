@@ -4,7 +4,7 @@ import { allEvents } from "../../store/events";
 import { allGroups } from "../../store/groups";
 import { Outlet, useParams } from "react-router-dom";
 import { Events } from "./index.js";
-import { EventView } from "./index";
+import { EventsView } from "./index";
 import './Events.css'
 
 export default function EventsById() {
@@ -31,7 +31,7 @@ export default function EventsById() {
                 ?
                 <div id=''>
                     <Events event={event} group={group} user={user} />
-                    <EventView event={event} group={group} user={user} />
+                    <EventsView event={event} group={group} user={user} />
                 </div>
                 :
                 <div id='groupView'>

@@ -4,13 +4,13 @@ export default function GroupDisplayer({ group }) {
 
     const navigate = useNavigate();
 
-    const img = <img src={group.previewImage} alt={`Group ${+group.id}'s image`} />
+    const img = <img href={group.previewImage} alt={`Group ${+group.id}'s image`} />
     return (
         <div id='group-displayer' onClick={() => {
             navigate(`/groups/${+group.id}`);
         }}>
             <div id='preview-image'>
-                {img.props.src}{console.log(group)}
+                {img}{console.log(group)}
             </div>
             <div id='group'>
                 <h3>{group.name}</h3>

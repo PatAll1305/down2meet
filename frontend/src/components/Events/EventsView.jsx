@@ -1,7 +1,7 @@
 import { FaMoneyBill } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ModalDeleteItem } from "../Groups/index.js";
-import { EventDeleteModal } from "../DeleteModals/index.js";
+import { DeleteEventModal } from "../DeleteModals/index.js";
 
 export default function EventsView({ group, event, user }) {
 
@@ -58,7 +58,7 @@ export default function EventsView({ group, event, user }) {
                                                         className='event-manage'
                                                         itemText={'Delete'}
                                                         modalComponent={
-                                                            <EventDeleteModal
+                                                            <DeleteEventModal
                                                                 event={event}
                                                                 redirect={navigate} />
                                                         } />

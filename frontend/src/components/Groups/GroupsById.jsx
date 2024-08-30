@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Outlet } from "react-router-dom";
-import { Groups, GroupView } from "./index.js";
+import { Groups, GroupsView } from "./index.js";
 import { allGroups } from "../../store/groups";
 import { allGroupEvents } from "../../store/currentGroup";
 import './Group.css';
@@ -30,7 +30,7 @@ export default function GroupById() {
                 ?
                 <div id='groupView'>
                     <Groups group={group} user={user} />
-                    <GroupView group={group} events={Object.values(events)} />
+                    <GroupsView group={group} events={Object.values(events)} />
                 </div>
                 :
                 <div id='groupView'>
