@@ -36,7 +36,7 @@ module.exports = {
       },
       {
         groupId: 5,
-        url: 'https://www.google.com/url?sa=https://cdn-apkpk.nitrocdn.com/ORTUaBxDZqklpdaXWJHCKPnkdYhRBLBZ/assets/images/optimized/rev-5620df5/www.sullivan-group.com/wp-content/uploads/2022/03/team-1.pngi&url=https%3A%2F%2Fwww.vecteezy.com%2Ffree-photos%2Fhappy-people-diverse&psig=AOvVaw2Un0uIW6DhzRmzcF0O-AjK&ust=1725034429261000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICf9JfMmogDFQAAAAAdAAAAABBE',
+        url: 'https://static01.nyt.com/images/2018/05/08/well/physed-happiness/physed-happiness-superJumbo.jpg',
         preview: true
       }
     ])
