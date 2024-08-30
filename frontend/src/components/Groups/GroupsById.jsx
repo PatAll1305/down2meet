@@ -23,7 +23,7 @@ export default function GroupById() {
     let reRender = 1
     useEffect(() => {
         updateGroups();
-        reRender < 1 ? reRender++ : reRender++
+        reRender !== 1 ? reRender++ : reRender--
     }, [reRender])
 
     return (
