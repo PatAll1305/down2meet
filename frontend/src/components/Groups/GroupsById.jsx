@@ -18,9 +18,9 @@ export default function GroupById() {
     async function updateGroups() {
         dispatch(allGroups());
         dispatch(allGroupEvents(groupId));
-        reRender--
     }
     let reRender = 1
+    reRender--
     useEffect(() => {
         updateGroups();
         reRender !== 1 ? reRender++ : reRender--
