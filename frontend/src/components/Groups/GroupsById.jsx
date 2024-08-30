@@ -24,6 +24,7 @@ export default function GroupById() {
     useEffect(() => {
         updateGroups();
         reRender !== 1 ? reRender++ : reRender--
+        console.log(Object.values(events))
     }, [reRender])
 
     return (
