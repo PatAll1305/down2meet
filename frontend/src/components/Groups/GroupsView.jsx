@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { EventDisplayer } from '../Events/index'
-import './Group.css';
 import { csrfFetch } from "../../store/csrf";
+import './Group.css';
 
 export default function GroupsView({ group, events }) {
     const [organizer, setOrganizer] = useState({})
