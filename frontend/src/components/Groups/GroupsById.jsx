@@ -21,11 +21,11 @@ export default function GroupsById() {
 
     return (
         <div>
-            {Object.keys(group).length && group.name && Object.values(events).length
+            {Object.keys(group).length && group.name
                 ?
                 <div id='groups'>
                     <Groups group={group} user={user} />
-                    <GroupsView group={group} events={Object.values(events)} />
+                    {/* <GroupsView group={group} events={Object.values(events)} /> */}
                 </div>
                 :
                 <div id='groups'>
