@@ -13,6 +13,10 @@ export default function GroupsById() {
     const events = useSelector(state => state.groupEvents)
     const group = groups[+groupId] ? groups[+groupId] : {};
 
+    // for (const event of events) {
+    //     console.log(event)
+    // }
+    console.log(events)
     const dispatch = useDispatch();
 
     async function updateGroups() {
@@ -22,7 +26,7 @@ export default function GroupsById() {
 
     useEffect(() => {
         updateGroups();
-    }, [groupId])
+    }, [events])
     return (
         <div>
             {Object.keys(group).length && group.name
