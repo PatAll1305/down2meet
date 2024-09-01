@@ -26,14 +26,14 @@ export default function GroupsById() {
 
     useEffect(() => {
         updateGroups();
-    }, [events])
+    }, [groupId])
     return (
         <div>
-            {Object.keys(group).length && group.name
+            {Object.keys(group).length && group.name && Object.keys(events).length
                 ?
                 <div id='groups'>
                     <Groups group={group} user={user} />
-                    <GroupsView group={group} events={Object.values(events)} />
+                    <GroupsView group={group} events={events} />
                 </div>
                 :
                 <div id='groups'>

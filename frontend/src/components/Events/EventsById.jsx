@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { allEvents } from "../../store/events";
 import { allGroups } from "../../store/groups";
 import { Outlet, useParams } from "react-router-dom";
-import { Events } from "./index.js";
-import { EventsView } from "./index";
+import { Events, EventsView } from "./index.js";
 import './Events.css'
 
 export default function EventsById() {
@@ -26,15 +25,15 @@ export default function EventsById() {
         updateGroups();
     }, [eventId])
     return (
-        <div id='eventView'>
-            {Object.keys(event).length && group.name
+        <div id='events'>
+            {event && Object.keys(event).length && group.name
                 ?
                 <div id=''>
                     <Events event={event} group={group} user={user} />
                     <EventsView event={event} group={group} user={user} />
                 </div>
                 :
-                <div id='groupView'>
+                <div id='groups'>
                     <h1>Group does not exist</h1>
                 </div>
             }

@@ -13,7 +13,9 @@ export default function GroupsView({ group, events }) {
     const [pastEvents, setPastEvents] = useState([]);
 
     function organizeDates() {
-        if (events) {
+        if (Object.keys(events).length) {
+            events = Object.values(events)
+
             const currDate = new Date();
 
             let pastArr = [];
@@ -51,7 +53,7 @@ export default function GroupsView({ group, events }) {
 
 
     return (
-        <div id='groupViewBody'>
+        <div id='group-body'>
             <div>
                 <h3>Organizer</h3>
                 <p>{organizer.firstName} {organizer.lastName} </p>
