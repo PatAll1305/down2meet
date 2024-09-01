@@ -4,11 +4,19 @@ import './Group.css';
 import { csrfFetch } from "../../store/csrf";
 
 export default function GroupsView({ group, events }) {
+    const [organizer, setOrganizer] = useState({})
+
     const getOrganizer = async () => {
         const organizer = await (await csrfFetch(`/api/groups/${group.id}`)).json()
         return organizer.Organizer
     }
-    const organizer = getOrganizer()
+
+    useEffect(() => {
+        const orgInit = async () => {
+            setOrganizer(await getOrganizer())
+        }
+        orgInit()
+    }, [group])
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [pastEvents, setPastEvents] = useState([]);
 
