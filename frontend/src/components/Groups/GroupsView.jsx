@@ -13,35 +13,36 @@ export default function GroupsView({ group, events }) {
     const [pastEvents, setPastEvents] = useState([]);
 
     function organizeDates() {
-        const currDate = new Date();
+        if (events) {
+            const currDate = new Date();
 
-        let pastArr = [];
-        let upcomingArr = [];
+            let pastArr = [];
+            let upcomingArr = [];
 
-        for (const event of events) {
-            let start = new Date(event.startDate);
-            if (start > currDate) {
-                upcomingArr.push(event);
-            } else {
-                pastArr.push(event);
+            for (const event of events) {
+                let start = new Date(event.startDate);
+                if (start > currDate) {
+                    upcomingArr.push(event);
+                } else {
+                    pastArr.push(event);
+                }
             }
+
+            upcomingArr.sort((a, b) => {
+                let dateA = new Date(a.startDate);
+                let dateB = new Date(b.startDate);
+                return dateA < dateB ? 1 : dateA > dateB ? -1 : dateA === dateB ? 0 : null
+            })
+
+            pastArr.sort((a, b) => {
+                let dateA = new Date(a.endDate);
+                let dateB = new Date(b.endDate);
+                return dateA < dateB ? 1 : dateA > dateB ? -1 : dateA === dateB ? 0 : null
+            })
+
+            setUpcomingEvents(upcomingArr);
+            setPastEvents(pastArr);
         }
-
-        upcomingArr.sort((a, b) => {
-            let dateA = new Date(a.startDate);
-            let dateB = new Date(b.startDate);
-            return dateA < dateB ? 1 : dateA > dateB ? -1 : dateA === dateB ? 0 : null
-        })
-
-        pastArr.sort((a, b) => {
-            let dateA = new Date(a.endDate);
-            let dateB = new Date(b.endDate);
-            return dateA < dateB ? 1 : dateA > dateB ? -1 : dateA === dateB ? 0 : null
-        })
-
-        setUpcomingEvents(upcomingArr);
-        setPastEvents(pastArr);
-
     }
 
     useEffect(() => {

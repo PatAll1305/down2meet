@@ -18,11 +18,14 @@ export default function GroupById() {
     async function updateGroups() {
         dispatch(allGroups());
         dispatch(allGroupEvents(groupId));
+        reRender--
     }
     let reRender = 1
     useEffect(() => {
         updateGroups();
-    }, [groupId, reRender])
+        reRender !== 1 ? reRender++ : reRender--
+        console.log(Object.values(events))
+    }, [reRender])
 
     return (
         <div>
@@ -30,8 +33,8 @@ export default function GroupById() {
                 ?
                 <div id='groupView'>
                     <Groups group={group} user={user} />
-                    {console.log('CONSOLE LOG', (events))}
-                    <GroupsView group={group} events={events ? Object.values(events) : reRender++} />
+                    {events ? null : reRender++}
+                    <GroupsView group={group} events={Object.values(events)} />
                 </div>
                 :
                 <div id='groupView'>
