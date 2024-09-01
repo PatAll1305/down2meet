@@ -13,9 +13,7 @@ export default function GroupsView({ group, events }) {
     const [pastEvents, setPastEvents] = useState([]);
 
     function organizeDates() {
-        if (Object.keys(events).length) {
-            events = Object.values(events)
-
+        if (events) {
             const currDate = new Date();
 
             let pastArr = [];
