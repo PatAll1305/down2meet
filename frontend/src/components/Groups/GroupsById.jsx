@@ -10,7 +10,7 @@ export default function GroupsById() {
     const { groupId } = useParams();
     const user = useSelector(state => state.session.user);
     const groups = useSelector(state => state.groups);
-    const events = useSelector(state => state.groupEvents)
+    const events = useSelector(state => state.groupEvents);
     const group = groups[+groupId] ? groups[+groupId] : {};
     const dispatch = useDispatch();
 
@@ -21,6 +21,7 @@ export default function GroupsById() {
 
     return (
         <div>
+            {!Object.values(events) && console.log(events)}
             {Object.keys(group).length && group.name
                 ?
                 <div id='groups'>

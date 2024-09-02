@@ -12,7 +12,7 @@ export default function Events({ event, group }) {
         }
         getOrganizer()
 
-    }, [event])
+    }, [event, group.id])
 
     { organizer.firstName } { organizer.lastName }
     return (
