@@ -21,15 +21,14 @@ export default function GroupsById() {
 
     return (
         <div>
-            {!Object.values(events) && console.log(events)}
             {Object.keys(group).length && group.name
                 ?
-                <div id='groups'>
+                <div id='groups-view'>
                     <Groups group={group} user={user} />
                     <GroupsView group={group} events={Object.values(events)} />
                 </div>
                 :
-                <div id='groups'>
+                <div id='groups-view'>
                     <h1>Group does not exist</h1>
                 </div>
             }

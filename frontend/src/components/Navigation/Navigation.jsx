@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import ProfileButton from './ProfileButton.jsx';
@@ -14,6 +14,10 @@ export const Navigation = ({ loaded }) => {
     const sessionUser = useSelector(state => state.session.user);
     const [navigate, setNavigate] = useState(false)
     const dispatch = useDispatch()
+    const redirectNav = useNavigate();
+    const redirect = (path) => {
+        redirectNav(path);
+    }
 
     useEffect(() => {
         if (navigate) setNavigate(false)
@@ -39,13 +43,13 @@ export const Navigation = ({ loaded }) => {
                 <li>
                     <OpenModalButton
                         buttonText="Sign Up"
-                        modalComponent={<SignupFormModal />}
+                        modalComponent={<SignupFormModal redirect={redirect} />}
                     />
                 </li>
                 <li>
                     <OpenModalButton
                         buttonText="Log In"
-                        modalComponent={<LoginFormModal />}
+                        modalComponent={<LoginFormModal redirect={redirect} />}
                     />
                 </li>
             </>
