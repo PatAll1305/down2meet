@@ -19,6 +19,12 @@ export default function GroupsById() {
         dispatch(allGroupEvents(groupId));
     }, [groupId, dispatch])
 
+    if (!groups || !events) {
+        return (
+            <h2>Loading</h2>
+        )
+    }
+
     return (
         <div>
             {!Object.values(events) && console.log(events)}
