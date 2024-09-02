@@ -1,17 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { newGroup } from '../../store/group';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { newGroup } from '../../store/groups';
 
 
 export default function CreateGroup() {
     const user = useSelector(state => state.session.user);
     const dispatch = useDispatch();
+
     const [name, setName] = useState('');
     const [location, setLocation] = useState('');
     const [about, setAbout] = useState('');
-    const [type, setType] = useState('Online');
-    const [privacy, setPrivacy] = useState();
+    const [type, setType] = useState('');
+    const [privacy, setPrivacy] = useState('');
     const [image, setImage] = useState('');
     const [errors, setErrors] = useState({});
 
@@ -19,7 +20,7 @@ export default function CreateGroup() {
 
     if (!user) navigate('/');
 
-    const handleSubmit = async (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
         let allow = true;
@@ -41,8 +42,8 @@ export default function CreateGroup() {
         if (!privacy) {
             errorObj.private = 'Visibility Type is required';
         }
-        if (!image || (!image.endsWith('.jpeg') && !image.endsWith('.png') && !image.endsWith('.jpg'))) {
-            errorObj.image = 'Link must end with .png, .jpg, or .jpeg';
+        if (!image || (!image.endsWith('.png') && !image.endsWith('.jpg') && !image.endsWith('.jpeg'))) {
+            errorObj.image = 'Link must end with .png, jpg, or .jpeg';
         }
 
         const [city, state] = location.split(', ',)
@@ -77,7 +78,7 @@ export default function CreateGroup() {
         })
 
         if (allow) {
-            navigate(`/groups/${+id}`);
+            navigate(`/groups/${parseInt(id)}`);
         }
     }
 
@@ -88,30 +89,33 @@ export default function CreateGroup() {
                 user
                     ?
                     <div id='form'>
-                        <h4>CREATE A GROUP</h4>
-                        <h1>{"Here's how to set your group up:"} </h1>
+                        <h4>CREATE A GROUP ON GREETS</h4>
+                        <h1>{"We'll walk you through a few steps to create your group's information"}</h1>
                         <hr />
                         <form
-                            onSubmit={handleSubmit}
+                            onSubmit={onSubmit}
                         >
                             <div>
                                 <h2>{"First, set you group's location."}</h2>
-                                <p>{"Groups meet locally, in person and online. We'll connect you with people in your area, and more can join you online."}
+                                <p>{"Groups that are all down will meet locally, in person and online. We'll connect you with people in your area, and more can join you online."}
                                 </p>
-                                <input className='form-inputs' type="text" value={location} placeholder='City, State' onChange={e => setLocation(e.target.value)} />
+                                <input className='small' type="text" placeholder='City, STATE' value={location} onChange={e => setLocation(e.target.value)} />
                                 <p className='error'>{errors && errors.location}</p>
                                 <hr />
                             </div>
                             <div>
                                 <h2>{"What will your group's name be?"}</h2>
-                                <p>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative!</p>
-                                <input className='form-inputs' type="text" placeholder='What is your group name?' value={name} onChange={e => setName(e.target.value)} />
+                                <p>Choose a name that will give people a clear idea of what the group is about.
+                                    Feel free to get creative!
+                                </p>
+                                <input className='small' type="text" placeholder='What is your group name?' value={name} onChange={e => setName(e.target.value)} />
                                 <p className='error'>{errors && errors.name}</p>
                                 <hr />
                             </div>
                             <div>
                                 <h2>Now describe what your group will be about</h2>
-                                <p>{"People will see this when we promote your group. Don't worry if it's not perfect, you'll be able to change it later."}</p>
+                                <p>{"People will see this when we promote your group, but you'll be able to add to it later, too."}
+                                </p>
                                 <ol>
                                     <li>{"What's the purpose of the group?"}</li>
                                     <li>Who should join?</li>
@@ -123,10 +127,11 @@ export default function CreateGroup() {
                             </div>
                             <div>
                                 <h2>{"Set the group's location"}</h2>
-                                <p>{"Groups meet locally, in person and online. We'll connect you with people in your area, and more can join you online"}</p>
+                                <p>{"Groups that are down will meet locally, in person or online. We'll connect you with people in your area, and more can join you online"}
+                                </p>
                                 <div>
                                     <p>Is this an in person or online group?</p>
-                                    <select name="type" id="type" value={type} onChange={e => setType(e.target.value)}>
+                                    <select name="groupType" id="gType" value={type} onChange={e => setType(e.target.value)}>
                                         <option value="">(select one)</option>
                                         <option value="In person">In person</option>
                                         <option value="Online">Online</option>
@@ -135,7 +140,7 @@ export default function CreateGroup() {
                                 </div>
                                 <div>
                                     <p>Is this a public or private group?</p>
-                                    <select name="privacy" id="privacy" value={privacy} onChange={e => setPrivacy(e.target.value)}>
+                                    <select name="groupPrivacy" id="gPrivacy" value={privacy} onChange={e => setPrivacy(e.target.value)}>
                                         <option value="">(select one)</option>
                                         <option value={false}>Public</option>
                                         <option value={true}>Private</option>
@@ -144,7 +149,7 @@ export default function CreateGroup() {
                                 </div>
                                 <div>
                                     <p>Please add an image url for your group below</p>
-                                    <input className='form-inputs' name='image' placeholder='Image URL' value={image} onChange={e => setImage(e.target.value)} />
+                                    <input className='small' name='imageUrl' placeholder='Image URL' value={image} onChange={e => setImage(e.target.value)} />
                                     <p className='error'>{errors && errors.image}</p>
                                 </div>
                                 <hr />

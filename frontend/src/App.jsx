@@ -8,8 +8,8 @@ import SignupPage from './components/SignupPage/index.js';
 import LoginPage from './components/LoginPage/index.js';
 import HomePage from './components/HomePage/index.js'
 import Browser from './components/Browser/index.js';
-import { EventsById } from './components/Events/index.js'
-import { GroupsById } from './components/Groups/index.js'
+import { EventsById, CreateEvent } from './components/Events/index.js'
+import { GroupsById, UpdateGroup, CreateGroup } from './components/Groups/index.js'
 
 const Layout = () => {
     const [loaded, setLoaded] = useState(false);
@@ -54,18 +54,18 @@ const router = createBrowserRouter([
                 path: '/groups/:groupId',
                 element: <GroupsById />
             },
-            // {
-            //     path: '/groups/:groupId/edit',
-            //     element: <UpdateGroup />
-            // },
-            // {
-            //     path: '/groups/create',
-            //     element: <CreateGroup />
-            // },
-            // {
-            //     path: '/groups/:groupId/event/new',
-            //     element: <CreateEvent />
-            // },
+            {
+                path: '/groups/:groupId/edit',
+                element: <UpdateGroup />
+            },
+            {
+                path: '/groups/create',
+                element: <CreateGroup />
+            },
+            {
+                path: '/groups/:groupId/event/new',
+                element: <CreateEvent />
+            },
             {
                 path: '/login',
                 element: <LoginPage />
