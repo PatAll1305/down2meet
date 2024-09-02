@@ -34,7 +34,7 @@ export default function GroupsById() {
                 ?
                 <div id='groups'>
                     <Groups group={group} user={user} />
-                    <GroupsView group={group} events={Object.values(events)} />z
+                    {/* <GroupsView group={group} events={Object.values(events)} />z */}
                 </div>
                 :
                 <div id='groups'>
