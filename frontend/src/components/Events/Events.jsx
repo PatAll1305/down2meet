@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
 import { csrfFetch } from "../../store/csrf";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Events({ event, group }) {
-    let organizer
+    const [organizer, setOrganizer] = useState({})
     useEffect(() => {
         const getOrganizer = async (organizer) => {
             const blob = await (await csrfFetch(`/api/groups/${group.id}`)).json()
             organizer = blob.Organizer
-            return organizer
+            setOrganizer(organizer)
         }
-        organizer = getOrganizer(organizer)
-    }, [organizer])
-    console.log(organizer)
+        getOrganizer()
+
+    }, [event])
 
     { organizer.firstName } { organizer.lastName }
     return (

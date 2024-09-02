@@ -8,17 +8,14 @@ import { useEffect, useState } from 'react';
 
 export default function Groups({ group, user }) {
     const [organizer, setOrganizer] = useState({})
-
-    const getOrganizer = async () => {
-        const organizer = await (await csrfFetch(`/api/groups/${group.id}`)).json()
-        return organizer.Organizer
-    }
-
     useEffect(() => {
-        const orgInit = async () => {
-            setOrganizer(await getOrganizer())
+        const getOrganizer = async (organizer) => {
+            const blob = await (await csrfFetch(`/api/groups/${group.id}`)).json()
+            organizer = blob.Organizer
+            setOrganizer(organizer)
         }
-        orgInit()
+        getOrganizer()
+
     }, [group])
 
     const navigate = useNavigate();

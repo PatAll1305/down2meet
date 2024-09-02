@@ -5,18 +5,15 @@ import './Group.css';
 
 export default function GroupsView({ group, events }) {
     const [organizer, setOrganizer] = useState({})
-
-    const getOrganizer = async () => {
-        const organizer = await (await csrfFetch(`/api/groups/${group.id}`)).json()
-        return organizer.Organizer
-    }
-
     useEffect(() => {
-        const orgInit = async () => {
-            setOrganizer(await getOrganizer())
+        const getOrganizer = async (organizer) => {
+            const blob = await (await csrfFetch(`/api/groups/${group.id}`)).json()
+            organizer = blob.Organizer
+            setOrganizer(organizer)
         }
-        orgInit()
-    }, [group])
+        getOrganizer()
+
+    }, [group.id])
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [pastEvents, setPastEvents] = useState([]);
 

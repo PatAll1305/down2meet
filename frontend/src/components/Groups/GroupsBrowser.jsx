@@ -11,7 +11,7 @@ export default function GroupsBrowser() {
 
     useEffect(() => {
         dispatch(allGroups());
-    }, [])
+    }, [dispatch])
 
     return (
         <div>
