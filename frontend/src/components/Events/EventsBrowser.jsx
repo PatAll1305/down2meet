@@ -12,7 +12,7 @@ export default function EventsBrowser() {
 
     useEffect(() => {
         dispatch(allEvents());
-    }, [])
+    }, [dispatch])
 
     const eventsValues = Object.values(events);
 

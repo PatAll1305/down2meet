@@ -27,7 +27,7 @@ export default function Groups({ group, user }) {
     return (
         <>
             <div id='groups'>
-                <div id='link'><Link to='/groups'>Back to all Groups</Link></div>
+                <div id='link'><Link id='back-button' to='/groups'>Back to all Groups</Link></div>
                 <div id='group-info'>
                     <div id='left-group'>
                         {img}

@@ -27,14 +27,14 @@ export default function Browser() {
                     }
                 }}
             >Groups</button> */}
-            <div id='selectionHeader'>
+            <div id='header'>
                 <h2
                     onClick={() => {
                         if (url !== 'events') {
                             navigate('/events')
                         }
                     }}
-                    className={url === 'events' ? "active-neutral" : "inactive-clickable"}
+                    className={url === 'events' ? "active-neutral" : "inactive-clickable" && 'separation'}
                 >{'Events'}</h2>
                 <h2
                     onClick={() => {
@@ -42,7 +42,7 @@ export default function Browser() {
                             navigate('/groups')
                         }
                     }}
-                    className={url === 'groups' ? "active-neutral" : "inactive-clickable"}
+                    className={url === 'groups' ? "active-neutral" : "inactive-clickable" && 'separation'}
                 >{'Groups'}</h2>
             </div>
             <div id='browse display'>

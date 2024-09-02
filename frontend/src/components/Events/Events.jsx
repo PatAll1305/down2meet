@@ -14,16 +14,14 @@ export default function Events({ event, group }) {
 
     }, [event, group.id])
 
-    { organizer.firstName } { organizer.lastName }
     return (
         <>
             {Object.keys(event).length && event.name
                 ?
                 <div id='view'>
                     <div className='event-header'>
-                        <div className="eventLink">
-                            <p>{'<'}</p>
-                            <Link to='/events'>Events</Link>
+                        <div className="event-link">
+                            <Link id='back-button' to='/events'>Back to all Events</Link>
                         </div>
                         <div id='event-name'><h2>{event.name}</h2></div>
                         <div id='host-header'><h4>This event is hosted by {!event.host ? `${organizer.firstName} ${organizer.lastName}` : `${event.host.firstName} ${event.host.lastName}`}</h4></div>

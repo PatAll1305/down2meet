@@ -12,7 +12,7 @@ export default function EventDisplayer({ event }) {
             navigate(`/events/${+event.id}`)
         }}>
             <div id='event-header'>
-                <div id='displayImageBrowse'>
+                <div id='event-browse-images'>
                     <img src={event.previewImage} alt="Event preview image" />
                 </div>
                 <div id='event'>

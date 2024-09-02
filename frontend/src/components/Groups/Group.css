@@ -135,3 +135,10 @@
     cursor: pointer;
     background-color: rgb(124, 107, 107);
 }
+
+#back-button {
+    background-color: rgb(29, 255, 90);
+    padding: 20px;
+    text-decoration: none;
+    color: white
+}

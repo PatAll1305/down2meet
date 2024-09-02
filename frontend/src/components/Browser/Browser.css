@@ -1,0 +1,15 @@
+#header {
+    background-color: rgb(29, 255, 90);
+    padding: 20px;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    border: 5px solid black;
+
+}
+
+#header:hover {
+    cursor: pointer;
+}

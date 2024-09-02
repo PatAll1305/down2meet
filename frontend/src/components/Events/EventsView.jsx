@@ -2,6 +2,7 @@ import { FaMoneyBill } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ModalDeleteItem } from "../Groups/index.js";
 import { DeleteEventModal } from "../DeleteModals/index.js";
+import GroupView from "./GroupView.jsx";
 
 export default function EventsView({ group, event, user }) {
 
@@ -23,10 +24,11 @@ export default function EventsView({ group, event, user }) {
                         </div>
                         <div id='right-group'>
                             <div id='right-group-header' onClick={e => { e.preventDefault() && navigate(`/groups/${+group.id}`) }}>
+                                <GroupView group={group} />
                             </div>
                             <div id='right-group-footer'>
-                                <div id='timeDisplay'>
-                                    <div id='timeHolder'>
+                                <div id='time-display'>
+                                    <div id='time-box'>
                                         <div className="time">
                                             START:
                                             <div>
