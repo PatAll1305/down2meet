@@ -142,3 +142,58 @@
     text-decoration: none;
     color: white
 }
+
+#form {
+    margin: 1% 15%;
+}
+
+#form>h4 {
+    color: blue;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+#submit {
+    position: relative;
+    height: 50px;
+    width: 130px;
+    box-shadow: rgba(10, 196, 50, 0.815) 5px 5px .1rem;
+    background-color: red;
+    color: white;
+    border: solid 3.5px;
+    border-radius: .25rem;
+    border-color: grey;
+}
+
+#submit:hover {
+    background-color: rgb(196, 0, 0);
+    color: lightgray;
+}
+
+#submit:focus {
+    background-color: rgb(196, 0, 0);
+    color: lightgray;
+    box-shadow: none;
+}
+
+.xSmall {
+    height: 20px;
+    width: 175px;
+    text-wrap: wrap;
+}
+
+.small {
+    height: 20px;
+    width: 400px;
+    text-wrap: wrap;
+}
+
+.large {
+    resize: none;
+    scrollbar-width: none;
+    width: 300px;
+    height: 100px;
+}

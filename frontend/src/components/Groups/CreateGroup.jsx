@@ -89,7 +89,7 @@ export default function CreateGroup() {
                 user
                     ?
                     <div id='form'>
-                        <h4>CREATE A GROUP ON GREETS</h4>
+                        <h4>{"CREATE s group that's Down2Meet!"}</h4>
                         <h1>{"We'll walk you through a few steps to create your group's information"}</h1>
                         <hr />
                         <form

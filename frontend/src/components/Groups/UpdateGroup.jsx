@@ -118,7 +118,7 @@ export default function UpdateGroup() {
                         >
                             <div>
                                 <h2>{"First, set you group's location."}</h2>
-                                <p>{"Groups on Greets meet locally, in person and online. We'll connect you with people in your area, and more can join you online."}</p>
+                                <p>{"Groups that are down will meet locally, in person and online. We'll connect you with people in your area, and more can join you online."}</p>
                                 <input className='small' type="text" placeholder='City, STATE' value={location} onChange={e => setLocation(e.target.value)} />
                                 <p className='error'>{errors && errors.location}</p>
                                 <hr />
