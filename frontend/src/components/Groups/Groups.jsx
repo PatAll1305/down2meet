@@ -22,14 +22,15 @@ export default function Groups({ group, user }) {
     const redirect = (path) => {
         navigate(path);
     }
+    const img = group.private ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={group.previewImage} alt={`Group ${+group.id}'s image`} />
 
     return (
         <>
             <div id='groups'>
-                <div id='link'>{'< '}<Link to='/groups'>Groups</Link></div>
+                <div id='link'><Link to='/groups'>Back to all Groups</Link></div>
                 <div id='group-info'>
                     <div id='left-group'>
-                        <div className="group-image"><img href={group.previewImage} alt={`Group ${group.id}'s image`} /></div>
+                        {img}
                     </div>
                     <div id='right-group'>
                         <div className='group-header'>
@@ -44,11 +45,11 @@ export default function Groups({ group, user }) {
                             {
                                 user && (user.id === group.organizerId)
                                     ?
-                                    <div>
+                                    <div className='main'>
                                         <button className='manage-button' onClick={() => redirect(`/groups/${+group.id}/event/new`)}>Create Event</button>
                                         {
                                             user.id === group.organizerId ?
-                                                <div>
+                                                <div className='row'>
                                                     <button className='manage-button' onClick={() => redirect(`/groups/${+group.id}/edit`)}>Update</button>
                                                     <ModalDeleteItem
                                                         className='manage-button'

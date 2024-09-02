@@ -21,7 +21,7 @@ module.exports = {
       },
       {
         groupId: 2,
-        url: 'https://assets3.cbsnewsstatic.com/hub/i/r/2011/07/27/5d9518d7-a643-11e2-a3f0-029118418759/thumbnail/640x350/926c55f0cdb2d9c56adfc9231261dc95/800px-Anonymous_at_Scientology_in_Los_Angeles.jpg?v=29ebd300d9a3cd24077d945a46991f72',
+        url: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Anonymous_emblem.svg',
         preview: false
       },
       {

@@ -1,0 +1,137 @@
+#groups {
+    margin: 0;
+    padding: 0;
+}
+
+#group-view>* {
+    margin: 0 15%;
+    padding: 0;
+}
+
+#group-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    padding: 0;
+    margin: 0;
+    column-gap: 50px;
+    width: 100%;
+}
+
+#link {
+    margin: 2% 15%
+}
+
+#group-view {
+    margin: 1% 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background-color: lightgray;
+
+    * {
+        margin: 1% 10%;
+        padding: 0;
+    }
+}
+
+
+#left-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.group-image {
+    width: 500px;
+    border: 5px solid;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+        max-height: 100%;
+        max-width: 100%;
+    }
+}
+
+
+#right-group {
+    display: flex;
+    flex-direction: column;
+
+    * {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+
+.main {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+}
+
+.group-button {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 150px;
+    border: 5px solid;
+    background-color: rgb(4, 144, 6);
+    color: white;
+    border-color: black;
+    font-size: medium;
+
+}
+
+.group-button:hover {
+    background-color: red;
+}
+
+.events-privacy {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+
+.manage-button {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 100px;
+    border: 3px solid;
+    background-color: darkgray;
+    color: white;
+    border-color: rgb(89, 247, 134);
+    font-size: small;
+    box-shadow: black 3px 3px;
+}
+
+.manage-button:hover {
+    cursor: pointer;
+    background-color: rgb(124, 107, 107);
+}
