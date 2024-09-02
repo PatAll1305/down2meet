@@ -9,13 +9,11 @@
 }
 
 .nav {
-    grid-area: a;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex: 0 0 100%;
-    justify-self: left;
-    background-color: rgb(31, 238, 20);
+    background-color: rgb(103, 120, 102);
 }
 
 #logged-options {

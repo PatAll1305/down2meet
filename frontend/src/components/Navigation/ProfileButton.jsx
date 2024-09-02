@@ -1,14 +1,18 @@
+// frontend/src/components/Navigation/ProfileButton.jsx
+
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { FaUserCircle } from 'react-icons/fa';
 import * as sessionActions from '../../store/session';
 
-export default function ProfileButton({ user }) {
-    const ulRef = useRef();
-    const [showMenu, setShowMenu] = useState(false);
+function ProfileButton({ user }) {
     const dispatch = useDispatch();
+    const [showMenu, setShowMenu] = useState(false);
+    const ulRef = useRef();
 
     const toggleMenu = (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // Keep click from bubbling up to document and triggering closeMenu
+        // if (!showMenu) setShowMenu(true);
         setShowMenu(!showMenu);
     };
 
@@ -31,18 +35,17 @@ export default function ProfileButton({ user }) {
         dispatch(sessionActions.logout());
     };
 
-    const ulClassname = "profile-dropdown" + (showMenu ? "" : " hidden");
+    const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
     return (
         <>
             <button onClick={toggleMenu}>
-                <i className="profile-button-outline" />
-                Profile
+                <FaUserCircle />
             </button>
-            <ul className={ulClassname} ref={ulRef}>
+            <ul className={ulClassName} ref={ulRef}>
                 <li>{user.username}</li>
+                <li>{user.firstName} {user.lastName}</li>
                 <li>{user.email}</li>
-                <li>{user.lastName + ', ' + user.firstname}</li>
                 <li>
                     <button onClick={logout}>Log Out</button>
                 </li>
@@ -51,3 +54,4 @@ export default function ProfileButton({ user }) {
     );
 }
 
+export default ProfileButton;
