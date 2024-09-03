@@ -324,3 +324,8 @@ body {
     text-decoration: none;
     color: white
 }
+
+#reverse-row {
+    display: flex;
+    flex-direction: column;
+}

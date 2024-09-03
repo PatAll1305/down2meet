@@ -5,7 +5,7 @@ const loadVenuesForGroup = 'group/venue/LOAD'
 const loadVenues = (venues) => {
     return {
         type: loadVenuesForGroup,
-        venues: venues
+        venues
     }
 }
 
