@@ -30,14 +30,15 @@ export default function EventsView({ group, event, user }) {
                                 <div id='time-display'>
                                     <div id='time-box'>
                                         <div className="time">
-                                            START:
+                                            ⏱︎ START:
                                             <div>
                                                 <p>{`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`}</p>
                                                 <p>{`${startDate.getHours()}:${startDate.getMinutes()}`}</p>
                                             </div>
                                         </div>
+                                        <p className="align-dot"> • </p>
                                         <div className="time">
-                                            END:
+                                            ⏱︎ END:
                                             <div>
                                                 <p>{`${endDate.getFullYear()}/${endDate.getMonth() + 1}/${endDate.getDate()}`}</p>
                                                 <p>{`${endDate.getHours()}:${endDate.getMinutes()}`}</p>
@@ -52,10 +53,10 @@ export default function EventsView({ group, event, user }) {
                                 <div>
                                     <div id='event-buttons'>
                                         {
-                                            user && ((event.host && event.host.id === user.id) || (group.organizer && group.organizer.id === user.id))
+                                            user && (group.organizerId === user.id)
                                                 ?
                                                 <>
-                                                    <button className='event-manage' onClick={e => { e.preventDefault() && alert('This feature is coming soon!') }}>Update</button>
+                                                    <button className='event-manage' onClick={() => window.alert('Feature coming soon')}>Update</button>
                                                     <ModalDeleteItem
                                                         className='event-manage'
                                                         itemText={'Delete'}
@@ -69,9 +70,10 @@ export default function EventsView({ group, event, user }) {
                                                 <button
                                                     id='event-join'
                                                     disabled={!user}
-                                                    onClick={e => { e.preventDefault() && alert('This feature is coming soon!') }}>
+                                                    onClick={() => window.alert('Feature coming soon')}>
                                                     Join Event
                                                 </button>
+
                                         }
                                     </div>
                                 </div>

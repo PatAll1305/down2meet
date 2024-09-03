@@ -27,8 +27,8 @@ export default function DeleteGroupModal({ group, redirect }) {
             <h2>{group.name}</h2>
             <h3>Are you sure you want to delete this group?</h3>
             <div>
-                <button onClick={acceptDelete}> Yes (Delete group)</button>
-                <button onClick={declineDelete}>No (Return to group page)</button>
+                <button className='confirm' onClick={acceptDelete}> Yes (Delete group)</button>
+                <button className='decline' onClick={declineDelete}>No (Return to group page)</button>
             </div>
         </div>
     )

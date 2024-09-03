@@ -12,7 +12,6 @@ export default function GroupsView({ group, events }) {
             setOrganizer(organizer)
         }
         getOrganizer()
-
     }, [group.id])
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [pastEvents, setPastEvents] = useState([]);
@@ -58,42 +57,45 @@ export default function GroupsView({ group, events }) {
     return (
         <div id='group-body'>
             <div>
-                <h3>Organizer</h3>
+                <h3>Organizer:</h3>
                 <p>{organizer.firstName} {organizer.lastName} </p>
             </div>
             <div>
-                <h3>All about us:</h3>
+                <h3>{"What we're about"}</h3>
                 <p>{group.about}</p>
             </div>
-            {
-                upcomingEvents.length
-                    ?
-                    <div>
-                        <h3>Upcoming Events ({upcomingEvents.length})</h3>
-                        <div>
-                            {upcomingEvents.map(event => (
-                                <EventDisplayer event={event} key={event.id} />
-                            ))}
+            <div id='group-events'>
+
+                {
+                    upcomingEvents.length
+                        ?
+                        <div className="cursor">
+                            <h3>Upcoming Events ({upcomingEvents.length})</h3>
+                            <div>
+                                {upcomingEvents.map(event => (
+                                    <EventDisplayer event={event} key={event.id} />
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                    : null
-            }
-            {
-                pastEvents.length
-                    ?
-                    <div>
-                        <h3>Past Events ({pastEvents.length})</h3>
+                        : null
+                }
+                {
+                    pastEvents.length
+                        ?
                         <div>
-                            {pastEvents.map(event => (
-                                <EventDisplayer event={event} key={event.id} />
-                            ))}
+                            <h3>Past Events ({pastEvents.length})</h3>
+                            <div className="cursor">
+                                {pastEvents.map(event => (
+                                    <EventDisplayer event={event} key={event.id} />
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                    : null
-            }
-            {
-                !upcomingEvents.length && !pastEvents.length ? <h3>No events for this Group</h3> : null
-            }
+                        : null
+                }
+                {
+                    !upcomingEvents.length && !pastEvents.length ? <h3>No events for this Group</h3> : null
+                }
+            </div>
 
         </div>
 

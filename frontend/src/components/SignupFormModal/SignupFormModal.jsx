@@ -33,7 +33,7 @@ export default function SignupFormModal({ redirect }) {
                 .catch(async (res) => {
                     const data = await res.json();
                     if (data?.errors) {
-                        setErrors(data.errors);
+                        setErrors(data.errors.email ? { email: 'Provided Email is not valid' } : data.errors);
                         allow = false;
                     }
                 });

@@ -17,12 +17,9 @@ const LoginFormModal = ({ redirect }) => {
         let allow = true;
         await dispatch(sessionActions.login({ credential, password }))
             .then(closeModal)
-            .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) {
-                    setErrors(data.errors);
-                    allow = false;
-                }
+            .catch(async () => {
+                setErrors({ credential: 'The provided Username/Email and Password are invalid' });
+                allow = false;
             });
         if (allow) redirect('/');
     };
@@ -33,12 +30,9 @@ const LoginFormModal = ({ redirect }) => {
         let allow = true;
         await dispatch(sessionActions.login({ credential: 'Demo-lition', password: 'password' }))
             .then(closeModal)
-            .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) {
-                    setErrors(data.errors);
-                    allow = false;
-                }
+            .catch(async () => {
+                setErrors({ credential: 'The provided Username/Email and Password are invalid' });
+                allow = false;
             });
         if (allow) redirect('/');
     }

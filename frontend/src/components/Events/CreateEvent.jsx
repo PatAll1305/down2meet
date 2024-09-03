@@ -11,7 +11,6 @@ export default function CreateEvent() {
     const user = useSelector(state => state.session.user);
     const groups = useSelector(state => state.groups);
     const group = groups[groupId] ? groups[groupId] : null;
-    const venues = useSelector(state => state.groupVenue);
     const dispatch = useDispatch();
     const [name, setName] = useState('');
     const [about, setAbout] = useState('');
@@ -92,11 +91,11 @@ export default function CreateEvent() {
         let allow = true;
 
         const payload = {
-            venueId: venue,
+            venueId: 1,
             name,
             about,
             type,
-            privacy,
+            isPrivate: privacy,
             imageUrl: image,
             price,
             capacity,
@@ -113,33 +112,22 @@ export default function CreateEvent() {
         })
 
         if (allow) {
-            navigate(`/events/${parseInt(id)}`);
+            navigate(`/events/${+id}`);
         }
-    }
-
-    const convertToDateTimeLocalString = (date) => {
-        if (!date) return;
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, "0");
-        const day = date.getDate().toString().padStart(2, "0");
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-
-        return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
     useEffect(() => {
         dispatch(allGroups());
         dispatch(groupVenues(groupId));
-    }, [])
+    }, [dispatch, groupId])
 
     return (
         <>
             {
                 user
                     ?
-                    <div id='formHolder'>
-                        <h4>CREATE AN EVENT FOR {group ? group.name : '<GROUP NAME HERE>'}</h4>
+                    <div id='form'>
+                        <h4>CREATE A NEW EVENT FOR {group ? group.name : '<GROUP NAME HERE>'}</h4>
                         <hr />
                         <form
                             onSubmit={onSubmit}
@@ -163,29 +151,10 @@ export default function CreateEvent() {
                                         type === 'In person'
                                             ?
                                             <div>
-                                                <select name="venues" id="venues" value={venue} onChange={e => setVenue(e.target.value)}>
-                                                    <option value="">Select Venue</option>
-                                                    {
-                                                        venues && Object.values(venues).map(venue => (
-                                                            <option key={venue.id} value={venue.id}>{`${venue.city}, ${venue.state}`}</option>
-                                                        ))
-                                                    }
-                                                </select>
+                                                <input name="venues" id="venues" value={venue} onChange={e => setVenue(e.target.value)}>
+                                                </input>
                                                 <p className='error'>{errors && errors.venueId}</p>
-                                                <div>
-                                                    {
-                                                        venue
-                                                            ?
-                                                            <>
-                                                                <h4>Selected Venue Info:</h4>
-                                                                <div>
-                                                                    <p>Address: {`${venues[venue].address}, ${venues[venue].city}, ${venues[venue].state}`}</p>
-                                                                    <p>Lat/Lng: {`${venues[venue].lat}, ${venues[venue].lng}`}</p>
-                                                                </div>
-                                                            </>
-                                                            : null
-                                                    }
-                                                </div>
+
                                             </div>
                                             : null
                                     }
@@ -225,18 +194,21 @@ export default function CreateEvent() {
                             </div>
                             <div>
                                 <div>
-                                    <input type='datetime-local' value={convertToDateTimeLocalString(startDate)} onChange={(e) => {
-                                        setStartDate(new Date(e.target.value))
-                                    }}
+                                    <input
+                                        type="text"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        placeholder="MM/DD/YYYY HH/mm AM"
                                         className='form-inputs' />
                                     <p className='error'>{errors && errors.startDate}</p>
                                 </div>
                                 <div>
-                                    <input type='datetime-local' value={convertToDateTimeLocalString(endDate)} onChange={(e) => {
-                                        setEndDate(new Date(e.target.value))
-                                    }}
-                                        className='form-inputs'
-                                    />
+                                    <input
+                                        type="text"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        placeholder="MM/DD/YYYY HH/mm PM"
+                                        className='form-inputs' />
                                     <p className='error'>{errors && errors.endDate}</p>
                                 </div>
                                 <hr />
@@ -248,7 +220,7 @@ export default function CreateEvent() {
                                 <hr />
                             </div>
                             <div>
-                                <h2>Now describe what your event will be about</h2>
+                                <h2>Now, please describe what your event will be about</h2>
                                 <p>{"People will see this when we promote your event, but you'll be able to add to it later, too."}</p>
                                 <ol>
                                     <li>{"What's the purpose of the event?"}</li>

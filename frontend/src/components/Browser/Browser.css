@@ -10,6 +10,13 @@
 
 }
 
+.active-neutral {
+    text-decoration: underline;
+    color: black;
+    background-color: aliceblue;
+    padding: 10px;
+}
+
 #header:hover {
     cursor: pointer;
 }

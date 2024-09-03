@@ -12,7 +12,8 @@ import * as sessionActions from '../../store/session';
 
 export const Navigation = ({ loaded }) => {
     const sessionUser = useSelector(state => state.session.user);
-    const [navigate, setNavigate] = useState(false)
+    const [navigateHome, setNavigateHome] = useState(false)
+    const [navigateGroupsCreate, setNavigateGroupsCreate] = useState(false)
     const dispatch = useDispatch()
     const redirectNav = useNavigate();
     const redirect = (path) => {
@@ -20,8 +21,9 @@ export const Navigation = ({ loaded }) => {
     }
 
     useEffect(() => {
-        if (navigate) setNavigate(false)
-    }, [navigate])
+        if (navigateHome) setNavigateHome(false)
+        if (navigateGroupsCreate) setNavigateGroupsCreate(false)
+    }, [navigateHome, navigateGroupsCreate])
 
     const logout = (e) => {
         e.preventDefault();
@@ -36,6 +38,11 @@ export const Navigation = ({ loaded }) => {
             </li>
             <li>
                 <button onClick={logout}>Log Out</button>
+            </li>
+            <li>
+                <button onClick={() => setNavigateGroupsCreate(true)}>
+                    Create a new group
+                </button>
             </li>
         </>
         ) : (
@@ -57,15 +64,17 @@ export const Navigation = ({ loaded }) => {
 
     return (
         <div className='nav'>
-            <img className='logo' src={logo} onClick={(e) => { e.preventDefault && setNavigate(true) }} />
-            {navigate && <Navigate to='/' />}
+            <img className='logo' src={logo} onClick={(e) => { e.preventDefault && setNavigateHome(true) }} />
+            {navigateHome && <Navigate to='/' />}
+            {navigateGroupsCreate && <Navigate to='/groups/create' />}
             <ul className='nav'>
                 <li>
-                    <button onClick={() => setNavigate(true)}>
+                    <button onClick={() => setNavigateHome(true)}>
                         Home
                     </button>
                 </li>
                 {loaded && sessionLinks}
+
             </ul>
         </div>
     );

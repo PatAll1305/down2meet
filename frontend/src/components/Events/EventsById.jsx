@@ -17,7 +17,7 @@ export default function EventsById() {
 
 
     useEffect(() => {
-        dispatch(allEvents());
+        eventId > 20 ? dispatch(allEvents(eventId)) : dispatch(allEvents());
         dispatch(allGroups());
     }, [eventId, dispatch])
 
@@ -25,13 +25,13 @@ export default function EventsById() {
         <div id='events'>
             {event && Object.keys(event).length && group.name
                 ?
-                <div id=''>
+                <div >
                     <Events event={event} group={group} user={user} />
                     <EventsView event={event} group={group} user={user} />
                 </div>
                 :
                 <div id='groups'>
-                    <h1>Group does not exist</h1>
+                    <h1>Event does not exist</h1>
                 </div>
             }
             <Outlet />
