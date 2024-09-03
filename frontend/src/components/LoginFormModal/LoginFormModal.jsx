@@ -59,7 +59,7 @@ const LoginFormModal = ({ redirect }) => {
                         required
                     />
                 </label>
-                {errors.credential && <p>{errors.credential}</p>}
+                {errors.credential && <p id='error-message'>{errors.credential}</p>}
                 <button className={'submit'} type="submit" disabled={credential.length < 4 || password.length < 6}>Log In</button>
             </form>
             <button className='demo-login' onClick={demoUserLogin}>Demo User</button>
