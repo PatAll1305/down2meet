@@ -1,0 +1,16 @@
+#error-message {
+    color: red;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    justify-content: space-evenly;
+    height: 300px;
+}
+
+.submit {
+    background-color: red;
+}

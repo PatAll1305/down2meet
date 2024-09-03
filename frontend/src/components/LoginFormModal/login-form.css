@@ -20,3 +20,7 @@
 .demo-login:hover {
     cursor: pointer;
 }
+
+.submit {
+    background-color: red;
+}

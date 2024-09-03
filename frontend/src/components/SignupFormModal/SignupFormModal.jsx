@@ -110,6 +110,7 @@ export default function SignupFormModal({ redirect }) {
                 </label>
                 {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
                 <button
+                    className='submit'
                     type="submit"
                     disabled={
                         !email ||
