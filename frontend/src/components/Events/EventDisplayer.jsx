@@ -15,8 +15,6 @@ export default function EventDisplayer({ event }) {
         getDescription(event)
     }, [description, event])
 
-    console.log(event)
-
     const navigate = useNavigate();
 
     const startDate = new Date(event.startDate);
