@@ -56,7 +56,7 @@ export const Navigation = ({ loaded }) => {
             <div className='nav'>
                 {loaded && sessionLinks}
             </div>
-        </div>
+        </div >
     );
 }
 
