@@ -46,6 +46,7 @@ const LoginFormModal = ({ redirect }) => {
     return (
         <div className='form'>
             <h1>Log In</h1>
+            {errors.credential && <p id='error-message'>{errors.credential}</p>}
             <form onSubmit={handleSubmit}>
                 <label>
                     Username or Email

@@ -36,7 +36,7 @@ export default function GroupsView({ group, events }) {
             upcomingArr.sort((a, b) => {
                 let dateA = new Date(a.startDate);
                 let dateB = new Date(b.startDate);
-                return dateA < dateB ? 1 : dateA > dateB ? -1 : dateA === dateB ? 0 : null
+                return dateA < dateB ? -1 : dateA > dateB ? 1 : dateA === dateB ? 0 : null
             })
 
             pastArr.sort((a, b) => {
@@ -61,9 +61,9 @@ export default function GroupsView({ group, events }) {
                 <h3>Organizer</h3>
                 <p>{organizer.firstName} {organizer.lastName} </p>
             </div>
-            <div>
-                <h3>All about us:</h3>
-                <p>{group.about}</p>
+            <div id="description">
+                <h3>{"What we're about"}</h3>
+                <p >{group.about}</p>
             </div>
             {
                 upcomingEvents.length

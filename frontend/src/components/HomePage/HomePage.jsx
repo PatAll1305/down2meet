@@ -15,16 +15,18 @@ export default function HomePage() {
     useEffect(() => {
         dispatch(allGroups());
         dispatch(allEvents());
-    }, [])
+    }, [dispatch])
 
     return (
         <div id='home-page'>
             <div id='title-splash'>
-                <div>
-                    <img className="logo-homepage" src={logo} alt="logo" />
+                <div id='text-container'>
                     <h1>Meet up with others</h1>
-                    <h2>Where hobbies can  become friendships</h2>
-                    <p>Find groups and events to join!</p>
+                    <h3>Where hobbies can  become friendships</h3>
+                    <p>{"Down2Meet is a promising social platform that aims to bring people together through shared interests and local events. By providing a user-friendly interface, diverse event options, and features that encourage community building, Down2Meet hopes to become a go-to platform for individuals seeking social connections and meaningful experiences."}</p>
+                </div>
+                <div id='logo-container'>
+                    <img className="logo-homepage" src={logo} alt="logo" />
                 </div>
             </div>
             <div id='section-two'>

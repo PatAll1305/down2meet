@@ -8,12 +8,36 @@
     padding: 0;
 }
 
-.nav {
+.navbar {
+
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex: 0 0 100%;
+    flex-direction: row;
     background-color: rgb(103, 120, 102);
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+
+    .nav {
+        gap: 100px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: end;
+
+        #logged-in {
+            display: flex;
+            flex-direction: row;
+
+            .profile-button {
+                width: 100px;
+                height: 50px;
+                display: flex;
+                align-self: center;
+            }
+        }
+
+    }
+
 }
 
 #logged-options {
@@ -25,13 +49,6 @@
     column-gap: 50px;
 }
 
-.profile-button {
-    width: 100px;
-    height: 50px;
-    display: flex;
-    align-self: center;
-    margin-right: 90px
-}
 
 #auth-buttons {
     display: flex;
@@ -44,16 +61,16 @@
     height: 35px;
 }
 
-.dropdown>button {
+.profile-dropdown>button {
     border: none;
     background-color: rgba(0, 0, 0, 0);
 }
 
-.dropdown>button>* {
+.profile-dropdown>button>* {
     font-size: larger;
 }
 
-.dropdown-content-hide {
+.profile-dropdown-content-hide {
     display: none;
     position: absolute;
     width: 100px;
@@ -61,9 +78,9 @@
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.7);
 }
 
-.dropdown-content-show {
+.profile-dropdown-content-show {
     top: auto;
-    position: absolute;
+    position: fixed;
     width: 175px;
     overflow: auto;
     text-align: end;
@@ -78,7 +95,7 @@
     text-align: start;
 }
 
-.dropdown-content>* {
+.profile-dropdown-content>* {
     display: block;
     color: #000000;
     text-decoration: none;

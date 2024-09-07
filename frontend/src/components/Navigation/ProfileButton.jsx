@@ -8,6 +8,8 @@ import * as sessionActions from '../../store/session';
 function ProfileButton({ user }) {
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
+    const [navigateGroups, setNavigateGroups] = useState(false);
+    const [navigateEvents, setNavigateEvents] = useState(false);
     const ulRef = useRef();
 
     const toggleMenu = (e) => {
@@ -15,6 +17,11 @@ function ProfileButton({ user }) {
         // if (!showMenu) setShowMenu(true);
         setShowMenu(!showMenu);
     };
+
+    useEffect(() => {
+        if (navigateGroups) setNavigateGroups(false)
+        if (navigateEvents) setNavigateEvents(false)
+    }, [navigateGroups, navigateEvents])
 
     useEffect(() => {
         if (!showMenu) return;

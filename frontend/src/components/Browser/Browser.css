@@ -1,13 +1,20 @@
 #header {
-    background-color: rgb(29, 255, 90);
+    background-color: rgb(0, 0, 0);
     padding: 20px;
     text-decoration: none;
     color: white;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    border: 5px solid black;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 
+}
+
+.active-neutral {
+    text-decoration: underline;
+    color: teal;
+    padding: 10px;
 }
 
 #header:hover {

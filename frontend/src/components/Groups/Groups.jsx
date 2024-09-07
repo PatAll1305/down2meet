@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 export default function Groups({ group, user }) {
     const [organizer, setOrganizer] = useState({})
+    const [groupImage, setGroupImage] = useState('')
     useEffect(() => {
         const getOrganizer = async (organizer) => {
             const blob = await (await csrfFetch(`/api/groups/${group.id}`)).json()
@@ -15,14 +16,29 @@ export default function Groups({ group, user }) {
             setOrganizer(organizer)
         }
         getOrganizer()
-
-    }, [group])
+        const getNumEvents = async () => {
+            const blob = await (await csrfFetch(`/api/groups/${group.id}/events`)).json()
+            const events = [...Object.values(blob)]
+            setNumEvents(events[0].length)
+        }
+        getNumEvents()
+        if (group.organizerId === user.id) {
+            const getGroupImage = async () => {
+                const blob = await (await csrfFetch(`/api/groups/${group.id}/`)).json()
+                const groupImage = blob.GroupImages[0].url
+                setGroupImage(groupImage)
+            }
+            getGroupImage()
+        }
+    }, [group, user.id])
 
     const navigate = useNavigate();
     const redirect = (path) => {
         navigate(path);
     }
-    const img = group.private ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={group.previewImage} alt={`Group ${+group.id}'s image`} />
+    let img
+    if (!groupImage) img = group.private && group.organizerId !== user.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={group.previewImage} alt={`Group ${+group.id}'s image`} />
+    else img = group.private && group.organizerId !== user.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={groupImage} alt={`Group ${+group.id}'s image`} />
 
     return (
         <>

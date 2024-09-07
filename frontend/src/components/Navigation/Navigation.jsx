@@ -7,66 +7,55 @@ import LoginFormModal from '../LoginFormModal/index.js';
 import SignupFormModal from '../SignupFormModal/index.js';
 import logo from '../../../logo.png'
 import './Navigation.css';
-import { useDispatch } from 'react-redux';
-import * as sessionActions from '../../store/session';
 
 export const Navigation = ({ loaded }) => {
     const sessionUser = useSelector(state => state.session.user);
-    const [navigate, setNavigate] = useState(false)
-    const dispatch = useDispatch()
+    const [navigateHome, setNavigateHome] = useState(false)
+    const [navigateGroupsCreate, setNavigateGroupsCreate] = useState(false)
     const redirectNav = useNavigate();
     const redirect = (path) => {
         redirectNav(path);
     }
 
     useEffect(() => {
-        if (navigate) setNavigate(false)
-    }, [navigate])
-
-    const logout = (e) => {
-        e.preventDefault();
-        dispatch(sessionActions.logout());
-    };
+        if (navigateHome) setNavigateHome(false)
+        if (navigateGroupsCreate) setNavigateGroupsCreate(false)
+    }, [navigateHome, navigateGroupsCreate])
 
 
     const sessionLinks = sessionUser ?
-        (<>
-            <li className='profile-button'>
+        (<div id='logged-in'>
+            <div className='profile-button'>
                 <ProfileButton user={sessionUser} />
-            </li>
-            <li>
-                <button onClick={logout}>Log Out</button>
-            </li>
-        </>
+            </div>
+            <button onClick={() => setNavigateGroupsCreate(true)}>
+                Create a new group
+            </button>
+        </div>
         ) : (
             <>
-                <li>
-                    <OpenModalButton
-                        buttonText="Sign Up"
-                        modalComponent={<SignupFormModal redirect={redirect} />}
-                    />
-                </li>
-                <li>
-                    <OpenModalButton
-                        buttonText="Log In"
-                        modalComponent={<LoginFormModal redirect={redirect} />}
-                    />
-                </li>
+                <OpenModalButton
+                    buttonText="Sign Up"
+                    modalComponent={<SignupFormModal redirect={redirect} />}
+                />
+                <OpenModalButton
+                    buttonText="Log In"
+                    modalComponent={<LoginFormModal redirect={redirect} />}
+                />
             </>
         );
 
     return (
-        <div className='nav'>
-            <img className='logo' src={logo} onClick={(e) => { e.preventDefault && setNavigate(true) }} />
-            {navigate && <Navigate to='/' />}
-            <ul className='nav'>
-                <li>
-                    <button onClick={() => setNavigate(true)}>
-                        Home
-                    </button>
-                </li>
+        <div className='navbar'>
+            <img className='logo' src={logo} onClick={(e) => {
+                e.preventDefault
+                setNavigateHome(true)
+            }} />
+            {navigateHome && <Navigate to='/' />}
+            {navigateGroupsCreate && <Navigate to='/groups/create' />}
+            <div className='nav'>
                 {loaded && sessionLinks}
-            </ul>
+            </div>
         </div>
     );
 }

@@ -1,0 +1,27 @@
+#error-message {
+    color: red;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    justify-content: space-evenly;
+    height: 600px;
+}
+
+.demo-login {
+    background-color: white;
+    border: 0px;
+    text-decoration: underline;
+}
+
+.demo-login:hover {
+    cursor: pointer;
+}
+
+.submit {
+    background-color: red;
+    margin-top: 10px;
+}

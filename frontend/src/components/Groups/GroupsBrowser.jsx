@@ -14,7 +14,7 @@ export default function GroupsBrowser() {
     }, [dispatch])
 
     return (
-        <div>
+        <div id='groups-container'>
             <h2>Groups in Down2Meet</h2>
             {groups && Object.values(groups).map(group => {
                 return (

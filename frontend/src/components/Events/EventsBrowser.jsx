@@ -20,8 +20,7 @@ export default function EventsBrowser() {
         let dateA = new Date(a.startDate);
         let dateB = new Date(b.startDate);
         let today = new Date();
-
-        return dateA < today || dateA < dateB ? 1 : dateA > dateB ? -1 : dateA === dateB ? 0 : null
+        return dateA < today || dateA < dateB ? -1 : dateA > dateB ? 1 : dateA === dateB ? -1 : null
     })
 
     return (
