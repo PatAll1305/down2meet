@@ -29,7 +29,7 @@ export default function EventsBrowser() {
             {eventsValues.map(event => {
                 return (
                     (
-                        <div key={event.id}>
+                        <div key={event.id} id="reverse-row">
                             <EventDisplayer event={event} />
                             <hr />
                         </div>

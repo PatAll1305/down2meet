@@ -9,8 +9,10 @@ const loadGroups = (events) => {
     }
 }
 
-export const allEvents = () => async (dispatch) => {
-    const response = await csrfFetch('/api/events');
+export const allEvents = (id) => async (dispatch) => {
+    let response;
+    response = await csrfFetch('/api/events');
+    if (id) response = await csrfFetch('/api/events?page=2');
 
     if (response.ok) {
         const groups = await response.json();
@@ -23,23 +25,23 @@ export const allEvents = () => async (dispatch) => {
 
 export const newEvent = (payload, id) => async (dispatch) => {
     const { name, about, type, capacity, price, privacy, venueId, startDate, endDate, imageUrl } = payload;
-
     const response = await csrfFetch(`/api/groups/${+id}/events`, {
         method: "POST",
         body: JSON.stringify({
             venueId: +venueId,
             name,
             description: about,
-            private: privacy,
+            private: Boolean(privacy),
             type,
-            capacity,
-            price,
+            capacity: +capacity,
+            price: +price,
             startDate,
             endDate
         })
     });
 
     const data = await response.json();
+
 
     await csrfFetch(`/api/events/${+data.id}/images`, {
         method: "POST",
@@ -49,7 +51,7 @@ export const newEvent = (payload, id) => async (dispatch) => {
         })
     });
 
-    await dispatch(allEvents());
+    if (+id > 20) await dispatch(allEvents(id))
     return data.id;
 }
 

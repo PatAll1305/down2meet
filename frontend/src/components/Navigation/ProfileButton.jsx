@@ -1,9 +1,8 @@
-// frontend/src/components/Navigation/ProfileButton.jsx
-
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
 import * as sessionActions from '../../store/session';
+import { Navigate } from 'react-router-dom';
 
 function ProfileButton({ user }) {
     const dispatch = useDispatch();
@@ -49,7 +48,20 @@ function ProfileButton({ user }) {
             <button onClick={toggleMenu}>
                 <FaUserCircle />
             </button>
+            {navigateGroups && <Navigate to='/groups' />}
+            {navigateEvents && <Navigate to='/events' />}
             <ul className={ulClassName} ref={ulRef}>
+                <li>Hello, {user.firstname}!</li>
+                <li>
+                    <button onClick={() => setNavigateGroups(true)}>
+                        View Groups
+                    </button>
+                </li>
+                <li>
+                    <button onClick={() => setNavigateEvents(true)}>
+                        View Events
+                    </button>
+                </li>
                 <li>{user.username}</li>
                 <li>{user.firstname} {user.lastName}</li>
                 <li>{user.email}</li>

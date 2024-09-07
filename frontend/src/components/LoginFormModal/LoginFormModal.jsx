@@ -17,12 +17,9 @@ const LoginFormModal = ({ redirect }) => {
         let allow = true;
         await dispatch(sessionActions.login({ credential, password }))
             .then(closeModal)
-            .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) {
-                    setErrors(data.errors);
-                    allow = false;
-                }
+            .catch(async () => {
+                setErrors({ credential: 'The provided Username/Email and Password are invalid' });
+                allow = false;
             });
         if (allow) redirect('/');
     };
@@ -33,12 +30,9 @@ const LoginFormModal = ({ redirect }) => {
         let allow = true;
         await dispatch(sessionActions.login({ credential: 'Demo-lition', password: 'password' }))
             .then(closeModal)
-            .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) {
-                    setErrors(data.errors);
-                    allow = false;
-                }
+            .catch(async () => {
+                setErrors({ credential: 'The provided Username/Email and Password are invalid' });
+                allow = false;
             });
         if (allow) redirect('/');
     }
@@ -49,7 +43,7 @@ const LoginFormModal = ({ redirect }) => {
             {errors.credential && <p id='error-message'>{errors.credential}</p>}
             <form onSubmit={handleSubmit}>
                 <label>
-                    Username or Email
+                    <p>Username or Email</p>
                     <input
                         type="text"
                         value={credential}
@@ -58,7 +52,7 @@ const LoginFormModal = ({ redirect }) => {
                     />
                 </label>
                 <label>
-                    Password
+                    <p>Password</p>
                     <input
                         type="password"
                         value={password}
@@ -68,7 +62,7 @@ const LoginFormModal = ({ redirect }) => {
                 </label>
                 <button className={'submit'} type="submit" disabled={credential.length < 4 || password.length < 6}>Log In</button>
             </form>
-            <button onClick={demoUserLogin}>Log in demo user</button>
+            <button className='demo-login' onClick={demoUserLogin}>Demo User</button>
         </div>
     );
 }

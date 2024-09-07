@@ -22,7 +22,6 @@ export const Navigation = ({ loaded }) => {
         if (navigateGroupsCreate) setNavigateGroupsCreate(false)
     }, [navigateHome, navigateGroupsCreate])
 
-
     const sessionLinks = sessionUser ?
         (<div id='logged-in'>
             <div className='profile-button'>
@@ -46,17 +45,19 @@ export const Navigation = ({ loaded }) => {
         );
 
     return (
-        <div className='navbar'>
-            <img className='logo' src={logo} onClick={(e) => {
-                e.preventDefault
-                setNavigateHome(true)
-            }} />
+        <div className='nav'>
+            <img className='logo' src={logo} onClick={(e) => { e.preventDefault && setNavigateHome(true) }} />
             {navigateHome && <Navigate to='/' />}
             {navigateGroupsCreate && <Navigate to='/groups/create' />}
-            <div className='nav'>
+            <ul className='nav'>
+                <li>
+                    <button onClick={() => setNavigateHome(true)}>
+                        Home
+                    </button>
+                </li>
                 {loaded && sessionLinks}
-            </div>
-        </div >
+            </ul>
+        </div>
     );
 }
 

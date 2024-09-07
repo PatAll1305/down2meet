@@ -3,11 +3,6 @@
     padding: 0;
 }
 
-#group-view>* {
-    margin: 0 15%;
-    padding: 0;
-}
-
 #group-info {
     display: flex;
     flex-direction: row;
@@ -91,11 +86,7 @@
 #right-group {
     display: flex;
     flex-direction: column;
-
-    * {
-        padding: 0;
-        margin: 0;
-    }
+    justify-content: space-around;
 }
 
 
@@ -112,23 +103,30 @@
     column-gap: 5px;
 }
 
+.group-events {
+    display: flex;
+    flex-direction: column;
+    gap: 40px
+}
+
 .group-button {
-    padding: 0;
-    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
     width: 150px;
     border: 5px solid;
-    background-color: rgb(4, 144, 6);
+    background-color: rgb(223, 22, 0);
     color: white;
     border-color: black;
     font-size: medium;
+    box-shadow: 2px 2px 2px black;
 
 }
 
+
 .group-button:hover {
+    cursor: pointer;
     background-color: red;
 }
 
@@ -166,10 +164,8 @@
 }
 
 #back-button {
-    background-color: rgb(29, 255, 90);
-    padding: 20px;
     text-decoration: none;
-    color: white
+    color: black
 }
 
 #form {

@@ -35,8 +35,8 @@ export const newGroup = (payload) => async (dispatch) => {
         body: JSON.stringify({
             name,
             about,
-            type,
-            private: isPrivate,
+            type: type === "Online" ? type : 'In person',
+            private: Boolean(isPrivate),
             city,
             state
         })
@@ -52,13 +52,17 @@ export const newGroup = (payload) => async (dispatch) => {
         })
     });
 
+
     if (response.ok) {
         const newResponse = await csrfFetch('/api/groups');
 
         const newData = await newResponse.json();
 
         await dispatch(loadGroups(newData.Groups));
+    } else {
+        (response)
     }
+
 
     return data.id;
 }
@@ -70,12 +74,12 @@ export const updateGroup = (payload, id) => async (dispatch) => {
         body: JSON.stringify({
             name,
             about,
-            type,
-            private: isPrivate,
+            type: type === "Online" ? type : 'In Person',
+            private: Boolean(isPrivate),
             city,
             state
         })
-    });
+    })
 
     const data = await response.json();
     await dispatch(allGroups());

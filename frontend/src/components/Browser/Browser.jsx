@@ -35,7 +35,7 @@ export default function Browser() {
                         }
                     }}
                     className={url === 'events' ? "active-neutral" : "inactive-clickable" && 'separation'}
-                >{'Events'}</h2>
+                >{'See all Events'}</h2>
                 <h2
                     onClick={() => {
                         if (url !== 'groups') {
@@ -43,7 +43,7 @@ export default function Browser() {
                         }
                     }}
                     className={url === 'groups' ? "active-neutral" : "inactive-clickable" && 'separation'}
-                >{'Groups'}</h2>
+                >{'See All Groups'}</h2>
             </div>
             <div id='browse display'>
                 {url === 'groups' ? <GroupsBrowser /> : <EventsBrowser />}

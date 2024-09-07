@@ -65,7 +65,7 @@ export default function UpdateGroup() {
             errorObj.image = 'Link must end with .png, jpg, or .jpeg';
         }
 
-        const [city, state] = location.split(', ',)
+        const [city, state] = location.split(', ')
 
         if (!city || !state) {
             errorObj.location = 'Please enter a city and state, separated by a comma and a space.';
@@ -82,7 +82,7 @@ export default function UpdateGroup() {
             name,
             about,
             type,
-            privat: privacy,
+            isPrivate: privacy,
             city,
             state,
             imageUrl: image
@@ -97,7 +97,7 @@ export default function UpdateGroup() {
         })
 
         if (allow) {
-            navigate(`/groups/${parseInt(id)}`);
+            navigate(`/groups/${+id}`);
         }
     }
 
@@ -149,8 +149,8 @@ export default function UpdateGroup() {
                                     <p>Is this an in person or online group?</p>
                                     <select name="groupType" id="gType" value={type} onChange={e => setType(e.target.value)}>
                                         <option value="">(select one)</option>
-                                        <option value="In person">In person</option>
-                                        <option value="Online">Online</option>
+                                        <option value='cheeseburger'>In Person</option>
+                                        <option value='Online'>Online</option>
                                     </select>
                                     <p className='error'>{errors && errors.type}</p>
                                 </div>

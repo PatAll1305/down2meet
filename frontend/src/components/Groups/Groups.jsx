@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 
 
 export default function Groups({ group, user }) {
+    const [numEvents, setNumEvents] = useState(0)
     const [organizer, setOrganizer] = useState({})
     const [groupImage, setGroupImage] = useState('')
-    const [numEvents, setNumEvents] = useState('')
     useEffect(() => {
         const getOrganizer = async (organizer) => {
             const blob = await (await csrfFetch(`/api/groups/${group.id}`)).json()
@@ -44,7 +44,7 @@ export default function Groups({ group, user }) {
     return (
         <>
             <div id='groups'>
-                <div id='link'><Link id='back-button' to='/groups'>Back to all Groups</Link></div>
+                <div id='link'><Link id='back-button' to='/groups'>{'<'} Groups</Link></div>
                 <div id='group-info'>
                     <div id='left-group'>
                         {img}
@@ -56,7 +56,7 @@ export default function Groups({ group, user }) {
                             <div className="events-privacy">
                                 <p>{numEvents} events so far! • {group.private ? 'Private' : 'Public'}</p>
                             </div>
-                            <p>{`Organized by ${organizer.firstName} ${organizer.lastName}`}</p>
+                            <p>{`Organized by: ${organizer.firstName} ${organizer.lastName}`}</p>
                         </div>
                         <div className="group-footer">
                             {
@@ -88,10 +88,7 @@ export default function Groups({ group, user }) {
                                         ? null
                                         :
                                         <button className='group-button'
-                                            onClick={e => {
-                                                e.preventDefault() && alert('Feature coming soon');
-                                            }}
-                                        >Join this Group</button>
+                                            onClick={() => window.alert('Feature coming soon')}>Join this Group</button>
                             }
                         </div>
                     </div>

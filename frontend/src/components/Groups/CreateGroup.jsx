@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { newGroup } from '../../store/groups';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 
+
 export default function CreateGroup() {
     const user = useSelector(state => state.session.user);
     const dispatch = useDispatch();
+    useEffect(() => {
+        document.title = 'Start a new Group';
+    }, []);
 
     const [name, setName] = useState('');
     const [location, setLocation] = useState('');
@@ -89,15 +93,15 @@ export default function CreateGroup() {
                 user
                     ?
                     <div id='form'>
-                        <h4>{"CREATE s group that's Down2Meet!"}</h4>
+                        <h4>{"Create a group that's Down2Meet"}</h4>
                         <h1>{"We'll walk you through a few steps to create your group's information"}</h1>
                         <hr />
                         <form
                             onSubmit={onSubmit}
                         >
                             <div>
-                                <h2>{"First, set you group's location."}</h2>
-                                <p>{"Groups that are all down will meet locally, in person and online. We'll connect you with people in your area, and more can join you online."}
+                                <h2>{"First, set your group's location."}</h2>
+                                <p>{"Groups on Down2Meet meet locally, in person and online. We'll connect you with people in your area, and more can join you online."}
                                 </p>
                                 <input className='small' type="text" placeholder='City, STATE' value={location} onChange={e => setLocation(e.target.value)} />
                                 <p className='error'>{errors && errors.location}</p>
@@ -106,14 +110,14 @@ export default function CreateGroup() {
                             <div>
                                 <h2>{"What will your group's name be?"}</h2>
                                 <p>Choose a name that will give people a clear idea of what the group is about.
-                                    Feel free to get creative!
+                                    Feel free to get creative! You can always change this later.
                                 </p>
                                 <input className='small' type="text" placeholder='What is your group name?' value={name} onChange={e => setName(e.target.value)} />
                                 <p className='error'>{errors && errors.name}</p>
                                 <hr />
                             </div>
                             <div>
-                                <h2>Now describe what your group will be about</h2>
+                                <h2>Describe the purpose of your group</h2>
                                 <p>{"People will see this when we promote your group, but you'll be able to add to it later, too."}
                                 </p>
                                 <ol>
@@ -127,13 +131,13 @@ export default function CreateGroup() {
                             </div>
                             <div>
                                 <h2>{"Set the group's location"}</h2>
-                                <p>{"Groups that are down will meet locally, in person or online. We'll connect you with people in your area, and more can join you online"}
+                                <p>{"Groups on Down2Meet meet locally, in person and online. We'll connect you with people in your area, and more can join you online"}
                                 </p>
                                 <div>
                                     <p>Is this an in person or online group?</p>
                                     <select name="groupType" id="gType" value={type} onChange={e => setType(e.target.value)}>
                                         <option value="">(select one)</option>
-                                        <option value="In person">In person</option>
+                                        <option value="In Person">In person</option>
                                         <option value="Online">Online</option>
                                     </select>
                                     <p className='error'>{errors && errors.type}</p>

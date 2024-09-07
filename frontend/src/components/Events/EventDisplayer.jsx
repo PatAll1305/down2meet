@@ -1,14 +1,26 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { csrfFetch } from "../../store/csrf";
 
 
 export default function EventDisplayer({ event }) {
+    const [description, setDescription] = useState('')
+
+    useEffect(() => {
+        const getDescription = async event => {
+            const blob = await (await csrfFetch(`/api/events/${event.id}`)).json()
+            const description = blob.description
+            setDescription(description)
+        }
+        getDescription(event)
+    }, [description, event])
 
     const navigate = useNavigate();
 
     const startDate = new Date(event.startDate);
 
     return (
-        <div id='event-displayer' onClick={() => {
+        <div id='event-displayer' className="cursor" onClick={() => {
             navigate(`/events/${+event.id}`)
         }}>
             <div id='event-header'>
@@ -22,7 +34,7 @@ export default function EventDisplayer({ event }) {
                 </div>
             </div>
             <div id='event-footer'>
-                {event.description}
+                {description}
             </div>
 
         </div>

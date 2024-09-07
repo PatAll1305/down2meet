@@ -5,7 +5,7 @@ const loadVenuesForGroup = 'group/venue/LOAD'
 const loadVenues = (venues) => {
     return {
         type: loadVenuesForGroup,
-        venues: venues
+        venues
     }
 }
 
@@ -23,9 +23,10 @@ export default function venueReducer(state = {}, action) {
     switch (action.type) {
         case loadVenuesForGroup: {
             let newState = {};
-            for (const venue of action.venues) {
-                newState[venue.id] = venue;
-            }
+            if (action.venues.length)
+                for (const venue of action.venues) {
+                    newState[venue.id] = venue;
+                }
             return newState;
         }
         default: {

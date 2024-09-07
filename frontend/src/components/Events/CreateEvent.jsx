@@ -113,7 +113,7 @@ export default function CreateEvent() {
         })
 
         if (allow) {
-            navigate(`/events/${parseInt(id)}`);
+            navigate(`/events/${+id}`);
         }
     }
 
@@ -131,15 +131,15 @@ export default function CreateEvent() {
     useEffect(() => {
         dispatch(allGroups());
         dispatch(groupVenues(groupId));
-    }, [])
+    }, [dispatch, groupId])
 
     return (
         <>
             {
                 user
                     ?
-                    <div id='formHolder'>
-                        <h4>CREATE AN EVENT FOR {group ? group.name : '<GROUP NAME HERE>'}</h4>
+                    <div id='form'>
+                        <h4>CREATE A NEW EVENT FOR {group ? group.name : '<GROUP NAME HERE>'}</h4>
                         <hr />
                         <form
                             onSubmit={onSubmit}
@@ -166,9 +166,11 @@ export default function CreateEvent() {
                                                 <select name="venues" id="venues" value={venue} onChange={e => setVenue(e.target.value)}>
                                                     <option value="">Select Venue</option>
                                                     {
-                                                        venues && Object.values(venues).map(venue => (
-                                                            <option key={venue.id} value={venue.id}>{`${venue.city}, ${venue.state}`}</option>
-                                                        ))
+
+                                                        venues && Object.keys(venues).forEach(el => {
+                                                            <option>{el}</option>
+                                                        })
+
                                                     }
                                                 </select>
                                                 <p className='error'>{errors && errors.venueId}</p>
