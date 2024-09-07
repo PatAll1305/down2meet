@@ -11,11 +11,8 @@ const loadGroups = (groups) => {
 
 export const allGroupEvents = (id) => async (dispatch) => {
     const response = await csrfFetch(`/api/groups/${+id}/events`);
-    console.log("response:", response)
-
     if (response.ok) {
         const events = await response.json();
-        console.log("EVENTS:", events)
         dispatch(loadGroups(events));
         return events;
     }

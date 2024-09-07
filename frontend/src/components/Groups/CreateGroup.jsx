@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { newGroup } from '../../store/group';
+import { newGroup } from '../../store/groups';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 export default function Groups({ group, user }) {
     const [organizer, setOrganizer] = useState({})
     const [groupImage, setGroupImage] = useState('')
+    const [numEvents, setNumEvents] = useState('')
     useEffect(() => {
         const getOrganizer = async (organizer) => {
             const blob = await (await csrfFetch(`/api/groups/${group.id}`)).json()
@@ -53,7 +54,7 @@ export default function Groups({ group, user }) {
                             <h3>{group.name}</h3>
                             <h4>{`${group.city}, ${group.state}`}</h4>
                             <div className="events-privacy">
-                                <p>{group.private ? 'Private' : 'Public'}</p>
+                                <p>{numEvents} events so far! • {group.private ? 'Private' : 'Public'}</p>
                             </div>
                             <p>{`Organized by ${organizer.firstName} ${organizer.lastName}`}</p>
                         </div>

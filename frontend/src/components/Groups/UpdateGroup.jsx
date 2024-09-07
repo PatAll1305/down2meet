@@ -62,9 +62,6 @@ export default function UpdateGroup() {
         if (!image) {
             errorObj.image = 'Link must end with .png, jpg, or .jpeg';
         } else if ((!image.endsWith('.png') && !image.endsWith('.jpg') && !image.endsWith('.jpeg'))) {
-            console.log('png test: ', image.endsWith('.png'));
-            console.log('jpg test: ', image.endsWith('.jpg'));
-            console.log('jpeg test: ', image.endsWith('.jpeg'));
             errorObj.image = 'Link must end with .png, jpg, or .jpeg';
         }
 
