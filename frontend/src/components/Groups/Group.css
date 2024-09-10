@@ -249,3 +249,10 @@ form {
     width: fit-content;
     max-width: 500px;
 }
+
+.events {
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    gap: 25px;
+}

@@ -24,7 +24,7 @@ export default function EventsBrowser() {
     })
 
     return (
-        <div>
+        <div id='events-container'>
             <h2>Events in Down2Meet</h2>
             {eventsValues.map(event => {
                 return (

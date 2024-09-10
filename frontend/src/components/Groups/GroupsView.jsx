@@ -53,7 +53,6 @@ export default function GroupsView({ group, events }) {
         organizeDates();
     }, [events])
 
-
     return (
         <div id='group-body'>
             <div>
@@ -71,7 +70,10 @@ export default function GroupsView({ group, events }) {
                         ?
                         <div className="cursor">
                             <h3>Upcoming Events ({upcomingEvents.length})</h3>
-                            <div>
+                            <div className="events" style={{ backgroundColor: 'green' }}>
+                                <style>
+
+                                </style>
                                 {upcomingEvents.map(event => (
                                     <EventDisplayer event={event} key={event.id} />
                                 ))}
@@ -82,9 +84,9 @@ export default function GroupsView({ group, events }) {
                 {
                     pastEvents.length
                         ?
-                        <div>
+                        <div className="cursor">
                             <h3>Past Events ({pastEvents.length})</h3>
-                            <div className="cursor">
+                            <div className="events" style={{ backgroundColor: 'green' }}>
                                 {pastEvents.map(event => (
                                     <EventDisplayer event={event} key={event.id} />
                                 ))}

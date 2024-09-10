@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { csrfFetch } from "../../store/csrf";
+import './Events.css'
 
 
 export default function EventDisplayer({ event }) {

@@ -45,16 +45,14 @@ export const Navigation = ({ loaded }) => {
         );
 
     return (
-        <div className='nav'>
-            <img className='logo' src={logo} onClick={(e) => { e.preventDefault && setNavigateHome(true) }} />
+        <div className='navbar'>
+            <img className='logo' src={logo} onClick={(e) => {
+                e.preventDefault
+                setNavigateHome(true)
+            }} />
             {navigateHome && <Navigate to='/' />}
             {navigateGroupsCreate && <Navigate to='/groups/create' />}
             <ul className='nav'>
-                <li>
-                    <button onClick={() => setNavigateHome(true)}>
-                        Home
-                    </button>
-                </li>
                 {loaded && sessionLinks}
             </ul>
         </div>
