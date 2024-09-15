@@ -30,7 +30,7 @@ export default function EventDisplayer({ event }) {
                 </div>
                 <div id='event'>
                     <h4 id='date'>{`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`} • {`${startDate.getHours() > 12 ? `${startDate.getHours() - 12}` : startDate.getHours()}:${startDate.getMinutes() < 10 ? `0${startDate.getMinutes()}` : startDate.getMinutes()}`}</h4>
-                    <h3>{event.name}</h3>
+                    <h3>{event.name.split(' ').length < 5 ? event.name : event.name.split(' ', 5).join(' ') + '...'}</h3>
                     <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : `${event.Group.city}, ${event.Group.state}`}</h4>
                 </div>
             </div>

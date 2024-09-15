@@ -4,6 +4,7 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { newEvent } from '../../store/events';
 import { allGroups } from '../../store/groups';
 import { groupVenues } from '../../store/venues';
+import { csrfFetch } from '../../store/csrf';
 
 
 export default function CreateEvent() {
@@ -11,8 +12,8 @@ export default function CreateEvent() {
     const user = useSelector(state => state.session.user);
     const groups = useSelector(state => state.groups);
     const group = groups[groupId] ? groups[groupId] : null;
-    const venues = useSelector(state => state.groupVenue);
     const dispatch = useDispatch();
+    const [venues, setVenues] = useState({})
     const [name, setName] = useState('');
     const [about, setAbout] = useState('');
     const [capacity, setCapacity] = useState('');
@@ -22,7 +23,7 @@ export default function CreateEvent() {
     const [image, setImage] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [venue, setVenue] = useState('');
+    const [venue, setVenue] = useState(0);
     const [errors, setErrors] = useState({});
 
 
@@ -30,12 +31,21 @@ export default function CreateEvent() {
 
     if (!user) navigate('/');
 
+    useEffect(() => {
+        const getVenues = async () => {
+            const blob = await (await csrfFetch(`/api/groups/${groupId}/venues`)).json()
+            const venues = blob.Venues
+            setVenues(venues)
+        };
+        getVenues();
+    }, [groupId])
     const onSubmit = async (e) => {
         e.preventDefault();
 
         const today = new Date();
 
         let errorObj = {};
+
 
         if (!name.length) {
             errorObj.name = 'Name is required';
@@ -103,14 +113,18 @@ export default function CreateEvent() {
             startDate,
             endDate
         };
+        let id
+        while (!id) {
 
-        let id = await dispatch(newEvent(payload, groupId)).catch(async (res) => {
-            const data = await res.json();
-            if (data?.errors) {
-                setErrors(data.errors);
-                allow = false;
-            }
-        })
+            id = await dispatch(newEvent(payload, groupId))
+                .catch(async (res) => {
+                    const data = await res.json();
+                    if (data?.errors) {
+                        setErrors(data.errors);
+                        allow = false;
+                    }
+                })
+        }
 
         if (allow) {
             navigate(`/events/${+id}`);
@@ -166,10 +180,10 @@ export default function CreateEvent() {
                                                 <select name="venues" id="venues" value={venue} onChange={e => setVenue(e.target.value)}>
                                                     <option value="">Select Venue</option>
                                                     {
-
-                                                        venues && Object.keys(venues).forEach(el => {
-                                                            <option>{el}</option>
-                                                        })
+                                                        venues && venues.map(venue => {
+                                                            return (<option key={venue.id} value={venue.id}>{venue.address}</option>)
+                                                        }
+                                                        )
 
                                                     }
                                                 </select>
@@ -181,8 +195,8 @@ export default function CreateEvent() {
                                                             <>
                                                                 <h4>Selected Venue Info:</h4>
                                                                 <div>
-                                                                    <p>Address: {`${venues[venue].address}, ${venues[venue].city}, ${venues[venue].state}`}</p>
-                                                                    <p>Lat/Lng: {`${venues[venue].lat}, ${venues[venue].lng}`}</p>
+                                                                    <p>Address: {`${venues.find((el) => el.id === +venue).address}, ${venues.find((el) => el.id === +venue).city}, ${venues.find((el) => el.id === +venue).state}`}</p>
+                                                                    <p>Lat/Lng: {`${venues.find((el) => el.id === +venue).lat}, ${venues.find((el) => el.id === +venue).lng}`}</p>
                                                                 </div>
                                                             </>
                                                             : null

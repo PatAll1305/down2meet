@@ -2,7 +2,7 @@ import { FaMoneyBill } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ModalDeleteItem } from "../Groups/index.js";
 import { DeleteEventModal } from "../DeleteModals/index.js";
-import GroupView from "./GroupView.jsx";
+import { GroupView } from "./index";
 
 export default function EventsView({ group, event, user }) {
 
@@ -10,6 +10,8 @@ export default function EventsView({ group, event, user }) {
     const endDate = new Date(event.endDate);
 
     const navigate = useNavigate();
+
+
 
     return (
         <>
@@ -33,15 +35,16 @@ export default function EventsView({ group, event, user }) {
                                             ⏱︎ START:
                                             <div>
                                                 <p>{`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`}</p>
-                                                <p>{`${startDate.getHours()}:${startDate.getMinutes()}`}</p>
+                                                <p className="align-dot"> • </p>
+                                                <p>{`${startDate.getHours() > 12 ? startDate.getHours() - 12 : startDate.getHours()}:${startDate.getMinutes()}`}</p>
                                             </div>
                                         </div>
-                                        <p className="align-dot"> • </p>
                                         <div className="time">
                                             ⏱︎ END:
                                             <div>
                                                 <p>{`${endDate.getFullYear()}/${endDate.getMonth() + 1}/${endDate.getDate()}`}</p>
-                                                <p>{`${endDate.getHours()}:${endDate.getMinutes()}`}</p>
+                                                <p className="align-dot"> • </p>
+                                                <p>{`${endDate.getHours() > 12 ? endDate.getHours() - 12 : endDate.getHours()}:${endDate.getMinutes()}`}</p>
                                             </div>
                                         </div>
                                     </div>

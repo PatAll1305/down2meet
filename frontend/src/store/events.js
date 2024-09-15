@@ -47,11 +47,12 @@ export const newEvent = (payload, id) => async (dispatch) => {
         method: "POST",
         body: JSON.stringify({
             url: imageUrl,
-            preview: true
+            preview: Boolean(privacy)
         })
     });
 
-    if (+id > 20) await dispatch(allEvents(id))
+    if (+id > 20) await dispatch(allEvents(+id))
+    console.log("DATA:", data)
     return data.id;
 }
 
