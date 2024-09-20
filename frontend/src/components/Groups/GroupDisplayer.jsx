@@ -17,7 +17,7 @@ export default function GroupDisplayer({ group }) {
             setNumEvents(events[0].length)
         }
         getNumEvents()
-        if (group.organizerId === user.id) {
+        if (group.organizerId === user?.id) {
             const getGroupImage = async () => {
                 const blob = await (await csrfFetch(`/api/groups/${group.id}/`)).json()
                 const groupImage = blob.GroupImages[0].url
@@ -25,11 +25,13 @@ export default function GroupDisplayer({ group }) {
             }
             getGroupImage()
         }
-    }, [group, user.id])
+    }, [group, user?.id])
+
     let img
-    if (!groupImage) img = group.private && group.organizerId !== user.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={group.previewImage} alt={`Group ${+group.id}'s image`} />
-    else img = group.private && group.organizerId !== user.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={groupImage} alt={`Group ${+group.id}'s image`} />
+    if (!groupImage) img = group.private && group.organizerId !== user?.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={group.previewImage} alt={`Group ${+group.id}'s image`} />
+    else img = group.private && group.organizerId !== user?.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={groupImage} alt={`Group ${+group.id}'s image`} />
     let about = group.about.split(' ').length >= 5 ? [group.about.split(' ')[1], group.about.split(' ')[2], group.about.split(' ')[3], group.about.split(' ')[4], group.about.split(' ')[5]].join(' ') + '...' : group.about
+
     return (
         <div id='group-displayer' onClick={() => {
             navigate(`/groups/${+group.id}`);

@@ -4,16 +4,16 @@ import { deleteEvent } from '../../store/events.js';
 import './DeleteModals.css'
 
 export default function DeleteEventModal({ event, redirect }) {
-
     const { closeModal } = useModal();
 
     const dispatch = useDispatch();
+    const groupId = event.groupId
 
     const acceptDelete = async (e) => {
         e.preventDefault();
         closeModal();
         dispatch(deleteEvent(event.id));
-        redirect('/events');
+        redirect(`/groups/${groupId}`);
     }
 
     const declineDelete = (e) => {
@@ -24,7 +24,7 @@ export default function DeleteEventModal({ event, redirect }) {
     return (
         <div id='delete-window'>
             <h1>Event to be deleted:</h1>
-            <h2>{event.name}</h2>
+            <h2>{event.name.split(' ').length > 5 ? event.name.split(' ', 5).join(' ') + '...' : event.name}</h2>
             <h3>Are you sure you want to delete this Event?</h3>
             <div>
                 <button className='confirm' onClick={acceptDelete}>Yes (Delete event)</button>

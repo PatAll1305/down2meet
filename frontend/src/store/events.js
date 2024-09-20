@@ -25,6 +25,17 @@ export const allEvents = (id) => async (dispatch) => {
 
 export const newEvent = (payload, id) => async (dispatch) => {
     const { name, about, type, capacity, price, privacy, venueId, startDate, endDate, imageUrl } = payload;
+    console.log({
+        venueId: +venueId,
+        name,
+        description: about,
+        private: Boolean(privacy),
+        type,
+        capacity: +capacity,
+        price: +price,
+        startDate,
+        endDate
+    })
     const response = await csrfFetch(`/api/groups/${+id}/events`, {
         method: "POST",
         body: JSON.stringify({
@@ -38,9 +49,11 @@ export const newEvent = (payload, id) => async (dispatch) => {
             startDate,
             endDate
         })
-    });
+
+    })
 
     const data = await response.json();
+    console.log('THE payload', payload, 'THE data', data, 'THE id', id)
 
 
     await csrfFetch(`/api/events/${+data.id}/images`, {
