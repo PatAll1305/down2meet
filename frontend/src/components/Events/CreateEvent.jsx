@@ -180,9 +180,8 @@ export default function CreateEvent() {
                                                 <select name="venues" id="venues" value={venue} onChange={e => setVenue(e.target.value)}>
                                                     <option value="">Select Venue</option>
                                                     {
-                                                        venues && venues.map(venue => {
-                                                            return (<option key={venue.id} value={venue.id}>{venue.address}</option>)
-                                                        }
+                                                        venues && venues.map(venue => <option key={venue.id} value={venue.id}>{venue.address}</option>
+
                                                         )
 
                                                     }

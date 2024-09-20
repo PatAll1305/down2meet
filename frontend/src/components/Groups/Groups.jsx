@@ -23,7 +23,7 @@ export default function Groups({ group, user }) {
             setNumEvents(events[0].length)
         }
         getNumEvents()
-        if (group.organizerId === user.id) {
+        if (group.organizerId === user?.id) {
             const getGroupImage = async () => {
                 const blob = await (await csrfFetch(`/api/groups/${group.id}/`)).json()
                 const groupImage = blob.GroupImages[0].url
@@ -31,15 +31,15 @@ export default function Groups({ group, user }) {
             }
             getGroupImage()
         }
-    }, [group, user.id])
+    }, [group, user?.id])
 
     const navigate = useNavigate();
     const redirect = (path) => {
         navigate(path);
     }
     let img
-    if (!groupImage) img = group.private && group.organizerId !== user.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={group.previewImage} alt={`Group ${+group.id}'s image`} />
-    else img = group.private && group.organizerId !== user.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={groupImage} alt={`Group ${+group.id}'s image`} />
+    if (!groupImage) img = group.private && group.organizerId !== user?.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={group.previewImage} alt={`Group ${+group.id}'s image`} />
+    else img = group.private && group.organizerId !== user?.id ? <h4>This group is private, please join the group to view their image</h4> : <img className='group-image' src={groupImage} alt={`Group ${+group.id}'s image`} />
 
     return (
         <>
@@ -60,12 +60,12 @@ export default function Groups({ group, user }) {
                         </div>
                         <div className="group-footer">
                             {
-                                user && (user.id === group.organizerId)
+                                user && (user?.id === group.organizerId)
                                     ?
                                     <div className='main'>
                                         <button className='manage-button' onClick={() => redirect(`/groups/${+group.id}/event/new`)}>Create Event</button>
                                         {
-                                            user.id === group.organizerId ?
+                                            user?.id === group.organizerId ?
                                                 <div className='row'>
                                                     <button className='manage-button' onClick={() => redirect(`/groups/${+group.id}/edit`)}>Update</button>
                                                     <ModalDeleteItem

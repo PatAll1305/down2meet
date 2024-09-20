@@ -56,7 +56,7 @@ export default function EventsView({ group, event, user }) {
                                 <div>
                                     <div id='event-buttons'>
                                         {
-                                            user && (group.organizerId === user.id)
+                                            user && (group.organizerId === user?.id)
                                                 ?
                                                 <>
                                                     <button className='event-manage' onClick={() => window.alert('Feature coming soon')}>Update</button>

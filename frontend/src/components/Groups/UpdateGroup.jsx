@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import { allGroups, updateGroup } from '../../store/groups';
+import { csrfFetch } from '../../store/csrf';
 import './Group.css'
 
 export default function UpdateGroup() {
@@ -18,8 +19,21 @@ export default function UpdateGroup() {
     const [about, setAbout] = useState('');
     const [type, setType] = useState('');
     const [privacy, setPrivacy] = useState('');
-    const [image, setImage] = useState('');
     const [errors, setErrors] = useState({});
+    const [image, setImage] = useState('');
+
+    useEffect(() => {
+        if (group?.organizerId === user?.id) {
+            const getGroupImage = async () => {
+                const blob = await (await csrfFetch(`/api/groups/${group.id}/`)).json()
+                const groupImage = blob.GroupImages[0].url
+                setImage(groupImage)
+            }
+            getGroupImage()
+        }
+    }, [group, user?.id])
+
+    console.log(image)
 
     useEffect(() => {
         dispatch(allGroups());
@@ -36,7 +50,7 @@ export default function UpdateGroup() {
 
     const navigate = useNavigate();
 
-    if (!user) navigate('/');
+    if (!user || !(group.organizerId === user?.id)) navigate('/');
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -104,7 +118,7 @@ export default function UpdateGroup() {
     return (
         <>
             {
-                group && user && group.organizerId == user.id
+                group && user && group.organizerId == user?.id
                     ?
                     <div id='form'>
                         <h4>{"UPDATE YOUR GROUP'S INFORMATION"}</h4>
