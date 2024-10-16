@@ -24,6 +24,14 @@
         justify-content: flex-end;
         align-items: end;
 
+        #logged-out {
+            gap: 100px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: end;
+        }
+
         img {
             max-height: 100px;
         }
@@ -83,20 +91,22 @@
 }
 
 .profile-dropdown-content-show {
-    top: auto;
+    top: 8%;
     position: fixed;
-    width: 175px;
+    width: fit-content;
     overflow: auto;
     text-align: end;
     background-color: rgb(22, 189, 122);
     display: block;
     flex-direction: column;
     justify-self: end;
-    right: 0px;
+    right: 10%;
     border: black 3px solid;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     padding: 5px;
     text-align: start;
+    gap: 10px;
+    justify-items: space-between;
 }
 
 .profile-dropdown-content>* {

@@ -46,10 +46,10 @@ export default function SignupFormModal({ redirect }) {
     };
 
     return (
-        <div className="form">
+        <div className="form-container">
             <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
+            <form className="form" onSubmit={handleSubmit}>
+                <label className='label'>
                     Email
                     <input
                         type="text"
@@ -59,7 +59,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.email && <p>{errors.email}</p>}
-                <label>
+                <label className='label'>
                     Username
                     <input
                         type="text"
@@ -69,7 +69,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.username && <p>{errors.username}</p>}
-                <label>
+                <label className='label'>
                     First Name
                     <input
                         type="text"
@@ -79,7 +79,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.firstName && <p>{errors.firstName}</p>}
-                <label>
+                <label className='label'>
                     Last Name
                     <input
                         type="text"
@@ -89,7 +89,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.lastName && <p>{errors.lastName}</p>}
-                <label>
+                <label className='label'>
                     Password
                     <input
                         type="password"
@@ -99,7 +99,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.password && <p>{errors.password}</p>}
-                <label>
+                <label className='label'>
                     Confirm Password
                     <input
                         type="password"
