@@ -18,7 +18,7 @@ const LoginFormModal = ({ redirect }) => {
         await dispatch(sessionActions.login({ credential, password }))
             .then(closeModal)
             .catch(async () => {
-                setErrors({ credential: 'The provided Username/Email and Password are invalid' });
+                setErrors({ credential: 'The provided credentials were invalid' });
                 allow = false;
             });
         if (allow) redirect('/');
@@ -31,18 +31,18 @@ const LoginFormModal = ({ redirect }) => {
         await dispatch(sessionActions.login({ credential: 'Demo-lition', password: 'password' }))
             .then(closeModal)
             .catch(async () => {
-                setErrors({ credential: 'The provided Username/Email and Password are invalid' });
+                setErrors({ credential: 'The provided Username/Email and Password were invalid' });
                 allow = false;
             });
         if (allow) redirect('/');
     }
 
     return (
-        <div className='form'>
+        <div className='form' data-testid='login-modal'>
             <h1>Log In</h1>
             {errors.credential && <p id='error-message'>{errors.credential}</p>}
             <form onSubmit={handleSubmit}>
-                <label>
+                <label data-testid='credential-input'>
                     <p>Username or Email</p>
                     <input
                         type="text"
@@ -51,7 +51,7 @@ const LoginFormModal = ({ redirect }) => {
                         required
                     />
                 </label>
-                <label>
+                <label data-testid='password-input'>
                     <p>Password</p>
                     <input
                         type="password"
@@ -60,9 +60,9 @@ const LoginFormModal = ({ redirect }) => {
                         required
                     />
                 </label>
-                <button className={'submit'} type="submit" disabled={credential.length < 4 || password.length < 6}>Log In</button>
+                <button className={'submit'} type="submit" data-testid='login-button' disabled={credential.length < 4 || password.length < 6}>Log In</button>
             </form>
-            <button className='demo-login' onClick={demoUserLogin}>Demo User</button>
+            <button className='demo-login' data-testid='demo-login-button' onClick={demoUserLogin}>Demo User</button>
         </div>
     );
 }

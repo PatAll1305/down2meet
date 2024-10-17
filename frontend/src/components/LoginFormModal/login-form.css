@@ -6,9 +6,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 500px;
     justify-content: space-evenly;
-    height: 600px;
+    width: 450px;
+    height: 350px;
 }
 
 .demo-login {

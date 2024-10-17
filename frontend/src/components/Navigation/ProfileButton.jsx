@@ -61,7 +61,7 @@ function ProfileButton({ user }) {
 
             {
                 sessionUser ?
-                    <ul className={`${ulClassName}`} ref={ulRef}>
+                    <ul data-testid='user-dropdown-menu' className={`${ulClassName}`} ref={ulRef}>
                         <li>Hello, {user.firstname}!</li>
                         <li>
                             <button onClick={() => setNavigateGroups(true)}>
@@ -82,13 +82,13 @@ function ProfileButton({ user }) {
                     </ul >
                     :
                     <ul className={`${ulClassName}`} ref={ulRef}>
-                        <li>
+                        <li data-testid='signup-menu-button'>
                             <OpenModalButton
                                 buttonText="Sign Up"
                                 modalComponent={<SignupFormModal redirect={redirect} />}
                             />
                         </li>
-                        <li>
+                        <li data-testid='login-menu-button'>
                             <OpenModalButton
                                 buttonText="Log In"
                                 modalComponent={<LoginFormModal redirect={redirect} />}

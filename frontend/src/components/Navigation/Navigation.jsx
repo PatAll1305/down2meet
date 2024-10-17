@@ -18,12 +18,12 @@ export const Navigation = ({ loaded }) => {
 
 
     const sessionLinks = (
-        <div id='logged-in' data-testid='user-menu-button' >
-            <div className='profile-button'>
+        <div id='logged-in'  >
+            <div className='profile-button' data-testid='user-menu-button'>
                 <ProfileButton user={sessionUser} />
             </div>
             {
-                sessionUser && <button onClick={() => setNavigateGroupsCreate(true)}>
+                sessionUser && <button data-testid='create-group-button' onClick={() => setNavigateGroupsCreate(true)}>
                     Create a new group
                 </button>
             }

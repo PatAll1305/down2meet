@@ -41,7 +41,7 @@
             flex-direction: row;
 
             .profile-button {
-                width: 100px;
+                width: fit-content;
                 height: 50px;
                 display: flex;
                 align-self: center;

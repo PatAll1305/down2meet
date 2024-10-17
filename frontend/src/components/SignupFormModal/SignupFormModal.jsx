@@ -46,10 +46,10 @@ export default function SignupFormModal({ redirect }) {
     };
 
     return (
-        <div className="form-container">
+        <div className="form-container-signup">
             <h1>Sign Up</h1>
             <form className="form" onSubmit={handleSubmit}>
-                <label className='label'>
+                <label className='label-signup'>
                     Email
                     <input
                         type="text"
@@ -59,7 +59,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.email && <p>{errors.email}</p>}
-                <label className='label'>
+                <label className='label-signup'>
                     Username
                     <input
                         type="text"
@@ -69,7 +69,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.username && <p>{errors.username}</p>}
-                <label className='label'>
+                <label className='label-signup'>
                     First Name
                     <input
                         type="text"
@@ -79,7 +79,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.firstName && <p>{errors.firstName}</p>}
-                <label className='label'>
+                <label className='label-signup'>
                     Last Name
                     <input
                         type="text"
@@ -89,7 +89,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.lastName && <p>{errors.lastName}</p>}
-                <label className='label'>
+                <label className='label-signup'>
                     Password
                     <input
                         type="password"
@@ -99,7 +99,7 @@ export default function SignupFormModal({ redirect }) {
                     />
                 </label>
                 {errors.password && <p>{errors.password}</p>}
-                <label className='label'>
+                <label className='label-signup'>
                     Confirm Password
                     <input
                         type="password"
@@ -110,7 +110,7 @@ export default function SignupFormModal({ redirect }) {
                 </label>
                 {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
                 <button
-                    className='submit'
+                    className='submit-signup'
                     type="submit"
                     disabled={
                         !email ||
