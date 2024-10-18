@@ -12,6 +12,7 @@ function ProfileButton({ user }) {
     const [showMenu, setShowMenu] = useState(false);
     const [navigateGroups, setNavigateGroups] = useState(false);
     const [navigateEvents, setNavigateEvents] = useState(false);
+    const [navigateHome, setNavigateHome] = useState(false);
     const sessionUser = useSelector(state => state.session.user);
     const ulRef = useRef();
     const redirectNav = useNavigate();
@@ -28,7 +29,8 @@ function ProfileButton({ user }) {
     useEffect(() => {
         if (navigateGroups) setNavigateGroups(false)
         if (navigateEvents) setNavigateEvents(false)
-    }, [navigateGroups, navigateEvents])
+        if (navigateHome) setNavigateHome(false)
+    }, [navigateGroups, navigateEvents, navigateHome])
 
     useEffect(() => {
         if (!showMenu) return;
@@ -46,6 +48,7 @@ function ProfileButton({ user }) {
 
     const logout = (e) => {
         e.preventDefault();
+        setNavigateHome(true)
         dispatch(sessionActions.logout());
     };
 
@@ -58,6 +61,7 @@ function ProfileButton({ user }) {
             </button>
             {navigateGroups && <Navigate to='/groups' />}
             {navigateEvents && <Navigate to='/events' />}
+            {navigateHome && <Navigate to='/' />}
 
             {
                 sessionUser ?
