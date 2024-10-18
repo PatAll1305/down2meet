@@ -2,15 +2,27 @@
     color: red;
 }
 
-.form {
+.form-container-signup {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 500px;
-    justify-content: space-evenly;
-    height: 400px;
+    height: 450px;
 }
 
-.submit {
+.form-signup {
+    display: flex;
+    justify-content: space-between;
+}
+
+.label-signup {
+    display: flex;
+    flex-direction: column;
+}
+
+.submit-signup {
     background-color: red;
+    padding: 2%;
+    padding-left: 8%;
+    padding-right: 8%;
 }
